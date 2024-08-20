@@ -1,0 +1,18 @@
+services:
+    postgres:
+        container_name: postgres
+        image: postgres:16.2
+        env_file:
+            - .env
+        environment:
+            - "POSTGRES_HOST_AUTH_METHOD=trust"
+        ports:
+            - "5432:5432"
+        networks:
+            - camagru_net
+        restart: always
+
+networks:
+    camagru_net:`
+        name: camagru_net
+        driver: bridge
