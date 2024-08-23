@@ -11,8 +11,16 @@ main {
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+}
+
+.postImages{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 #video {
@@ -62,6 +70,7 @@ canvas {
     font-size: 1.1em;
     padding: 1em;
     background-color: lightgreen;
+    cursor: pointer;
 }
 
 #retakeButton {
@@ -71,15 +80,16 @@ canvas {
     border-radius: 7px;
     padding: 1em;
     font-size: 1.1em;
+    cursor: pointer;
 }
 
 #saveButton {
-    display: none;
-    background: lightgray;
+    background: rgb(149, 149, 149);
     padding: 1em;
     border: none;
     border-radius: 7px;
     font-size: 1.1em;
+    cursor: pointer;
 }
 
 .imgContainer img {
@@ -89,4 +99,14 @@ canvas {
     border-radius: 7px;
     padding: .5em;
     background-color: rgb(235, 172, 132);
+    cursor: pointer;
 }
+
+.postInfo{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 1em;
+}
+

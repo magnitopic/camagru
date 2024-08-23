@@ -4,10 +4,15 @@ const startButton = document.querySelector("#startButton");
 const retakeButton = document.querySelector("#retakeButton");
 const saveButton = document.querySelector("#saveButton");
 const defaultImages = document.querySelectorAll(".defaultImgs");
+const sizeSlider = document.querySelector("#size");
+const rotationSlider = document.querySelector("#rotation");
 const ctx = canvas.getContext("2d");
 
-const width = 1000;
+let width = 1000;
 let height = 0;
+let heightSelectedImg = 100;
+let widthSelectedImg = 100;
+let rotation = 0;
 let streaming = false;
 let userImage = null;
 let selectedImg = null;
@@ -25,7 +30,7 @@ const editImages = () => {
 		img.addEventListener("click", () => {
 			selectedImg = img.src;
 			img.style.background = "lightyellow";
-			if (previousSelectedImage != null)
+			if (previousSelectedImage != null && previousSelectedImage.src != selectedImg)
 				previousSelectedImage.style.background = "rgb(235, 172, 132)";
 			previousSelectedImage = img;
 		});
@@ -46,8 +51,6 @@ const drawBackground = () => {
 
 const drawSelectedImage = () => {
 	const rect = canvas.getBoundingClientRect();
-	const height = 100;
-	const width = 100;
 	const x = event.clientX - rect.left;
 	const y = event.clientY - rect.top;
 
@@ -55,8 +58,16 @@ const drawSelectedImage = () => {
 
 	const img = new Image();
 	img.src = selectedImg;
-	img.onload = () =>
-		ctx.drawImage(img, x - height / 2, y - width / 2, height, width);
+	img.onload = () => {
+		ctx.save();
+		ctx.translate(x, y);
+		ctx.rotate((rotation * Math.PI) / 180);
+
+		// Draw the image, adjusting the position to account for the translation
+		ctx.drawImage(img, -widthSelectedImg / 2, -heightSelectedImg / 2, widthSelectedImg, heightSelectedImg);
+
+		ctx.restore(); // Restore the canvas state
+	};
 	enableSaveButton();
 };
 
@@ -187,13 +198,32 @@ const resetPicture = () => {
 	if (previousSelectedImage != null)
 		previousSelectedImage.style.background = "rgb(235, 172, 132)";
 	previousSelectedImage = null;
+	streaming = false;
 	resetPhoto();
 };
+
+/* Helper functions */
+
+const debounce = (func, delay) => {
+	let timeout;
+	return function (...args) {
+		const context = this;
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(context, args), delay);
+	};
+}
+
+const debouncedDraw = debounce(() => {
+	drawEntireScene();
+}, 100);
+
 
 /* Listeners and initial function */
 startButton.addEventListener(
 	"click",
 	(ev) => {
+		if (!streaming)
+			return;
 		takePicture();
 		ev.preventDefault();
 	},
@@ -208,6 +238,27 @@ retakeButton.addEventListener(
 	},
 	false
 );
+
+sizeSlider.addEventListener(
+	"input",
+	(ev) => {
+		heightSelectedImg = this.value;
+		widthSelectedImg = this.value;
+		console.log(this.value);
+		debouncedDraw();
+		ev.preventDefault();
+	}
+)
+
+rotationSlider.addEventListener(
+	"input",
+	(ev) => {
+		rotation = ev.target.value
+		console.log(ev.target.value);
+		debouncedDraw();
+		ev.preventDefault();
+	}
+)
 
 canvas.addEventListener("click", drawEntireScene);
 
