@@ -6,6 +6,7 @@ const saveButton = document.querySelector("#saveButton");
 const defaultImages = document.querySelectorAll(".defaultImgs");
 const sizeSlider = document.querySelector("#size");
 const rotationSlider = document.querySelector("#rotation");
+const sliderContainer = document.querySelectorAll(".sliderContainer");
 const ctx = canvas.getContext("2d");
 
 let width = 1000;
@@ -22,16 +23,16 @@ let videoStream = null; // Store the video stream
 /* Editing images logic */
 const enableSaveButton = () => {
 	saveButton.disabled = false;
-	saveButton.style.background = "lightgreen";
+	saveButton.style.cursor = "pointer";
 };
 
 const editImages = () => {
 	defaultImages.forEach((img) => {
 		img.addEventListener("click", () => {
 			selectedImg = img.src;
-			img.style.background = "lightyellow";
+			img.style.background = "#b57410";
 			if (previousSelectedImage != null && previousSelectedImage.src != selectedImg)
-				previousSelectedImage.style.background = "rgb(235, 172, 132)";
+				previousSelectedImage.style.background = "#1051B5";
 			previousSelectedImage = img;
 		});
 	});
@@ -176,10 +177,12 @@ const takePicture = () => {
 	video.style.display = "none";
 	canvas.style.display = "block";
 	document.querySelector(".imgContainer").style.display = "flex";
+	document.querySelector(".postInfo").style.display = "flex";
 	startButton.style.display = "none";
 	retakeButton.style.display = "block";
-	saveButton.style.display = "block";
-
+	sliderContainer.forEach((slider) => {
+		slider.style.display = "flex";
+	});
 	flashEffect();
 	editImages();
 };
@@ -190,13 +193,17 @@ const resetPicture = () => {
 	video.style.display = "block";
 	canvas.style.display = "none";
 	document.querySelector(".imgContainer").style.display = "none";
+	document.querySelector(".postInfo").style.display = "none";
 	startButton.style.display = "block";
 	retakeButton.style.display = "none";
-	saveButton.style.display = "none";
 	saveButton.disabled = true;
+	saveButton.style.cursor = "not-allowed";
+	sliderContainer.forEach((slider) => {
+		slider.style.display = "none";
+	});
 	selectedImg = null;
 	if (previousSelectedImage != null)
-		previousSelectedImage.style.background = "rgb(235, 172, 132)";
+		previousSelectedImage.style.background = "#1051B5";
 	previousSelectedImage = null;
 	streaming = false;
 	resetPhoto();
@@ -204,7 +211,7 @@ const resetPicture = () => {
 
 /* Helper functions */
 
-const debounce = (func, delay) => {
+/* const debounce = (func, delay) => {
 	let timeout;
 	return function (...args) {
 		const context = this;
@@ -215,7 +222,7 @@ const debounce = (func, delay) => {
 
 const debouncedDraw = debounce(() => {
 	drawEntireScene();
-}, 100);
+}, 100); */
 
 
 /* Listeners and initial function */
@@ -245,7 +252,7 @@ sizeSlider.addEventListener(
 		heightSelectedImg = this.value;
 		widthSelectedImg = this.value;
 		console.log(this.value);
-		debouncedDraw();
+		drawEntireScene();
 		ev.preventDefault();
 	}
 )
