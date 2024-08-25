@@ -7,73 +7,107 @@ const defaultImages = document.querySelectorAll(".defaultImgs");
 const sizeSlider = document.querySelector("#size");
 const rotationSlider = document.querySelector("#rotation");
 const sliderContainer = document.querySelectorAll(".sliderContainer");
+const postMsg = document.querySelector("#postMsg");
 const ctx = canvas.getContext("2d");
 
-let width = 1000;
-let height = 0;
-let heightSelectedImg = 100;
-let widthSelectedImg = 100;
-let rotation = 0;
+let imgWidth = 1000;
+let imgHeight = 0; // Will be computed based on the aspect ratio of the video
+let postMsgValue = "";
 let streaming = false;
-let userImage = null;
-let selectedImg = null;
-let previousSelectedImage = null;
 let videoStream = null;
+
+class BackgroundImage {
+	constructor(width, height) {
+		this.position = { x: 0, y: 0 };
+		this.size = { width: width, height: height };
+		this.src = null;
+	}
+}
+let backgroundImage;
+
+class SelectedImg {
+	constructor() {
+		this.position = { x: 0, y: 0 };
+		this.size = { width: 100, height: 100 };
+		this.rotation = 1;
+		this.src = null;
+		this.previousSelectedImage = null;
+	}
+}
+let selectedImg;
 
 /* Editing images logic */
 const enableSaveButton = () => {
-	saveButton.disabled = false;
-	saveButton.style.cursor = "pointer";
+	if ((postMsgValue.trim()).length > 0 && selectedImg.src != null) {
+		saveButton.disabled = false;
+		saveButton.style.cursor = "pointer";
+	} else {
+		saveButton.disabled = true;
+		saveButton.style.cursor = "not-allowed";
+	}
 };
 
 const editImages = () => {
 	defaultImages.forEach((img) => {
 		img.addEventListener("click", () => {
-			selectedImg = img.src;
+			selectedImg.src = img.src;
 			img.style.background = "#b57410";
 			if (
-				previousSelectedImage != null &&
-				previousSelectedImage.src != selectedImg
+				selectedImg.previousSelectedImage != null &&
+				selectedImg.previousSelectedImage.src != selectedImg.src
 			)
-				previousSelectedImage.style.background = "#1051B5";
-			previousSelectedImage = img;
+				selectedImg.previousSelectedImage.style.background = "#1051B5";
+			selectedImg.previousSelectedImage = img;
 		});
 	});
 };
 
 /* Drawing on the canvas */
 const drawBackground = () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(
+		0,
+		0,
+		backgroundImage.size.width,
+		backgroundImage.size.height
+	);
 
-	if (userImage !== null) {
-		ctx.drawImage(userImage, 0, 0, canvas.width, canvas.height);
+	if (backgroundImage.src !== null) {
+		ctx.drawImage(
+			backgroundImage.src,
+			0,
+			0,
+			backgroundImage.size.width,
+			backgroundImage.size.height
+		);
 	} else {
-		ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+		ctx.drawImage(
+			video,
+			0,
+			0,
+			backgroundImage.size.width,
+			backgroundImage.size.height
+		);
 	}
 	ctx.stroke();
 };
 
 const drawSelectedImage = () => {
-	const rect = canvas.getBoundingClientRect();
-	const x = event.clientX - rect.left;
-	const y = event.clientY - rect.top;
-
-	if (selectedImg === null) return;
+	if (selectedImg.src === null) return;
 
 	const img = new Image();
-	img.src = selectedImg;
+	img.src = selectedImg.src;
 	img.onload = () => {
 		ctx.save();
-		ctx.translate(x, y);
-		ctx.rotate((rotation * Math.PI) / 180); // Rotate the image
+		ctx.translate(selectedImg.position.x, selectedImg.position.y);
+		ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
 
 		// Draw the image, adjusting the position to account for the translation
 		ctx.drawImage(
 			img,
-			-(widthSelectedImg / 2),
-			-(heightSelectedImg / 2),
-			widthSelectedImg,
-			heightSelectedImg
+			-(selectedImg.size.width / 2),
+			-(selectedImg.size.height / 2),
+			selectedImg.size.width,
+			selectedImg.size.height
 		);
 
 		ctx.restore(); // Restore the canvas state
@@ -88,6 +122,7 @@ const drawEntireScene = () => {
 
 /* Camera and taking picture logic */
 const initialSetup = () => {
+	// Get the camera stream
 	navigator.mediaDevices
 		.getUserMedia({ video: true, audio: false })
 		.then((stream) => {
@@ -99,32 +134,30 @@ const initialSetup = () => {
 			console.error(`An error occurred: ${err}`);
 		});
 
+	// Set the video dimensions
 	video.addEventListener(
 		"canplay",
 		(ev) => {
 			if (!streaming) {
-				height = video.videoHeight / (video.videoWidth / width);
-
-				if (isNaN(height)) {
-					height = width / (4 / 3);
+				imgHeight = video.videoHeight / (video.videoWidth / imgWidth);
+				if (isNaN(imgHeight)) {
+					imgHeight = imgWidth / (4 / 3);
 				}
+				backgroundImage = new BackgroundImage(imgWidth, imgHeight);
 
-				video.setAttribute("width", width);
-				video.setAttribute("height", height);
-				canvas.setAttribute("width", width);
-				canvas.setAttribute("height", height);
+				video.setAttribute("width", imgWidth);
+				video.setAttribute("height", imgHeight);
+				canvas.setAttribute("width", imgWidth);
+				canvas.setAttribute("height", imgHeight);
 				streaming = true;
 			}
 		},
 		false
 	);
 
-	resetPhoto();
-};
+	selectedImg = new SelectedImg();
 
-const resetPhoto = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	userImage = null;
 };
 
 const flashEffect = () => {
@@ -172,10 +205,10 @@ const getFrame = () => {
 };
 
 const takePicture = () => {
-	canvas.width = width;
-	canvas.height = height;
+	canvas.width = imgWidth;
+	canvas.height = imgHeight;
 
-	userImage = getFrame();
+	backgroundImage.src = getFrame();
 	drawBackground();
 
 	// Stop the camera stream
@@ -197,6 +230,8 @@ const takePicture = () => {
 };
 
 const resetPicture = () => {
+	if (selectedImg.previousSelectedImage != null)
+		selectedImg.previousSelectedImage.style.background = "#1051B5";
 	initialSetup(); // Reinitialize the camera when resetting the picture
 
 	video.style.display = "block";
@@ -210,28 +245,24 @@ const resetPicture = () => {
 	sliderContainer.forEach((slider) => {
 		slider.style.display = "none";
 	});
-	selectedImg = null;
-	if (previousSelectedImage != null)
-		previousSelectedImage.style.background = "#1051B5";
-	previousSelectedImage = null;
+	backgroundImage = new BackgroundImage(imgWidth, imgHeight);
 	streaming = false;
-	resetPhoto();
 };
 
 /* Helper functions */
 
-/* const debounce = (func, delay) => {
+const debounce = (func, delay) => {
 	let timeout;
 	return function (...args) {
 		const context = this;
 		clearTimeout(timeout);
 		timeout = setTimeout(() => func.apply(context, args), delay);
 	};
-}
+};
 
 const debouncedDraw = debounce(() => {
 	drawEntireScene();
-}, 100); */
+}, 100);
 
 /* Listeners and initial function */
 startButton.addEventListener(
@@ -254,20 +285,29 @@ retakeButton.addEventListener(
 );
 
 sizeSlider.addEventListener("input", (ev) => {
-	heightSelectedImg = ev.target.value;
-	widthSelectedImg = ev.target.value;
-	console.log(ev.target.value);
-	drawEntireScene();
+	selectedImg.size.width = ev.target.value;
+	selectedImg.size.height = ev.target.value;
+	debouncedDraw();
 	ev.preventDefault();
 });
 
 rotationSlider.addEventListener("input", (ev) => {
-	rotation = ev.target.value;
-	console.log(ev.target.value);
-	drawEntireScene();
+	selectedImg.rotation = ev.target.value;
+	debouncedDraw();
 	ev.preventDefault();
 });
 
-canvas.addEventListener("click", drawEntireScene);
+canvas.addEventListener("click", () => {
+	const rect = canvas.getBoundingClientRect();
+	selectedImg.position.x = event.clientX - rect.left;
+	selectedImg.position.y = event.clientY - rect.top;
+	drawEntireScene();
+});
+
+postMsg.addEventListener("input", (ev) => {
+	postMsgValue = ev.target.value;
+	enableSaveButton();
+	ev.preventDefault();
+});
 
 initialSetup();

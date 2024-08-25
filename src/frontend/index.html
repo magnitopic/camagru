@@ -37,6 +37,7 @@
                 <button id="startButton" class="bg-green-700 border-none rounded-lg p-3 text-lg cursor-pointer text-font">Take picture</button>
                 <button id="retakeButton" class="hidden bg-red-700 border-none rounded-lg p-3 text-font text-lg cursor-pointer">Retake picture</button>
                 <div class="imgContainer flex gap-2 flex-col items-center hidden">
+                    <p class="text-font font-semibold">Select an overlay image</p>
                     <img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer" src="img/rocket.png" alt="rocket">
                     <img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/flower.png" alt="">
                     <img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/42.png" alt="">
@@ -44,7 +45,7 @@
                     <img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="" alt="">
                 </div>
                 <div class="sliderContainer flex flex-col hidden">
-                    <label for="size" class="text-font">Change image size</label>
+                    <label for="size" class="text-font">Change image size </label>
                     <input type="range" min="30" max="1000" value="100" class="slider" id="size" name="rotation">
                 </div>
                 <div class="sliderContainer flex flex-col hidden">
@@ -54,7 +55,7 @@
             </div>
         </div>
         <div class="postInfo flex items-center justify-end gap-2 mt-4 rounded hidden">
-            <input type="text" class="px-2 py-2 text-font rounded bg-background-light border-2 border-borders" placeholder="Post message..." maxlength="20">
+            <input id="postMsg" type="text" class="px-2 py-2 text-font rounded bg-background-light border-2 border-borders" placeholder="Post message..." maxlength="20">
             <button id="saveButton" class="bg-primary border-none rounded-lg p-3 text-font text-lg cursor-not-allowed" disabled>Publish picture</button>
         </div>
     </main>
