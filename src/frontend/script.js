@@ -18,7 +18,7 @@ let streaming = false;
 let userImage = null;
 let selectedImg = null;
 let previousSelectedImage = null;
-let videoStream = null; // Store the video stream
+let videoStream = null;
 
 /* Editing images logic */
 const enableSaveButton = () => {
@@ -31,7 +31,10 @@ const editImages = () => {
 		img.addEventListener("click", () => {
 			selectedImg = img.src;
 			img.style.background = "#b57410";
-			if (previousSelectedImage != null && previousSelectedImage.src != selectedImg)
+			if (
+				previousSelectedImage != null &&
+				previousSelectedImage.src != selectedImg
+			)
 				previousSelectedImage.style.background = "#1051B5";
 			previousSelectedImage = img;
 		});
@@ -62,10 +65,16 @@ const drawSelectedImage = () => {
 	img.onload = () => {
 		ctx.save();
 		ctx.translate(x, y);
-		ctx.rotate((rotation * Math.PI) / 180);
+		ctx.rotate((rotation * Math.PI) / 180); // Rotate the image
 
 		// Draw the image, adjusting the position to account for the translation
-		ctx.drawImage(img, -widthSelectedImg / 2, -heightSelectedImg / 2, widthSelectedImg, heightSelectedImg);
+		ctx.drawImage(
+			img,
+			-(widthSelectedImg / 2),
+			-(heightSelectedImg / 2),
+			widthSelectedImg,
+			heightSelectedImg
+		);
 
 		ctx.restore(); // Restore the canvas state
 	};
@@ -224,13 +233,11 @@ const debouncedDraw = debounce(() => {
 	drawEntireScene();
 }, 100); */
 
-
 /* Listeners and initial function */
 startButton.addEventListener(
 	"click",
 	(ev) => {
-		if (!streaming)
-			return;
+		if (!streaming) return;
 		takePicture();
 		ev.preventDefault();
 	},
@@ -246,26 +253,20 @@ retakeButton.addEventListener(
 	false
 );
 
-sizeSlider.addEventListener(
-	"input",
-	(ev) => {
-		heightSelectedImg = this.value;
-		widthSelectedImg = this.value;
-		console.log(this.value);
-		drawEntireScene();
-		ev.preventDefault();
-	}
-)
+sizeSlider.addEventListener("input", (ev) => {
+	heightSelectedImg = ev.target.value;
+	widthSelectedImg = ev.target.value;
+	console.log(ev.target.value);
+	drawEntireScene();
+	ev.preventDefault();
+});
 
-rotationSlider.addEventListener(
-	"input",
-	(ev) => {
-		rotation = ev.target.value
-		console.log(ev.target.value);
-		debouncedDraw();
-		ev.preventDefault();
-	}
-)
+rotationSlider.addEventListener("input", (ev) => {
+	rotation = ev.target.value;
+	console.log(ev.target.value);
+	drawEntireScene();
+	ev.preventDefault();
+});
 
 canvas.addEventListener("click", drawEntireScene);
 
