@@ -6,9 +6,15 @@
 		<title>Camagru | Start</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 		<script>
 			tailwind.config = {
 				theme: {
+					fontFamily: {
+						'montserrat': ['Montserrat', 'sans-serif']
+					},
 					extend: {
 						colors: {
 							"background": "#010307",
@@ -31,20 +37,20 @@
 			</a>
 			<div>
 				<nav class="flex gap-4">
-					<a href="login.html" class="text-font cursor-pointer hover:text-white underline">Login</a>
-					<a href="register.html" class="text-font cursor-pointer hover:text-white underline">Register</a>
+					<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold">Login</a>
+					<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold">Register</a>
 				</nav>
 			</div>
 		</header>
 
-		<main class="bg-background-light text-font ">
+		<main class="container bg-background-light text-font mx-auto my-8 max-w-screen-xl">
 			<section>Main Banner</section>
 			<section>Take pictures</section>
 			<section>Share them in the gallery</section>
 			<section class="flex ">
 
 				<div>
-					<h2>
+					<h2 class="font-monserrat">
 						Join the community and start taking pictures!
 					</h2>
 				</div>
