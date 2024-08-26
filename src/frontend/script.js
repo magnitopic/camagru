@@ -8,10 +8,13 @@ const sizeSlider = document.querySelector("#size");
 const rotationSlider = document.querySelector("#rotation");
 const sliderContainer = document.querySelectorAll(".sliderContainer");
 const postMsg = document.querySelector("#postMsg");
+const imgFileInput = document.querySelector("#imgFileInput");
+const imgFile = document.querySelector("#imgFile");
 const ctx = canvas.getContext("2d");
 
 let imgWidth = 1000;
 let imgHeight = 0; // Will be computed based on the aspect ratio of the video
+let reader;
 let postMsgValue = "";
 let streaming = false;
 let videoStream = null;
@@ -156,6 +159,7 @@ const initialSetup = () => {
 	);
 
 	selectedImg = new SelectedImg();
+	reader = new FileReader();
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
@@ -204,11 +208,24 @@ const getFrame = () => {
 	return image;
 };
 
-const takePicture = () => {
+const takePicture = (file = false) => {
 	canvas.width = imgWidth;
 	canvas.height = imgHeight;
+	const validImageTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
-	backgroundImage.src = getFrame();
+	if (file != false)
+	{
+		if (!validImageTypes.includes(file.type)) {
+			return;
+		}
+		reader.readAsDataURL(file);
+		reader.onload = function (e) {
+			backgroundImage.src = new Image();
+			backgroundImage.src.src = e.target.result;
+		}
+	}
+	else
+		backgroundImage.src = getFrame();
 	drawBackground();
 
 	// Stop the camera stream
@@ -222,6 +239,7 @@ const takePicture = () => {
 	document.querySelector(".postInfo").style.display = "flex";
 	startButton.style.display = "none";
 	retakeButton.style.display = "block";
+	imgFile.style.display = "none";
 	sliderContainer.forEach((slider) => {
 		slider.style.display = "flex";
 	});
@@ -240,6 +258,8 @@ const resetPicture = () => {
 	document.querySelector(".postInfo").style.display = "none";
 	startButton.style.display = "block";
 	retakeButton.style.display = "none";
+	imgFile.style.display = "flex";
+
 	saveButton.disabled = true;
 	saveButton.style.cursor = "not-allowed";
 	sliderContainer.forEach((slider) => {
@@ -308,6 +328,15 @@ postMsg.addEventListener("input", (ev) => {
 	postMsgValue = ev.target.value;
 	enableSaveButton();
 	ev.preventDefault();
+});
+
+imgFile.addEventListener("click", () => {
+	imgFileInput.click();
+});
+
+imgFileInput.addEventListener("change", () => {
+	const fileInput = event.target.files[0];
+	takePicture(fileInput)
 });
 
 initialSetup();

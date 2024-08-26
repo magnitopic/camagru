@@ -35,6 +35,11 @@
 			<div class="sidePanel flex flex-col justify-center p-8 gap-4 max-w-md">
 				<button id="startButton" class="bg-green-700 border-none rounded-lg p-3 text-lg cursor-pointer text-font">Take picture</button>
 				<button id="retakeButton" class="hidden bg-red-700 border-none rounded-lg p-3 text-font text-lg cursor-pointer">Retake picture</button>
+				<input type="file" name="imgFileInput" id="imgFileInput" class="hidden">
+				<button class="flex justify-center items-center py-4 px-2 gap-2 border-none bg-primary rounded-lg cursor-pointer" id="imgFile">
+					<svg class="svg-icon" width="24" viewBox="0 0 24 24" height="24" fill="none"><g stroke-width="2" stroke-linecap="round" stroke="#056dfa" fill-rule="evenodd" clip-rule="evenodd"><path d="m3 7h17c.5523 0 1 .44772 1 1v11c0 .5523-.4477 1-1 1h-16c-.55228 0-1-.4477-1-1z"></path><path d="m3 4.5c0-.27614.22386-.5.5-.5h6.29289c.13261 0 .25981.05268.35351.14645l2.8536 2.85355h-10z"></path></g></svg>
+					<span class="mt-1 text-font tracking-wide leading-5" id="fileNameDisplay">Upload picture</span>
+				</button>
 				<div class="imgContainer flex gap-2 flex-col items-center hidden">
 					<p class="text-font font-semibold">Select an overlay image</p>
 					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer" src="img/rocket.png" alt="rocket">

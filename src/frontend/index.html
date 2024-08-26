@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Camagru | Start</title>
 		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 		<script>
 			tailwind.config = {
 				theme: {
@@ -22,7 +23,7 @@
 			};
 		</script>
 	</head>
-	<body>
+	<body class="dark:bg-background">
 		<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
 			<div class="flex gap-4 items-center">
 				<img src="img/logo.png" alt="logo" class="w-20">
@@ -40,6 +41,16 @@
 			<section>Main Banner</section>
 			<section>Take pictures</section>
 			<section>Share them in the gallery</section>
+			<section class="flex ">
+
+				<div>
+					<h2>
+						Join the community and start taking pictures!
+					</h2>
+				</div>
+				<div><button class="bg-green-700"><a href="camera.html">Start here!</a></button></div>
+
+			</section>
 		</main>
 
 		<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4">
