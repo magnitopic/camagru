@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Camagru | Regiter</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							"background": "#010307",
+							"background-light": "#0A0E12",
+							"primary": "#1051B5",
+							"secondary": "#b57410",
+							"font": "#CAD9E5",
+							"borders": "#7A7164",
+						},
+					},
+				},
+			};
+		</script>
+	</head>
+<body class="dark:bg-background">
+
+	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
+		<a href="/src/frontend/" class="flex gap-4 items-center">
+			<img src="img/logo.png" alt="logo" class="w-20">
+			<h1 class="text-font text-3xl">Camagru</h1>
+		</a>g
+		<div>
+			<nav class="flex gap-4">
+				<a href="login.html" class="text-font cursor-pointer hover:text-white underline">Login</a>
+				<a href="register.html" class="text-font cursor-pointer hover:text-white underline">Register</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<form class="bg-background-light border-2 border-borders border-solid p-3 flex flex-col gap-6 items-center w-fit mx-auto my-8">
+			<h1 class="text-font font-bold text-2xl">Login</h1>
+			<input type="text" name="username" id="" placeholder="Username or Email" class="rounded p-2">
+			<input type="password" name="password" id="pass" placeholder="Password" class="rounded p-2">
+			<button type="submit" class="bg-primary text-white rounded p-2 font-bold">Access account</button>
+		</form>
+	</main>
+
+	<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 border-t-2 border-t-solid border-t-borders">
+		<p class="text-font">Camagru - <a href="https://profile.intra.42.fr/users/alaparic" class="cursor-pointer underline hover:text-white font-semibold">alaparic</a></p>
+		<p class="text-font font-bold">© All rights reserved 2024</p>
+	</footer>
+
+</body>
+</html>

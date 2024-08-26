@@ -5,7 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Camagru | Camera</title>
-	<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 	<script defer src="script.js"></script>
 	<script>
 		tailwind.config = {
@@ -26,10 +27,22 @@
 </head>
 
 <body class="dark:bg-background">
+	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
+		<a href="/src/frontend/" class="flex gap-4 items-center">
+			<img src="img/logo.png" alt="logo" class="w-20">
+			<h1 class="text-font text-3xl">Camagru</h1>
+		</a>
+		<div>
+			<nav class="flex gap-4">
+				<a href="login.html" class="text-font cursor-pointer hover:text-white underline">Login</a>
+				<a href="register.html" class="text-font cursor-pointer hover:text-white underline">Register</a>
+			</nav>
+		</div>
+	</header>
 	<main class="max-w-7xl mx-auto w-max flex justify-center flex-col bg-background-light p-4 rounded border-2 border-solid border-borders my-8">
 		<div class="postImages flex gap-4">
 			<div class="canvasContainer">
-				<video id="video" class="border-solid border-2 dark:border-red-800 rounded-lg">Video not supported in this browser</video>
+				<video id="video" class="border-solid border-2 dark:border-red-800 rounded-lg" disablePictureInPicture="true">Video not supported in this browser</video>
 				<canvas class="hidden border-solid border-2 dark:border-borders rounded-lg"></canvas>
 			</div>
 			<div class="sidePanel flex flex-col justify-center p-8 gap-4 max-w-md">

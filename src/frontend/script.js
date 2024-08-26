@@ -75,13 +75,18 @@ const drawBackground = () => {
 	);
 
 	if (backgroundImage.src !== null) {
-		ctx.drawImage(
+		try {
+			ctx.drawImage(
 			backgroundImage.src,
 			0,
 			0,
 			backgroundImage.size.width,
 			backgroundImage.size.height
-		);
+			);
+		} catch (error) {
+			// ! -> an error occurred when drawing file src to canvas. Probably not a valid image file
+			resetPicture();
+		}
 	} else {
 		ctx.drawImage(
 			video,
@@ -259,6 +264,9 @@ const resetPicture = () => {
 	startButton.style.display = "block";
 	retakeButton.style.display = "none";
 	imgFile.style.display = "flex";
+
+	rotationSlider.value = 1;
+	sizeSlider.value = 100;
 
 	saveButton.disabled = true;
 	saveButton.style.cursor = "not-allowed";
