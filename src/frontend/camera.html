@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Camagru | Camera</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="script.js"></script>
+	<script>
+		tailwind.config = {
+			theme:{
+				extend: {
+					colors: {
+						'background': '#010307',
+						'background-light': '#0A0E12',
+						'primary': '#1051B5',
+						'secondary': '#b57410',
+						"font": "#CAD9E5",
+						"borders": "#7A7164"
+					}
+				}
+			}
+		}
+	</script>
+</head>
+
+<body class="dark:bg-background">
+	<main class="max-w-7xl mx-auto w-max flex justify-center flex-col bg-background-light p-4 rounded border-2 border-solid border-borders my-8">
+		<div class="postImages flex gap-4">
+			<div class="canvasContainer">
+				<video id="video" class="border-solid border-2 dark:border-red-800 rounded-lg">Video not supported in this browser</video>
+				<canvas class="hidden border-solid border-2 dark:border-borders rounded-lg"></canvas>
+			</div>
+			<div class="sidePanel flex flex-col justify-center p-8 gap-4 max-w-md">
+				<button id="startButton" class="bg-green-700 border-none rounded-lg p-3 text-lg cursor-pointer text-font">Take picture</button>
+				<button id="retakeButton" class="hidden bg-red-700 border-none rounded-lg p-3 text-font text-lg cursor-pointer">Retake picture</button>
+				<div class="imgContainer flex gap-2 flex-col items-center hidden">
+					<p class="text-font font-semibold">Select an overlay image</p>
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer" src="img/rocket.png" alt="rocket">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/flower.png" alt="">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/42.png" alt="">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="" alt="">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="" alt="">
+				</div>
+				<div class="sliderContainer flex flex-col hidden">
+					<label for="size" class="text-font">Change image size </label>
+					<input type="range" min="30" max="1000" value="100" class="slider" id="size" name="rotation">
+				</div>
+				<div class="sliderContainer flex flex-col hidden">
+					<label for="rotation" class="text-font">Change image rotation</label>
+					<input type="range" min="0" max="360" value="1" class="slider" id="rotation" name="rotation">
+				</div>
+			</div>
+		</div>
+		<div class="postInfo flex items-center justify-end gap-2 mt-4 rounded hidden">
+			<input id="postMsg" type="text" class="px-2 py-2 text-font rounded bg-background-light border-2 border-borders" placeholder="Post message..." maxlength="20">
+			<button id="saveButton" class="bg-primary border-none rounded-lg p-3 text-font text-lg cursor-not-allowed" disabled>Publish picture</button>
+		</div>
+	</main>
+	<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 border-t-2 border-t-solid border-t-borders">
+		<p class="text-font">Camagru - <a href="https://profile.intra.42.fr/users/alaparic" class="cursor-pointer underline hover:text-white font-semibold">alaparic</a></p>
+		<p class="text-font font-bold">© All rights reserved 2024</p>
+	</footer>
+</body>
+
+</html>
