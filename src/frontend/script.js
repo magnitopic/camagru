@@ -84,7 +84,7 @@ const drawBackground = () => {
 			backgroundImage.size.height
 			);
 		} catch (error) {
-			// ! -> an error occurred when drawing file src to canvas. Probably not a valid image file
+			// an error occurred when drawing file src to canvas. Probably not a valid image file
 			resetPicture();
 		}
 	} else {

@@ -31,38 +31,60 @@
 </head>
 
 <body class="dark:bg-background">
-	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
+	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center flex-wrap">
 		<a href="/src/frontend/" class="flex gap-4 items-center">
 			<img src="img/logo.png" alt="logo" class="w-20">
 			<h1 class="text-font text-3xl">Camagru</h1>
 		</a>
 		<div>
-			<nav class="flex gap-4">
-				<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold">LogIn</a>
-				<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold">Register</a>
+			<nav class="flex gap-10 items-center">
+				<div class="flex gap-4 items-center">
+					<a href="gallery.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Gallery</a>
+					<a href="camera.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Camera</a>
+				</div>
+				<div class="flex gap-2 items-center">
+					<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">LogIn</a>
+					<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Register</a>
+				</div>
 			</nav>
 		</div>
 	</header>
 
 	<main class="container bg-background-light text-font mx-auto my-8 max-w-screen-xl p-8">
-		<section class="mx-auto my-8">Main Banner</section>
-		<section class="mx-auto my-8 flex items-center flex-wrap w-fit">
+		<section class="mx-auto my-20 flex items-center flex-wrap w-fit flex-col gap-4">
+			
+			<h2 class="font-monserrat text-6xl">Welcome to Camagru!!</h2>
+			<h3 class="text-2xl">Your place to share pictures with the world</h3>
+
+		</section>
+		<section class="mx-auto my-8 flex items-center flex-wrap w-fit justify-center">
 			<div>
-				<h2 class="font-monserrat text-3xl underline mb-4">Take pictures</h2>
-				<p>Take pictures with your webcam. Or you can choose to upload your own from your device.</p>
+				<h2 class="font-monserrat text-3xl font-bold mb-4">Take pictures</h2>
+				<p class="max-w-xl">Take pictures with your webcam. Or you can choose to upload your own from your device.</p>
 			</div>
 			<img src="img/logo.png" alt="Taking pictures" class="w-96">
 		</section>
-		<section class="mx-auto my-8">Share them in the gallery</section>
-		<section class="flex flex-col gap-4 w-fit mx-auto items-center justify-center">
-
+		<section class="mx-auto my-8 flex items-center flex-wrap w-fit flex-row-reverse justify-center">
 			<div>
-				<h2 class="font-monserrat text-3xl underline">
+				<h2 class="font-monserrat text-3xl font-bold mb-4">Edit them directly in the page</h2>
+				<p class="max-w-xl">You can use a set of already available images to place on top of your pictures to give more personality to the final product</p>
+				</div>
+			<img src="img/logo.png" alt="Taking pictures" class="w-96">
+		</section>
+		<section class="mx-auto my-8 flex items-center flex-wrap w-fit justify-center">
+			<div>
+				<h2 class="font-monserrat text-3xl font-bold mb-4">Share them in the gallery</h2>
+				<p class="max-w-xl">Share your creations with the community through the gallery. Where you can like and comment other peoples pictures</p>
+			</div>
+			<img src="img/logo.png" alt="Taking pictures" class="w-96">
+		</section>
+		<section class="flex flex-col gap-4 w-fit mx-auto items-center justify-center">
+			<div>
+				<h2 class="font-monserrat text-3xl font-bold">
 					Join the community and start taking pictures!
 				</h2>
 			</div>
-			<div><button class="bg-primary rounded text-2xl p-2"><a href="camera.html">Start here!</a></button></div>
-
+			<div><button class="bg-primary rounded text-2xl p-2 cursor-pointer font-semibold"><a href="camera.html">Start here!</a></button></div>
 		</section>
 	</main>
 

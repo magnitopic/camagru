@@ -16,6 +16,7 @@
 						'background': '#010307',
 						'background-light': '#0A0E12',
 						'primary': '#1051B5',
+						'primary-light': '#1A5DC0',
 						'secondary': '#b57410',
 						"font": "#CAD9E5",
 						"borders": "#7A7164"
@@ -27,15 +28,21 @@
 </head>
 
 <body class="dark:bg-background">
-	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
+	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center flex-wrap">
 		<a href="/src/frontend/" class="flex gap-4 items-center">
 			<img src="img/logo.png" alt="logo" class="w-20">
 			<h1 class="text-font text-3xl">Camagru</h1>
 		</a>
 		<div>
-			<nav class="flex gap-4">
-				<a href="login.html" class="text-font cursor-pointer hover:text-white underline">LogIn</a>
-				<a href="register.html" class="text-font cursor-pointer hover:text-white underline">Register</a>
+			<nav class="flex gap-10 items-center">
+				<div class="flex gap-4 items-center">
+					<a href="gallery.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Gallery</a>
+					<a href="camera.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Camera</a>
+				</div>
+				<div class="flex gap-2 items-center">
+					<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">LogIn</a>
+					<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold text-lg">Register</a>
+				</div>
 			</nav>
 		</div>
 	</header>
@@ -46,18 +53,18 @@
 				<canvas class="hidden border-solid border-2 dark:border-borders rounded-lg"></canvas>
 			</div>
 			<div class="sidePanel flex flex-col justify-center p-8 gap-4 max-w-md">
-				<button id="startButton" class="bg-green-700 border-none rounded-lg p-3 text-lg cursor-pointer text-font">Take picture</button>
-				<button id="retakeButton" class="hidden bg-red-700 border-none rounded-lg p-3 text-font text-lg cursor-pointer">Retake picture</button>
+				<button id="startButton" class="bg-green-700 hover:bg-green-600 border-none rounded-lg p-3 text-lg cursor-pointer text-font">Take picture</button>
+				<button id="retakeButton" class="hidden bg-red-700 hover:bg-red-600 border-none rounded-lg p-3 text-font text-lg cursor-pointer">Retake picture</button>
 				<input type="file" name="imgFileInput" id="imgFileInput" class="hidden">
-				<button class="flex justify-center items-center py-4 px-2 gap-2 border-none bg-primary rounded-lg cursor-pointer" id="imgFile">
+				<button class="flex justify-center items-center py-4 px-2 gap-2 border-none bg-primary hover:bg-primary-light rounded-lg cursor-pointer" id="imgFile">
 					<svg class="svg-icon" width="24" viewBox="0 0 24 24" height="24" fill="none"><g stroke-width="2" stroke-linecap="round" stroke="#056dfa" fill-rule="evenodd" clip-rule="evenodd"><path d="m3 7h17c.5523 0 1 .44772 1 1v11c0 .5523-.4477 1-1 1h-16c-.55228 0-1-.4477-1-1z"></path><path d="m3 4.5c0-.27614.22386-.5.5-.5h6.29289c.13261 0 .25981.05268.35351.14645l2.8536 2.85355h-10z"></path></g></svg>
 					<span class="mt-1 text-font tracking-wide leading-5" id="fileNameDisplay">Upload picture</span>
 				</button>
 				<div class="imgContainer flex gap-2 flex-col items-center hidden">
 					<p class="text-font font-semibold">Select an overlay image</p>
-					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer" src="img/rocket.png" alt="rocket">
-					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/flower.png" alt="">
-					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/42.png" alt="">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer" src="img/rocket.png" alt="rocket" title="Rocket">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/flower.png" alt="flower" title="Flower">
+					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="img/42.png" alt="42logo" title="42logo">
 					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="" alt="">
 					<img class="defaultImgs  w-20 border-solid border-2 border-font rounded p-2 bg-primary cursor-pointer " src="" alt="">
 				</div>
@@ -70,10 +77,10 @@
 					<input type="range" min="0" max="360" value="1" class="slider" id="rotation" name="rotation">
 				</div>
 			</div>
-		</div>
+		</div> 
 		<div class="postInfo flex items-center justify-end gap-2 mt-4 rounded hidden">
 			<input id="postMsg" type="text" class="px-2 py-2 text-font rounded bg-background-light border-2 border-borders" placeholder="Post message..." maxlength="20">
-			<button id="saveButton" class="bg-primary border-none rounded-lg p-3 text-font text-lg cursor-not-allowed" disabled>Publish picture</button>
+			<button id="saveButton" class="disabled:cursor-not-allowed disabled:hover:bg-gray-400 disabled:bg-gray-500 disabled:text-gray-800 bg-primary hover:bg-primary-light border-none rounded-lg p-3 text-font text-lg cursor-pointer" disabled>Publish picture</button>
 		</div>
 	</main>
 	<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 border-t-2 border-t-solid border-t-borders">
