@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Camagru | Regiter</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
-		<script>
-			tailwind.config = {
-				theme: {
-					extend: {
-						colors: {
-							"background": "#010307",
-							"background-light": "#0A0E12",
-							"primary": "#1051B5",
-							"secondary": "#b57410",
-							"font": "#CAD9E5",
-							"borders": "#7A7164",
-						},
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Camagru | Register</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						"background": "#010307",
+						"background-light": "#0A0E12",
+						"primary": "#1051B5",
+						"secondary": "#b57410",
+						"font": "#CAD9E5",
+						"borders": "#7A7164",
 					},
 				},
-			};
-		</script>
-	</head>
+			},
+		};
+	</script>
+</head>
+
 <body class="dark:bg-background">
 
 	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
@@ -32,14 +33,14 @@
 		</a>g
 		<div>
 			<nav class="flex gap-4">
-				<a href="login.html" class="text-font cursor-pointer hover:text-white underline">Login</a>
+				<a href="login.html" class="text-font cursor-pointer hover:text-white underline">LogIn</a>
 				<a href="register.html" class="text-font cursor-pointer hover:text-white underline">Register</a>
 			</nav>
 		</div>
 	</header>
 
 	<main>
-		<form class="bg-background-light border-2 border-borders border-solid p-3 flex flex-col gap-6 items-center w-fit mx-auto my-8">
+		<form class="bg-background-light border-2 border-borders border-solid p-3 flex flex-col gap-6 items-center w-fit mx-auto my-8 rounded">
 			<h1 class="text-font font-bold text-2xl">Register</h1>
 			<input type="text" name="" id="" placeholder="Username" class="rounded p-2">
 			<input type="email" name="" id="" placeholder="Email" class="rounded p-2">
@@ -55,4 +56,5 @@
 	</footer>
 
 </body>
+
 </html>

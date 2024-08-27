@@ -13,6 +13,6 @@ services:
         restart: always
 
 networks:
-    camagru_net:`
+    camagru_net:
         name: camagru_net
         driver: bridge

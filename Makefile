@@ -6,7 +6,7 @@
 #    By: alaparic <alaparic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/15 15:57:48 by alaparic          #+#    #+#              #
-#    Updated: 2024/08/19 16:10:15 by alaparic         ###   ########.fr        #
+#    Updated: 2024/08/27 12:52:50 by alaparic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,30 +28,30 @@ RESET			=	\033[0m
 all:		$(NAME)
 
 $(NAME):	
-			@printf "\n$(BLUE)==> $(CYAN)Building Transcendence 🏗️\n\n$(RESET)"
+			@printf "\n$(BLUE)==> $(CYAN)Building Camagru 🏗️\n\n$(RESET)"
 			@echo "Using compose files: $(DOCKER_COMPOSE_FILE)"
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --remove-orphans
-			@printf "\n$(BLUE)==> $(CYAN)Transcendence is running ✅\n$(RESET)"
+			@printf "\n$(BLUE)==> $(CYAN)Camagru is running ✅\n$(RESET)"
 			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)https://localhost:8080\n$(RESET)"
 
 stop:
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) stop
-			@printf "\n$(BLUE)==> $(RED)Transcendence stopped 🛑\n$(RESET)"
+			@printf "\n$(BLUE)==> $(RED)Camagru stopped 🛑\n$(RESET)"
 
 clean:		stop
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) down
-			@printf "\n$(BLUE)==> $(RED)Removed Transcendence 🗑️\n$(RESET)"
+			@printf "\n$(BLUE)==> $(RED)Removed Camagru 🗑️\n$(RESET)"
 
 fclean:		
 			@docker rmi -f $(shell docker images -q)
 			@docker rm -f $(shell docker ps -aq)
 			@docker network rm $(shell docker network ls -q)
-			@printf "\n$(BLUE)==> $(RED)Fully cleaned Transcendence 🗑️\n$(RESET)"
+			@printf "\n$(BLUE)==> $(RED)Fully cleaned Camagru 🗑️\n$(RESET)"
 
 re:			clean
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --build
-			@printf "$(BLUE)==> $(CYAN)Transcendence rebuilt 🔄\n$(RESET)"
-			@printf "\n$(BLUE)==> $(CYAN)Transcendence is running ✅\n$(RESET)"
+			@printf "$(BLUE)==> $(CYAN)Camagru rebuilt 🔄\n$(RESET)"
+			@printf "\n$(BLUE)==> $(CYAN)Camagru is running ✅\n$(RESET)"
 			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)https://localhost:8080\n$(RESET)"
 
 .PHONY:		all stop clean fclean re re-postgres re-django re-nginx

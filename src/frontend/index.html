@@ -1,67 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Camagru | Start</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
-		<script>
-			tailwind.config = {
-				theme: {
-					fontFamily: {
-						'montserrat': ['Montserrat', 'sans-serif']
-					},
-					extend: {
-						colors: {
-							"background": "#010307",
-							"background-light": "#0A0E12",
-							"primary": "#1051B5",
-							"secondary": "#b57410",
-							"font": "#CAD9E5",
-							"borders": "#7A7164",
-						},
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Camagru | Start</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+	<script>
+		tailwind.config = {
+			theme: {
+				fontFamily: {
+					'montserrat': ['Montserrat', 'sans-serif']
+				},
+				extend: {
+					colors: {
+						"background": "#010307",
+						"background-light": "#0A0E12",
+						"primary": "#1051B5",
+						"secondary": "#b57410",
+						"font": "#CAD9E5",
+						"borders": "#7A7164",
 					},
 				},
-			};
-		</script>
-	</head>
-	<body class="dark:bg-background">
-		<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
-			<a href="/src/frontend/" class="flex gap-4 items-center">
-				<img src="img/logo.png" alt="logo" class="w-20">
-				<h1 class="text-font text-3xl">Camagru</h1>
-			</a>
+			},
+		};
+	</script>
+</head>
+
+<body class="dark:bg-background">
+	<header class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 items-center">
+		<a href="/src/frontend/" class="flex gap-4 items-center">
+			<img src="img/logo.png" alt="logo" class="w-20">
+			<h1 class="text-font text-3xl">Camagru</h1>
+		</a>
+		<div>
+			<nav class="flex gap-4">
+				<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold">LogIn</a>
+				<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold">Register</a>
+			</nav>
+		</div>
+	</header>
+
+	<main class="container bg-background-light text-font mx-auto my-8 max-w-screen-xl p-8">
+		<section class="mx-auto my-8">Main Banner</section>
+		<section class="mx-auto my-8 flex items-center flex-wrap w-fit">
 			<div>
-				<nav class="flex gap-4">
-					<a href="login.html" class="text-font cursor-pointer hover:text-white underline font-bold">Login</a>
-					<a href="register.html" class="text-font cursor-pointer hover:text-white underline font-bold">Register</a>
-				</nav>
+				<h2 class="font-monserrat text-3xl underline mb-4">Take pictures</h2>
+				<p>Take pictures with your webcam. Or you can choose to upload your own from your device.</p>
 			</div>
-		</header>
+			<img src="img/logo.png" alt="Taking pictures" class="w-96">
+		</section>
+		<section class="mx-auto my-8">Share them in the gallery</section>
+		<section class="flex flex-col gap-4 w-fit mx-auto items-center justify-center">
 
-		<main class="container bg-background-light text-font mx-auto my-8 max-w-screen-xl">
-			<section>Main Banner</section>
-			<section>Take pictures</section>
-			<section>Share them in the gallery</section>
-			<section class="flex ">
+			<div>
+				<h2 class="font-monserrat text-3xl underline">
+					Join the community and start taking pictures!
+				</h2>
+			</div>
+			<div><button class="bg-primary rounded text-2xl p-2"><a href="camera.html">Start here!</a></button></div>
 
-				<div>
-					<h2 class="font-monserrat">
-						Join the community and start taking pictures!
-					</h2>
-				</div>
-				<div><button class="bg-green-700"><a href="camera.html">Start here!</a></button></div>
+		</section>
+	</main>
 
-			</section>
-		</main>
+	<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 border-t-2 border-t-solid border-t-borders">
+		<p class="text-font">Camagru - <a href="https://profile.intra.42.fr/users/alaparic" class="cursor-pointer underline hover:text-white font-semibold">alaparic</a></p>
+		<p class="text-font font-bold">© All rights reserved 2024</p>
+	</footer>
+</body>
 
-		<footer class="bg-background flex flex-row justify-around py-6 flex-wrap gap-4 border-t-2 border-t-solid border-t-borders">
-			<p class="text-font">Camagru - <a href="https://profile.intra.42.fr/users/alaparic" class="cursor-pointer underline hover:text-white font-semibold">alaparic</a></p>
-			<p class="text-font font-bold">© All rights reserved 2024</p>
-		</footer>
-	</body>
 </html>
