@@ -1,0 +1,15 @@
+@import "../../node_modules/modern-normalize/modern-normalize.css";
+
+/* Colour variables */
+:root {
+	--background: #010307;
+	--background-light: #0a0e12;
+	--primary: #1051b5;
+	--secondary: #b57410;
+	--font: #cad9e5;
+	--borders: #7a7164;
+}
+
+body {
+	background: var(--background);
+}
