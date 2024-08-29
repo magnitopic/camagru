@@ -1,0 +1,22 @@
+{
+  "name": "camagru",
+  "version": "1.0.0",
+  "description": "This web project is challenging you to create a small web application allowing you to make basic photo and video editing using your webcam and some predefined images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnitopic/camagru.git"
+  },
+  "author": "magnitopic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magnitopic/camagru/issues"
+  },
+  "homepage": "https://github.com/magnitopic/camagru#readme",
+  "dependencies": {
+    "modern-normalize": "^3.0.0"
+  }
+}
