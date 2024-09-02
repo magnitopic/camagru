@@ -11,7 +11,7 @@
 </head>
 
 <body>
-	<?php include 'header.html'; ?>
+	<?php include 'header.php'; ?>
 
 	<main>
 		<section class="title_section">

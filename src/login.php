@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require __DIR__ . "php/parseData.php";
+require_once "php/parseData.php";
 
 if (isset($_SESSION['user'])) {
 	header("Location: /camera.php");

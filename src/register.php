@@ -1,28 +1,28 @@
 <?php
 session_start();
 
-require __DIR__ . "php/parseData.php";
+require_once 'php/controllers/UserController.php';
+require_once "php/parseData.php";
 
-if (isset($_SESSION['user'])) {
+/* if (isset($_SESSION['user'])) {
 	header("Location: /camera.php");
 	die();
-}
+} */
 
-if (isset($_POST['login'])) {
-	$user = parserData($_POST['user']);
-	$pass = parserData($_POST['pass']);
-	$repeatPass = parserData($_POST['repeatPass']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$user = parseData($_POST['user']);
+	$pass = parseData($_POST['pass']);
+	$repeatPass = parseData($_POST['repeatPass']);
 
-	if ($pass != $repeatPass)
+	/* echo '<script type="text/javascript"> window.open("camera.php","_self");</script>'; */
+	/* if ($pass != $repeatPass)
 		echo "Passwords don't match";
-	elseif ($user == "Ank" && $pass == "1234") { // TODO -> check database values
-		$_SESSION['use'] = $user;
-		echo '<script type="text/javascript"> window.open("camera.php","_self");</script>';
-	} else {
-		// TODO -> give proper error
-		echo "invalid UserName or Password";
-	}
+	else { */
+		$userController = new UserController();
+		$userController->register($username, $password);
+	/* } */
 }
+
 ?>
 
 <!DOCTYPE html>
