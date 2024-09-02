@@ -1,3 +1,30 @@
+<?php
+session_start();
+
+require __DIR__ . "php/parseData.php";
+
+if (isset($_SESSION['user'])) {
+	header("Location: /camera.php");
+	die();
+}
+
+if (isset($_POST['login'])) {
+	$user = parserData($_POST['user']);
+	$pass = parserData($_POST['pass']);
+
+	if ($user == "Ank" && $pass == "1234") {
+
+		$_SESSION['use'] = $user;
+
+
+		echo '<script type="text/javascript"> window.open("camera.php","_self");</script>';
+	} else {
+		// TODO -> give proper error
+		echo "invalid UserName or Password";
+	}
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,9 +38,9 @@
 </head>
 
 <body>
-	<?php include 'header.html'; ?>
+	<?php include 'header.php'; ?>
 	<main>
-		<form method="post">
+		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Login</h2>
 			<input
 				required
