@@ -1,7 +1,7 @@
 <?php
 
 class Database {
-	private $host = "db";
+	private $host = "mariadb";
 	private $db_name = "camagru";
 	private $username = "alaparic";
 	private $password = "pass123";

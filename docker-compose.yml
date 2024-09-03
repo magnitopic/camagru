@@ -3,11 +3,11 @@ version: "3.8"
 services:
     web:
         image: nginx:latest
-        container_name: nginx_container
+        container_name: nginx
         ports:
             - "8080:80"
         volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
+            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./src:/var/www/html
         depends_on:
             - php
@@ -15,22 +15,28 @@ services:
             - camagru_net
 
     php:
-        image: php:7.4-fpm
-        container_name: php_container
+        build:
+            context: ./docker/php
+        container_name: php
         volumes:
             - ./src:/var/www/html
         networks:
             - camagru_net
 
-    db:
-        image: mariadb:10.5.8
-        container_name: mysql_container
+    mariadb:
+        container_name: mariadb
+        build:
+            context: ./docker/mariadb
+        image: alaparic-mariadb
         env_file:
             - .env
+        expose:
+            - "3306"
         volumes:
             - db_data:/var/lib/mysql
         networks:
             - camagru_net
+        restart: always
 
 volumes:
     db_data:
