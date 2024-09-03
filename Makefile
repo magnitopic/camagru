@@ -6,13 +6,13 @@
 #    By: alaparic <alaparic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/15 15:57:48 by alaparic          #+#    #+#              #
-#    Updated: 2024/08/27 12:52:50 by alaparic         ###   ########.fr        #
+#    Updated: 2024/09/03 16:36:37 by alaparic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Camagru
 NAME				=	camagru
-DOCKER_COMPOSE_FILE	= ./docker-compose.yml
+DOCKER_COMPOSE_FILE	= ./Docker/docker-compose.yml
 
 # Colours
 RED				=	\033[0;31m
@@ -49,7 +49,7 @@ fclean:
 			@printf "\n$(BLUE)==> $(RED)Fully cleaned Camagru 🗑️\n$(RESET)"
 
 re:			clean
-			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --build
+			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --build --remove-orphans
 			@printf "$(BLUE)==> $(CYAN)Camagru rebuilt 🔄\n$(RESET)"
 			@printf "\n$(BLUE)==> $(CYAN)Camagru is running ✅\n$(RESET)"
 			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)https://localhost:8080\n$(RESET)"

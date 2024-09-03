@@ -7,8 +7,8 @@ services:
         ports:
             - "8080:80"
         volumes:
-            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-            - ./src:/var/www/html
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ../src:/var/www/html
         depends_on:
             - php
         networks:
@@ -16,24 +16,24 @@ services:
 
     php:
         build:
-            context: ./docker/php
+            context: ./php
         container_name: php
         volumes:
-            - ./src:/var/www/html
+            - ../src:/var/www/html
         networks:
             - camagru_net
 
     mariadb:
         container_name: mariadb
         build:
-            context: ./docker/mariadb
+            context: ./mariadb
         image: alaparic-mariadb
         env_file:
-            - .env
+            - ../.env
         expose:
             - "3306"
         volumes:
-            - db_data:/var/lib/mysql
+            - ../db_data:/var/lib/mysql
         networks:
             - camagru_net
         restart: always
