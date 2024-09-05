@@ -14,6 +14,7 @@ if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
 	echo "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';" >> "$MYSQL_INIT_FILE"
 	echo "ALTER USER 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" >> "$MYSQL_INIT_FILE"
 	echo "FLUSH PRIVILEGES;" >> "$MYSQL_INIT_FILE"
+	cat camagru.sql >> "$MYSQL_INIT_FILE"
 	echo "Starting database ✅"
 	mysqld_safe --init-file=$MYSQL_INIT_FILE >/dev/null 2>&1
 else

@@ -1,13 +1,23 @@
 <?php
 
-class Database {
-	private $host = "mariadb";
-	private $db_name = "camagru";
-	private $username = "alaparic";
-	private $password = "pass123";
+class Database
+{
+	private $host;
+	private $db_name;
+	private $username;
+	private $password;
 	private $conn;
 
-	public function connect() {
+	public function __construct()
+	{
+		$this->host = $_ENV['MYSQL_HOST'];
+		$this->db_name = $_ENV['MYSQL_DATABASE'];
+		$this->username = $_ENV['MYSQL_USER'];
+		$this->password = $_ENV['MYSQL_PASSWORD'];
+	}
+
+	public function connect()
+	{
 		$this->conn = null;
 
 		try {

@@ -4,6 +4,7 @@ RUN apt update && apt install -y mariadb-server
 
 COPY ./tools/50-server.cnf /etc/mysql/mariadb.conf.d/.
 COPY ./script/start.sh ./start.sh
+COPY ./sql/camagru.sql ./camagru.sql
 
 RUN mkdir /run/mysql
 
