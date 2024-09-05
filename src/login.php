@@ -56,6 +56,20 @@ if (isset($_POST['login'])) {
 				placeholder="Password" />
 			<button type="submit">Access account</button>
 		</form>
+		<div class="resetEmail">
+			<details>
+				<summary>¿Forgot your password?</summary>
+				<form action="" method="post">
+					<input
+						required
+						type="email"
+						name="email"
+						id="email"
+						placeholder="Email address" />
+					<button type="submit">Reset password</button>
+				</form>
+			</details>
+		</div>
 	</main>
 	<?php include 'footer.html'; ?>
 </body>

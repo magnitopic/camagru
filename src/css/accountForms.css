@@ -17,7 +17,6 @@ form h2 {
 	font-weight: 700;
 }
 
-
 form input {
 	width: 100%;
 	padding: 0.5rem;
@@ -35,4 +34,32 @@ form button {
 	color: var(--text);
 	border-radius: 0.25rem;
 	cursor: pointer;
+}
+
+.resetEmail {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 1rem auto;
+	gap: 1.2rem;
+	padding: 1rem;
+	background: var(--background-light);
+	border: 2px solid var(--borders);
+	width: fit-content;
+	border-radius: 0.5rem;
+}
+
+.resetEmail summary {
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.resetEmail form {
+	padding: 0;
+	margin: 0;
+	background: inherit;
+	border: none;
+	width: fit-content;
+	margin-top: 1em;
 }

@@ -13,6 +13,7 @@ services:
             - php
         networks:
             - camagru_net
+        restart: always
 
     php:
         build:
@@ -22,8 +23,11 @@ services:
             - ../.env
         volumes:
             - ../src:/var/www/html
+        depends_on:
+            - mariadb
         networks:
             - camagru_net
+        restart: always
 
     mariadb:
         container_name: mariadb
@@ -36,6 +40,7 @@ services:
             - "3306"
         networks:
             - camagru_net
+        restart: always
 
 networks:
     camagru_net:
