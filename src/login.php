@@ -1,25 +1,24 @@
 <?php
 session_start();
 
-require_once "php/parseData.php";
+require_once 'php/parseData.php';
+require_once 'php/controllers/UserController.php';
+$userController = new UserController();
 
-if (isset($_SESSION['user'])) {
+if (isset($_SESSION['user_id'])) {
 	header("Location: /camera.php");
 	die();
 }
 
-if (isset($_POST['login'])) {
-	$user = parserData($_POST['user']);
-	$pass = parserData($_POST['pass']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$user = parseData($_POST['username']);
+	$pass = parseData($_POST['pass']);
 
-	if ($user == "Ank" && $pass == "1234") {
-
-		$_SESSION['use'] = $user;
-
-
-		echo '<script type="text/javascript"> window.open("camera.php","_self");</script>';
+	if ($userController->login($user, $pass)) {
+		$_SESSION['user_id'] = $userController->getUserByUsername($user)['id'];
+		$_SESSION['user_name'] = $user;
+		header("Location: /camera.php");
 	} else {
-		// TODO -> give proper error
 		echo "invalid UserName or Password";
 	}
 }

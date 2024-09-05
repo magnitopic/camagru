@@ -4,10 +4,10 @@ session_start();
 require_once 'php/controllers/UserController.php';
 require_once "php/parseData.php";
 
-/* if (isset($_SESSION['user'])) {
+if (isset($_SESSION['user'])) {
 	header("Location: /camera.php");
 	die();
-} */
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$username = parseData($_POST['username']);
@@ -15,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$pass = parseData($_POST['pass']);
 	$repeatPass = parseData($_POST['repeatPass']);
 
-	/* if ($pass != $repeatPass)
-	echo "Passwords don't match";
-	else { */
-	$userController = new UserController();
-	$userController->register($username, $email, $pass);
-	/* } */
+	if ($pass != $repeatPass)
+		echo "Passwords don't match";
+	else {
+		$userController = new UserController();
+		$userController->register($username, $email, $pass);
+	}
 }
 
 ?>
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<?php include 'header.php'; ?>
 
 	<main>
-		<form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
+		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Register</h2>
 			<input required type="text" name="username" id="username" placeholder="Username" />
 			<input required type="email" name="email" id="email" placeholder="Email" />

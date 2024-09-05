@@ -10,7 +10,7 @@ session_start();
 	<title>Camagru | Camera</title>
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/camera.css">
-	<script src="js/camera.js" defer></script>
+	<!-- <script src="js/camera.js" defer></script> --> <!-- !-> Remove comment -->
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 </head>
 

@@ -44,3 +44,31 @@ header nav a {
 header nav a:hover {
 	color: var(--primary);
 }
+
+.userName {
+	color: var(--primary);
+	font-size: 1.2rem;
+	font-weight: 400;
+	cursor: pointer;
+}
+
+details {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+details a {
+	color: var(--font);
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: 400;
+}
+
+.logout {
+	color: lightcoral;
+}
+
+.logout:hover {
+	color: red;
+}
