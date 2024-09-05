@@ -10,10 +10,10 @@ class Database
 
 	public function __construct()
 	{
-		$this->host = $_ENV['MYSQL_HOST'];
-		$this->db_name = $_ENV['MYSQL_DATABASE'];
-		$this->username = $_ENV['MYSQL_USER'];
-		$this->password = $_ENV['MYSQL_PASSWORD'];
+		$this->host = $_ENV['MARIADB_HOST'];
+		$this->db_name = $_ENV['MARIADB_DATABASE'];
+		$this->username = $_ENV['MARIADB_USER'];
+		$this->password = $_ENV['MARIADB_PASSWORD'];
 	}
 
 	public function connect()

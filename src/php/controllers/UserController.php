@@ -12,8 +12,8 @@ class UserController {
         $this->user = new User($db);
     }
 
-    public function register($username, $password) {
-        if ($this->user->createUser($username, $password)) {
+    public function register($username, $email, $password) {
+        if ($this->user->createUser($username, $email, $password)) {
             // Successfully created the user
             header("Location: /login.php");
             exit();

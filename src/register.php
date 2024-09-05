@@ -10,16 +10,16 @@ require_once "php/parseData.php";
 } */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$user = parseData($_POST['user']);
+	$username = parseData($_POST['username']);
+	$email = parseData($_POST['email']);
 	$pass = parseData($_POST['pass']);
 	$repeatPass = parseData($_POST['repeatPass']);
 
-	/* echo '<script type="text/javascript"> window.open("camera.php","_self");</script>'; */
 	/* if ($pass != $repeatPass)
-		echo "Passwords don't match";
+	echo "Passwords don't match";
 	else { */
-		$userController = new UserController();
-		$userController->register($username, $password);
+	$userController = new UserController();
+	$userController->register($username, $email, $pass);
 	/* } */
 }
 
@@ -44,10 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<main>
 		<form method="post" action="<?php echo $_SERVER["PHP_SELF"];?>">
 			<h2>Register</h2>
-			<input required type="text" name="" id="username" placeholder="Username" />
-			<input required type="email" name="" id="email" placeholder="Email" />
-			<input required minlength="3" maxlength="30" type="password" name="" id="pass" placeholder="Password" />
-			<input required minlength="3" maxlength="30" type="password" name="repeatPass" id="" placeholder="Repeat Password" />
+			<input required type="text" name="username" id="username" placeholder="Username" />
+			<input required type="email" name="email" id="email" placeholder="Email" />
+			<input required minlength="3" maxlength="30" type="password" name="pass" id="pass" placeholder="Password" />
+			<input required minlength="3" maxlength="30" type="password" name="repeatPass" id="repeatPass" placeholder="Repeat Password" />
 			<button type="submit">Create account</button>
 		</form>
 	</main>

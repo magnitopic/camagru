@@ -2,7 +2,7 @@
 
 class User {
     private $conn;
-    private $table = 'users';
+    private $table = 'user';
 
     public function __construct($db) {
         $this->conn = $db;
@@ -17,14 +17,15 @@ class User {
         return $stmt->fetch();
     }
 
-    public function createUser($username, $password) {
-        $query = "INSERT INTO " . $this->table . " (username, password) VALUES (:username, :password)";
+    public function createUser($username, $email, $password) {
+        $query = "INSERT INTO " . $this->table . " (username, email, password) VALUES (:username, :email, :password)";
         $stmt = $this->conn->prepare($query);
 
         // Hash the password before storing it
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashed_password);
 
         if ($stmt->execute()) {

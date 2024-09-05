@@ -18,19 +18,20 @@ services:
         build:
             context: ./php
         container_name: php
+        env_file:
+            - ../.env
         volumes:
             - ../src:/var/www/html
         networks:
             - camagru_net
 
-    db:
-        image: mariadb:latest
-        container_name: some-mariadb
-        environment:
-            MARIADB_ROOT_PASSWORD: pass123
-            MARIADB_USER: alaparic
-            MARIADB_PASSWORD: pass123
-            MARIADB_DATABASE: camagru
+    mariadb:
+        container_name: mariadb
+        image: alaparic-mariadb
+        build:
+            context: ./mariadb
+        env_file:
+            - ../.env
         expose:
             - "3306"
         networks:
