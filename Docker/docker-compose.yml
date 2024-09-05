@@ -23,23 +23,18 @@ services:
         networks:
             - camagru_net
 
-    mariadb:
-        container_name: mariadb
-        build:
-            context: ./mariadb
-        image: alaparic-mariadb
-        env_file:
-            - ../.env
+    db:
+        image: mariadb:latest
+        container_name: some-mariadb
+        environment:
+            MARIADB_ROOT_PASSWORD: pass123
+            MARIADB_USER: alaparic
+            MARIADB_PASSWORD: pass123
+            MARIADB_DATABASE: camagru
         expose:
             - "3306"
-        volumes:
-            - ../db_data:/var/lib/mysql
         networks:
             - camagru_net
-        restart: always
-
-volumes:
-    db_data:
 
 networks:
     camagru_net:
