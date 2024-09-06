@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				type="text"
 				name="username"
 				id="username"
-				placeholder="Username or Email" />
+				autofocus
+				placeholder="Username" />
 			<input
 				required
 				type="password"

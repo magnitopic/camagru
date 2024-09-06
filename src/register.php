@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<main>
 		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Register</h2>
-			<input required type="text" name="username" id="username" placeholder="Username" />
+			<input required type="text" name="username" id="username" placeholder="Username" autofocus />
 			<input required type="email" name="email" id="email" placeholder="Email" />
 			<input required minlength="3" maxlength="30" type="password" name="pass" id="pass" placeholder="Password" />
 			<input required minlength="3" maxlength="30" type="password" name="repeatPass" id="repeatPass" placeholder="Repeat Password" />

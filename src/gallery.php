@@ -10,7 +10,7 @@ session_start();
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/gallery.css">
 	<script defer src="js/gallery.js"></script>
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
 	<script src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
 	<title>Camagru | Gallery</title>
 </head>
