@@ -52,10 +52,8 @@ header nav a:hover {
 	cursor: pointer;
 }
 
-details {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+details :hover {
+	color: var(--primary);
 }
 
 details a {
@@ -70,5 +68,29 @@ details a {
 }
 
 .logout:hover {
-	color: red;
+	color: rgb(250, 38, 38);
+}
+
+.userDropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdownContent {
+	display: none;
+	position: absolute;
+	background-color: var(--background-light);
+	border-radius: 0.5rem;
+	border: 1px solid var(--borders);
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	padding: 0.5rem;
+	gap: .5em;
+	flex-direction: column;
+	
+}
+
+.show {
+	display: block;
 }
