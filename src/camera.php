@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
 
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 
 	<main>
 		<div class="postImages">
@@ -65,7 +65,7 @@ if (!isset($_SESSION['user_id'])) {
 		</div>
 	</main>
 
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>

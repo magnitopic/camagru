@@ -31,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Camagru | LogIn</title>
-	<link rel="stylesheet" href="css/_general.css" />
-	<link rel="stylesheet" href="css/accountForms.css" />
-	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
+	<link rel="stylesheet" href="/css/_general.css" />
+	<link rel="stylesheet" href="/css/accountForms.css" />
+	<link rel="shortcut icon" href="/img/logo.png" type="image/x-icon" />
 </head>
 
 <body>
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 	<main>
 		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Login</h2>
@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				id="pass"
 				placeholder="Password" />
 			<button type="submit">Access account</button>
+			<p>Don't have an account? <a href="register.php">Register</a></p>
 		</form>
 		<div class="resetEmail">
 			<details>
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			</details>
 		</div>
 	</main>
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>

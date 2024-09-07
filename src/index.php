@@ -9,12 +9,12 @@ session_start();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Camagru | Start</title>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
-	<link rel="stylesheet" href="./css/_general.css" />
-	<link rel="stylesheet" href="./css/index.css" />
+	<link rel="stylesheet" href="/css/_general.css" />
+	<link rel="stylesheet" href="/css/index.css" />
 </head>
 
 <body>
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 
 	<main>
 		<section class="title_section">
@@ -58,12 +58,12 @@ session_start();
 				<h2>Join the community and start taking pictures!</h2>
 			</div>
 			<div>
-				<button><a href="camera.html">Start here!</a></button>
+				<button><a href="camera.php">Start here!</a></button>
 			</div>
 		</section>
 	</main>
 
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>

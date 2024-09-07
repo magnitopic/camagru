@@ -17,7 +17,7 @@ session_start();
 
 <body>
 
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 
 	<main>
 		<div class="postContainer">
@@ -69,7 +69,7 @@ session_start();
 		</div>
 	</main>
 
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>

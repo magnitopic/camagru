@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 
 	<main>
 		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		</form>
 	</main>
 
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>

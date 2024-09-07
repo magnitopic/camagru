@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user'])) {
+	header('Location: login.php');
+	exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +18,7 @@ session_start();
 </head>
 
 <body>
-	<?php include 'header.php'; ?>
+	<?php include 'components/header.php'; ?>
 	<main>
 		<form action="" method="post">
 			<h2>Change your settings</h2>
@@ -57,7 +61,7 @@ session_start();
 			<button>Save settings</button>
 		</form>
 	</main>
-	<?php include 'footer.html'; ?>
+	<?php include 'components/footer.html'; ?>
 </body>
 
 </html>
