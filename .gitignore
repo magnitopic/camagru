@@ -5,3 +5,5 @@
 .env
 node_modules/
 db_data/
+uploads/
+test.txt

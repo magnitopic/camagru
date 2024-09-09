@@ -41,7 +41,7 @@ let selectedImg;
 
 /* Editing images logic */
 const enableSaveButton = () => {
-	if ((postMsgValue.trim()).length > 0 && selectedImg.src != null) {
+	if (postMsgValue.trim().length > 0 && selectedImg.src != null) {
 		saveButton.disabled = false;
 		saveButton.style.cursor = "pointer";
 	} else {
@@ -77,11 +77,11 @@ const drawBackground = () => {
 	if (backgroundImage.src !== null) {
 		try {
 			ctx.drawImage(
-			backgroundImage.src,
-			0,
-			0,
-			backgroundImage.size.width,
-			backgroundImage.size.height
+				backgroundImage.src,
+				0,
+				0,
+				backgroundImage.size.width,
+				backgroundImage.size.height
 			);
 		} catch (error) {
 			// an error occurred when drawing file src to canvas. Probably not a valid image file
@@ -216,10 +216,9 @@ const getFrame = () => {
 const takePicture = (file = false) => {
 	canvas.width = imgWidth;
 	canvas.height = imgHeight;
-	const validImageTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+	const validImageTypes = ["image/png", "image/jpeg", "image/jpg"];
 
-	if (file != false)
-	{
+	if (file != false) {
 		if (!validImageTypes.includes(file.type)) {
 			return;
 		}
@@ -227,10 +226,8 @@ const takePicture = (file = false) => {
 		reader.onload = function (e) {
 			backgroundImage.src = new Image();
 			backgroundImage.src.src = e.target.result;
-		}
-	}
-	else
-		backgroundImage.src = getFrame();
+		};
+	} else backgroundImage.src = getFrame();
 	drawBackground();
 
 	// Stop the camera stream
@@ -275,6 +272,49 @@ const resetPicture = () => {
 	});
 	backgroundImage = new BackgroundImage(imgWidth, imgHeight);
 	streaming = false;
+};
+
+const savePost = () => {
+	const formData = new FormData();
+
+	try {
+		// Convert the images to base64 strings and append them to the FormData
+		if (backgroundImage.src && backgroundImage.src.src) {
+			formData.append("backgroundImage", backgroundImage.src.src);
+		} else {
+			throw new Error("Invalid background image source");
+		}
+
+		if (selectedImg.src) {
+			formData.append("selectedImg", selectedImg.src);
+		} else {
+			throw new Error("Invalid selected image source");
+		}
+
+		// Append the post message
+		formData.append("postMsg", postMsg.value);
+
+		// Log FormData entries
+		for (let pair of formData.entries()) {
+			console.log(pair[0] + ": " + pair[1]);
+		}
+
+		fetch("php/generatePostImage.php", {
+			method: "POST",
+			body: formData,
+		})
+			.then((response) => response.text()) // Get the response as text
+			.then((text) => {
+				console.log("Response text:", text); // Log the response text
+				const data = JSON.parse(text); // Parse the JSON
+				console.log("Success:", data);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	} catch (error) {
+		console.error("Error preparing images for upload:", error);
+	}
 };
 
 /* Helper functions */
@@ -344,7 +384,9 @@ imgFile.addEventListener("click", () => {
 
 imgFileInput.addEventListener("change", () => {
 	const fileInput = event.target.files[0];
-	takePicture(fileInput)
+	takePicture(fileInput);
 });
+
+saveButton.addEventListener("click", savePost);
 
 initialSetup();

@@ -8,4 +8,7 @@ RUN apt-get update && apt-get install -y npm
 
 # install libraries in package.json
 WORKDIR /var/www/html
+
+RUN mkdir -p uploads
+RUN chmod 755 uploads
 RUN npm install
