@@ -43,22 +43,26 @@ $user = $userController->getUserById($_SESSION['user_id']);
 	<main>
 		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Change your settings</h2>
-			<input
-				type="text"
-				name="username"
-				id="username"
-				placeholder="Change username"
-				autofocus
-				value="<?php echo $user->username ?>"
-				required />
-			<input
-				type="email"
-				name="email"
-				id="email"
-				placeholder="Change email"
-				value="<?php echo $user->email ?>"
-				required />
-			<div class="passwordContainer">
+			<div class="inputContainer">
+				<input
+					type="text"
+					name="username"
+					id="username"
+					placeholder="Change username"
+					autofocus
+					value="<?php echo $user->username ?>"
+					required />
+			</div>
+			<div class="inputContainer">
+				<input
+					type="email"
+					name="email"
+					id="email"
+					placeholder="Change email"
+					value="<?php echo $user->email ?>"
+					required />
+			</div>
+			<div class="inputContainer">
 				<input
 					type="password"
 					name="pass"
