@@ -6,13 +6,13 @@
 #    By: alaparic <alaparic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/15 15:57:48 by alaparic          #+#    #+#              #
-#    Updated: 2024/09/03 16:36:37 by alaparic         ###   ########.fr        #
+#    Updated: 2024/09/09 15:13:46 by alaparic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Camagru
 NAME				=	camagru
-DOCKER_COMPOSE_FILE	= ./Docker/docker-compose.yml
+DOCKER_COMPOSE_FILE	=	./Docker/docker-compose.yml
 
 # Colours
 RED				=	\033[0;31m
@@ -27,7 +27,7 @@ RESET			=	\033[0m
 # Rules
 all:		$(NAME)
 
-$(NAME):	
+$(NAME):
 			@printf "\n$(BLUE)==> $(CYAN)Building Camagru 🏗️\n\n$(RESET)"
 			@echo "Using compose files: $(DOCKER_COMPOSE_FILE)"
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --remove-orphans
@@ -42,7 +42,7 @@ clean:		stop
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) down
 			@printf "\n$(BLUE)==> $(RED)Removed Camagru 🗑️\n$(RESET)"
 
-fclean:		
+fclean:
 			@docker rmi -f $(shell docker images -q)
 			@docker rm -f $(shell docker ps -aq)
 			@docker network rm $(shell docker network ls -q)

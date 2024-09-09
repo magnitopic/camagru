@@ -11,12 +11,12 @@ if (isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$user = parseData($_POST['username']);
+	$username = parseData($_POST['username']);
 	$pass = parseData($_POST['pass']);
 
-	if ($userController->login($user, $pass)) {
-		$_SESSION['user_id'] = $userController->getUserByUsername($user)['id'];
-		$_SESSION['user_name'] = $user;
+	if ($userController->login($username, $pass)) {
+		$_SESSION['user_id'] = $userController->getUserByUsername($username)->id;
+		$_SESSION['user_name'] = $username;
 		header("Location: /camera.php");
 	} else {
 		echo "invalid UserName or Password";
