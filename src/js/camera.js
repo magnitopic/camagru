@@ -53,7 +53,7 @@ const enableSaveButton = () => {
 const editImages = () => {
 	defaultImages.forEach((img) => {
 		img.addEventListener("click", () => {
-			selectedImg.src = img.src;
+			selectedImg.src = img;
 			img.style.background = "#b57410";
 			if (
 				selectedImg.previousSelectedImage != null &&
@@ -99,27 +99,33 @@ const drawBackground = () => {
 	ctx.stroke();
 };
 
+function drawTest() {
+	ctx.save();
+	ctx.translate(selectedImg.position.x, selectedImg.position.y);
+	ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
+
+	// Draw the image, adjusting the position to account for the translation
+	ctx.drawImage(
+		selectedImg.src,
+		-(selectedImg.size.width / 2),
+		-(selectedImg.size.height / 2),
+		selectedImg.size.width,
+		selectedImg.size.height
+	);
+
+	ctx.restore();
+}
+
 const drawSelectedImage = () => {
 	if (selectedImg.src === null) return;
+	if (selectedImg.src.complete)
+		drawTest();
+	else {
+		selectedImg.src.onload = () => {
+			drawTest();
+		}
+	}
 
-	const img = new Image();
-	img.src = selectedImg.src;
-	img.onload = () => {
-		ctx.save();
-		ctx.translate(selectedImg.position.x, selectedImg.position.y);
-		ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
-
-		// Draw the image, adjusting the position to account for the translation
-		ctx.drawImage(
-			img,
-			-(selectedImg.size.width / 2),
-			-(selectedImg.size.height / 2),
-			selectedImg.size.width,
-			selectedImg.size.height
-		);
-
-		ctx.restore(); // Restore the canvas state
-	};
 	enableSaveButton();
 };
 
@@ -275,8 +281,8 @@ const resetPicture = () => {
 };
 
 const savePost = async () => {
-	const bgImage = canvas.toDataURL("image/png");
-	const selImageUrl = selectedImg.src; // URL to the selected image
+	const bgImage = backgroundImage.src.src;
+	const selImageUrl = selectedImg.src.src; // URL to the selected image
 	const postMsg = postMsgValue;
 
 	// Convert base64 to Blob
@@ -318,21 +324,6 @@ const savePost = async () => {
 		});
 };
 
-/* Helper functions */
-
-const debounce = (func, delay) => {
-	let timeout;
-	return function (...args) {
-		const context = this;
-		clearTimeout(timeout);
-		timeout = setTimeout(() => func.apply(context, args), delay);
-	};
-};
-
-const debouncedDraw = debounce(() => {
-	drawEntireScene();
-}, 100);
-
 /* Listeners and initial function */
 startButton.addEventListener(
 	"click",
@@ -356,13 +347,13 @@ retakeButton.addEventListener(
 sizeSlider.addEventListener("input", (ev) => {
 	selectedImg.size.width = ev.target.value;
 	selectedImg.size.height = ev.target.value;
-	debouncedDraw();
+	drawEntireScene();
 	ev.preventDefault();
 });
 
 rotationSlider.addEventListener("input", (ev) => {
 	selectedImg.rotation = ev.target.value;
-	debouncedDraw();
+	drawEntireScene();
 	ev.preventDefault();
 });
 

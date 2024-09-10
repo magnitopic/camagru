@@ -46,8 +46,8 @@ if (!isset($_SESSION['user_id'])) {
 					<img class="defaultImgs" src="img/rocket.png" alt="rocket" title="Rocket">
 					<img class="defaultImgs" src="img/flower.png" alt="flower" title="Flower">
 					<img class="defaultImgs" src="img/42.png" alt="42logo" title="42logo">
-					<img class="defaultImgs" src="" alt="">
-					<img class="defaultImgs" src="" alt="">
+					<img class="defaultImgs" src="img/c.png" alt="c" title="c">
+					<img class="defaultImgs" src="img/github.png" alt="github" title="github">
 				</div>
 				<div class="sliderContainer">
 					<label for="size">Change image size </label>
