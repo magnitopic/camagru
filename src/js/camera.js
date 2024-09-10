@@ -118,12 +118,11 @@ function drawTest() {
 
 const drawSelectedImage = () => {
 	if (selectedImg.src === null) return;
-	if (selectedImg.src.complete)
-		drawTest();
+	if (selectedImg.src.complete) drawTest();
 	else {
 		selectedImg.src.onload = () => {
 			drawTest();
-		}
+		};
 	}
 
 	enableSaveButton();
