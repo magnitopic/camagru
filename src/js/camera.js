@@ -274,47 +274,48 @@ const resetPicture = () => {
 	streaming = false;
 };
 
-const savePost = () => {
+const savePost = async () => {
+	const bgImage = canvas.toDataURL("image/png");
+	const selImageUrl = selectedImg.src; // URL to the selected image
+	const postMsg = postMsgValue;
+
+	// Convert base64 to Blob
+	const base64ToBlob = (base64, mime) => {
+		const byteString = atob(base64.split(",")[1]);
+		const ab = new ArrayBuffer(byteString.length);
+		const ia = new Uint8Array(ab);
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ab], { type: mime });
+	};
+
+	// Fetch the selected image data from the URL and convert it to a blob
+	const fetchImageBlob = async (url) => {
+		const response = await fetch(url);
+		const blob = await response.blob();
+		return blob;
+	};
+
+	const bgImageBlob = base64ToBlob(bgImage, "image/png");
+	const selImageBlob = await fetchImageBlob(selImageUrl);
+
 	const formData = new FormData();
+	formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
+	formData.append("selectedImg", selImageBlob, "selectedImg.png");
+	formData.append("postMsg", postMsg);
 
-	try {
-		// Convert the images to base64 strings and append them to the FormData
-		if (backgroundImage.src && backgroundImage.src.src) {
-			formData.append("backgroundImage", backgroundImage.src.src);
-		} else {
-			throw new Error("Invalid background image source");
-		}
-
-		if (selectedImg.src) {
-			formData.append("selectedImg", selectedImg.src);
-		} else {
-			throw new Error("Invalid selected image source");
-		}
-
-		// Append the post message
-		formData.append("postMsg", postMsg.value);
-
-		// Log FormData entries
-		for (let pair of formData.entries()) {
-			console.log(pair[0] + ": " + pair[1]);
-		}
-
-		fetch("php/generatePostImage.php", {
-			method: "POST",
-			body: formData,
+	fetch("/php/generatePostImage.php", {
+		method: "POST",
+		body: formData,
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			console.log("Success:", data);
 		})
-			.then((response) => response.text()) // Get the response as text
-			.then((text) => {
-				console.log("Response text:", text); // Log the response text
-				const data = JSON.parse(text); // Parse the JSON
-				console.log("Success:", data);
-			})
-			.catch((error) => {
-				console.error("Error:", error);
-			});
-	} catch (error) {
-		console.error("Error preparing images for upload:", error);
-	}
+		.catch((error) => {
+			console.error("Error:", error);
+		});
 };
 
 /* Helper functions */

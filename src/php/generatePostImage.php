@@ -7,14 +7,10 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	if (isset($_POST['backgroundImage']) && isset($_POST['selectedImg']) && isset($_POST['postMsg'])) {
-		$backgroundImage = $_POST['backgroundImage'];
-		$selectedImg = $_POST['selectedImg'];
+	if (isset($_FILES['backgroundImage']) && isset($_FILES['selectedImg']) && isset($_POST['postMsg'])) {
+		$backgroundImage = $_FILES['backgroundImage'];
+		$selectedImg = $_FILES['selectedImg'];
 		$postMsg = $_POST['postMsg'];
-
-		// Decode the base64-encoded images
-		$backgroundImageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $backgroundImage));
-		$selectedImgData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $selectedImg));
 
 		// Ensure the uploads directory exists
 		$uploadsDir = 'uploads';
@@ -22,18 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			mkdir($uploadsDir, 0755, true);
 		}
 
-		file_put_contents("test.txt", $backgroundImageData . "\n" . $postMsg);
-
 		// Save the images to the server
 		$backgroundImagePath = $uploadsDir . '/backgroundImage.png';
 		$selectedImgPath = $uploadsDir . '/selectedImg.png';
 
-		if (file_put_contents($backgroundImagePath, $backgroundImageData) === false) {
+		if (!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath)) {
 			echo json_encode(['status' => 'error', 'message' => 'Failed to save background image']);
 			exit;
 		}
 
-		if (file_put_contents($selectedImgPath, $selectedImgData) === false) {
+		if (!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)) {
 			echo json_encode(['status' => 'error', 'message' => 'Failed to save selected image']);
 			exit;
 		}
