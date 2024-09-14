@@ -14,7 +14,10 @@ if (!isset($_SESSION['user_id'])) {
 	<title>Camagru | Camera</title>
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/camera.css">
-	<script src="js/camera.js" defer></script> <!-- !-> Remove comment -->
+	<script src="js/camera.js" defer></script>
+	<script>
+		const user_id = "<?php echo $_SESSION['user_id']; ?>";
+	</script>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 </head>
 
@@ -60,7 +63,7 @@ if (!isset($_SESSION['user_id'])) {
 			</div>
 		</div>
 		<div class="postInfo">
-			<input id="postMsg" type="text" placeholder="Post message..." maxlength="20">
+			<input id="postMsg" type="text" placeholder="Post title..." maxlength="20">
 			<button id="saveButton" disabled>Publish picture</button>
 		</div>
 	</main>

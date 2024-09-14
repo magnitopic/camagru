@@ -233,6 +233,7 @@ const takePicture = (file = false) => {
 			backgroundImage.src.src = e.target.result;
 		};
 	} else backgroundImage.src = getFrame();
+
 	drawBackground();
 
 	// Stop the camera stream
@@ -309,8 +310,9 @@ const savePost = async () => {
 	formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
 	formData.append("selectedImg", selImageBlob, "selectedImg.png");
 	formData.append("postMsg", postMsg);
+	formData.append("user_id", user_id); // user_id is a global variable defined in the php file head
 
-	fetch("/php/generatePostImage.php", {
+	/* fetch("/php/generatePostImage.php", {
 		method: "POST",
 		body: formData,
 	})
@@ -320,7 +322,31 @@ const savePost = async () => {
 		})
 		.catch((error) => {
 			console.error("Error:", error);
+		}); */
+
+	/** TODO -> Debugging method, remove when working */
+	/** ------------------------ */
+	fetch("/php/generatePostImage.php", {
+		method: "POST",
+		body: formData,
+	})
+		.then((response) => response.text())
+		.then((text) => {
+			try {
+				const data = JSON.parse(text);
+				if (data.status === "error") {
+					console.error("Error:", data.message);
+				} else {
+					console.log("Success:", data);
+				}
+			} catch (e) {
+				console.error("Error parsing JSON:", text);
+			}
+		})
+		.catch((error) => {
+			console.error("Fetch error:", error);
 		});
+	/** ----------------------- */
 };
 
 /* Listeners and initial function */

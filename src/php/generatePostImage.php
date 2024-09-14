@@ -1,10 +1,22 @@
 <?php
+session_start();
+
+require_once 'controllers/PostController.php';
+
 // Enable error reporting
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 header('Content-Type: application/json');
+
+try {
+	$postController = new PostController();
+	// echo "PostController initialized successfully."; // Comment out or remove this line
+} catch (Exception $e) {
+	echo json_encode(['status' => 'error', 'message' => "Error initializing PostController: " . $e->getMessage()]);
+	exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (isset($_FILES['backgroundImage']) && isset($_FILES['selectedImg']) && isset($_POST['postMsg'])) {
@@ -22,6 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			echo json_encode($result);
 			exit;
 		}
+
+		// Save the post to the database
+		savePost($_POST['user_id'], $_POST['postMsg'], 'uploads/postImage.png');
 
 		// Return a response
 		echo json_encode(['status' => 'success', 'message' => 'Images uploaded and processed successfully', 'postMsg' => $_POST['postMsg']]);
@@ -96,4 +111,10 @@ function generatePostImage()
 	imagedestroy($selectedImg);
 
 	return ['status' => 'success', 'message' => 'Image generated successfully', 'outputPath' => $outputPath];
+}
+
+function savePost($user_id, $postMsg, $outputPath)
+{
+	$postController = new PostController();
+	return $postController->createNewPost($user_id, $postMsg, $outputPath);
 }

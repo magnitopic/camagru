@@ -1,0 +1,59 @@
+<?php
+
+class Post
+{
+	private $conn;
+	private $table = 'post';
+
+	public function __construct($db)
+	{
+		$this->conn = $db;
+	}
+
+	public function getPostById($id)
+	{
+		$query = "SELECT * FROM " . $this->table . " WHERE id = :id";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ);
+	}
+
+	public function createNewPost($userId, $imagePath, $title)
+	{
+		$query = "INSERT INTO " . $this->table . " (posterId, imagePath, title, date ) VALUES (:userId, :imagePath, :title, :date)";
+		$stmt = $this->conn->prepare($query);
+
+		$date = date('Y-m-d H:i:s');
+
+		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$stmt->bindParam(':imagePath', $imagePath);
+		$stmt->bindParam(':title', $title);
+		$stmt->bindParam(':date', $date);
+
+		if ($stmt->execute()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function getPosts()
+	{
+		$query = "SELECT * FROM " . $this->table;
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
+	public function getIdLastPost()
+	{
+		$query = "SELECT id FROM " . $this->table . " ORDER BY id DESC LIMIT 1";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ);
+	}
+}
