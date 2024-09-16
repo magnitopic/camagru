@@ -25,7 +25,7 @@ session_start();
 			<div class="postIconsContainer">
 				<div id="like">
 					<i class="fa-solid fa-heart"></i>
-					<span>5</span>
+					<span id="postLikes">5</span>
 				</div>
 				<div id="comment">
 					<i class="fa-solid fa-comment"></i>
@@ -40,10 +40,12 @@ session_start();
 					<img src="img/rocket.png" alt="" id="postInfoImg">
 					<div class="postLike" id="like">
 						<i class="fa-solid fa-heart"></i>
-						<span>5</span>
+						<span id="postInfoLikes">5</span>
 					</div>
 					<div>
-						<p id="postInfoTitle">PostTitle</p>
+						<span id="postInfoTitle">PostTitle</span>
+						<span>-</span>
+						<span id="postInfoAuthor">PostAuthor</span>
 					</div>
 				</div>
 				<div class="commentsContainer">

@@ -25,7 +25,7 @@ CREATE TABLE comment (
 	FOREIGN KEY (commenterId) REFERENCES user(id)
 );
 
-CREATE TABLE `like` (
+CREATE TABLE likes (
 	likeId INT AUTO_INCREMENT PRIMARY KEY,
 	userId INT NOT NULL,
 	postId INT NOT NULL,

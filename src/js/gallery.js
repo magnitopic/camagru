@@ -17,18 +17,25 @@ const fetchPosts = async () => {
 	const posts = await response.json();
 
 	posts.forEach((post) => {
+		/* console.log(post); */ // TODO -> remove
+
 		const postElement = postTemplate.cloneNode(true);
 		postElement.style.display = "block";
+		// load post card element data
 		postElement.querySelector("#postImg").src = "php/" + post.imagePath;
 		postElement.querySelector("#postImg").alt = post.title;
+		postElement.querySelector("#postLikes").textContent = post.likes;
 		postElement.classList.remove("postTemplate");
 		galleryContainer.appendChild(postElement);
+
+		// load post info data
 		postElement.addEventListener("click", () => {
 			postInfo.style.display = "flex";
 			postInfo.querySelector("#postInfoImg").src =
 				"php/" + post.imagePath;
 			postInfo.querySelector("#postInfoTitle").textContent = post.title;
-			selectedPost = post;
+			postInfo.querySelector("#postInfoAuthor").textContent = post.author;
+			postInfo.querySelector("#postInfoLikes").textContent = post.likes;
 		});
 	});
 	page++;

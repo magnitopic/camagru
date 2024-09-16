@@ -42,7 +42,12 @@ class Post
 
 	public function getPosts($limit, $offset)
 	{
-		$query = "SELECT * FROM " . $this->table . " LIMIT :limit OFFSET :offset";
+		$query = "SELECT p.*, u.username as author, 
+				  (SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) as likes 
+				  FROM " . $this->table . " p 
+				  JOIN user u ON p.posterId = u.id
+				  ORDER BY p.date DESC
+				  LIMIT :limit OFFSET :offset";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 		$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
