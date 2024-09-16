@@ -10,6 +10,9 @@ session_start();
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/gallery.css">
 	<script defer src="js/gallery.js"></script>
+	<script>
+		const user_id = "<?php echo $_SESSION['user_id']; ?>";
+	</script>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
 	<script src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
 	<title>Camagru | Gallery</title>
@@ -38,20 +41,20 @@ session_start();
 			<div class="postInfo">
 				<div class="mainInfo">
 					<img src="img/rocket.png" alt="" id="postInfoImg">
-					<div class="postLike" id="like">
+					<div class="postLike" id="likePostButton">
 						<i class="fa-solid fa-heart"></i>
 						<span id="postInfoLikes">5</span>
 					</div>
 					<div>
 						<span id="postInfoTitle">PostTitle</span>
 						<span>-</span>
-						<span id="postInfoAuthor">PostAuthor</span>
+						<span id="postInfoAuthor" class="usernameSpan">PostAuthor</span>
 					</div>
 				</div>
 				<div class="commentsContainer">
 					<div class="fullComment">
 						<div class="commentTop">
-							<a href="#">UserName</a>
+							<span class="usernameSpan">UserName</span>
 							<div id="like">
 								<i class="fa-solid fa-heart"></i>
 								<span>5</span>
@@ -61,8 +64,8 @@ session_start();
 					</div>
 					<div class="fullComment">
 						<div class="commentTop">
-							<a href="#">UserName</a>
-							<div id="like">
+							<span class="usernameSpan">UserName</span>
+							<div>
 								<i class="fa-solid fa-heart"></i>
 								<span>5</span>
 							</div>

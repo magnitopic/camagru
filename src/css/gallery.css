@@ -10,6 +10,7 @@ main {
 }
 
 #postContainer {
+	display: none;
 	border: 2px solid var(--borders);
 	border-radius: 0.5em;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -28,6 +29,7 @@ main {
 img {
 	width: 20em;
 	height: auto;
+	border-radius: 0.5em 0.5em 0 0;
 }
 
 .comment {
@@ -49,9 +51,9 @@ img {
 	border-radius: 0 0 0.5em 0.5em;
 }
 
-span {
+.usernameSpan {
 	font-weight: 500;
-	cursor: pointer;
+	text-decoration: underline;
 }
 
 .postInfoContainer {
@@ -82,17 +84,20 @@ span {
 	flex-direction: column;
 	gap: 2em;
 	max-width: 35em;
+	overflow: auto;
+	max-height: 80vh;
 }
 
 .mainInfo {
 	border: 2px solid var(--borders);
-	padding: 0.5em;
+	padding: 1em 0.5em;
 	border-radius: 0.5em;
 }
 
 .mainInfo img {
 	margin: 0 auto;
 	display: flex;
+	border-radius: 0.5em;
 }
 
 .commentsContainer {
@@ -114,6 +119,7 @@ span {
 
 .postLike {
 	font-size: 1.5em;
+	width: fit-content;
 }
 
 .commentTop {
@@ -121,11 +127,7 @@ span {
 	gap: 0.5em;
 }
 
-.commentTop a {
+.usernameSpan {
 	font-weight: 800;
 	color: var(--font);
-}
-
-.commentTop a:hover {
-	color: white;
 }

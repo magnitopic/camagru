@@ -3,7 +3,7 @@
 class Like
 {
 	private $conn;
-	private $table = 'like';
+	private $table = 'likes';
 
 	public function __construct($db)
 	{
@@ -12,7 +12,7 @@ class Like
 
 	public function getNumberLikes($postId)
 	{
-		$query = "SELECT COUNT(likeId) FROM " . $this->table . " WHERE post_id = :post_id";
+		$query = "SELECT COUNT(likeId) FROM " . $this->table . " WHERE postId = :post_id";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
 		$stmt->execute();
@@ -22,7 +22,7 @@ class Like
 
 	public function getPostLikedByUser($userId, $postId)
 	{
-		$query = "SELECT * FROM " . $this->table . " WHERE user_id = :user_id AND post_id = :post_id";
+		$query = "SELECT * FROM " . $this->table . " WHERE userId = :user_id AND postId = :post_id";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
@@ -33,7 +33,20 @@ class Like
 
 	public function likePost($userId, $postId)
 	{
-		$query = "INSERT INTO " . $this->table . " (user_id, post_id) VALUES (:user_id, :post_id)";
+		echo $userId;
+		echo $postId;
+		$query = "INSERT INTO " . $this->table . " (userId, postId) VALUES (:user_id, :post_id)";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+		$stmt->execute();
+
+		return $stmt->rowCount();
+	}
+
+	public function unlikePost($userId, $postId)
+	{
+		$query = "DELETE FROM " . $this->table . " WHERE userId = :user_id AND postId = :post_id";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
