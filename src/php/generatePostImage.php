@@ -28,8 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			exit;
 		}
 
+		$postX = $_POST['posx'];
+		$postY = $_POST['posy'];
+		$size = $_POST['size'];
+		$rotation = $_POST['rotation'];
+
 		// Generate the post image
-		$result = generatePostImage();
+		$result = generatePostImage(postx, posty, size, rotation);
 		if ($result['status'] === 'error') {
 			echo json_encode($result);
 			exit;
@@ -81,7 +86,7 @@ function recvImages()
 	return ['status' => 'success', 'message' => 'Images uploaded successfully', 'postMsg' => $postMsg];
 }
 
-function generatePostImage()
+function generatePostImage($postX, $postY, $size, $rotation)
 {
 	$backgroundImagePath = 'uploads/backgroundImage.png';
 	$selectedImgPath = 'uploads/selectedImg.png';

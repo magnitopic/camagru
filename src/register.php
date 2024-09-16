@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<input required minlength="3" maxlength="30" type="password" name="pass" id="pass" placeholder="Password" />
 			<input required minlength="3" maxlength="30" type="password" name="repeatPass" id="repeatPass" placeholder="Repeat Password" />
 			<button type="submit">Create account</button>
+			<p>Already have an account? <a href="login.php">LogIn</a></p>
 		</form>
 	</main>
 

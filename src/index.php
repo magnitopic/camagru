@@ -29,7 +29,7 @@ session_start();
 					upload your own from your device.
 				</p>
 			</div>
-			<img src="img/logo.png" alt="Taking pictures" />
+			<img src="img/main1.png" alt="Taking pictures" />
 		</section>
 		<section class="middle_sections" id="opposite_section">
 			<div>
