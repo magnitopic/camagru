@@ -1,5 +1,4 @@
 <?php
-
 class Post
 {
 	private $conn;
@@ -20,12 +19,14 @@ class Post
 		return $stmt->fetch(PDO::FETCH_OBJ);
 	}
 
-	public function createNewPost($userId, $imagePath, $title)
+	public function createNewPost($userId, $title)
 	{
 		$query = "INSERT INTO " . $this->table . " (posterId, imagePath, title, date ) VALUES (:userId, :imagePath, :title, :date)";
 		$stmt = $this->conn->prepare($query);
 
 		$date = date('Y-m-d H:i:s');
+		$lastPostId = $this->getIdLastPost();
+		$imagePath = 'uploads/' . ($lastPostId + 1) . '.png';
 
 		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
 		$stmt->bindParam(':imagePath', $imagePath);
@@ -33,7 +34,7 @@ class Post
 		$stmt->bindParam(':date', $date);
 
 		if ($stmt->execute()) {
-			return true;
+			return $imagePath;
 		}
 
 		return false;
@@ -54,6 +55,10 @@ class Post
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
 
-		return $stmt->fetch(PDO::FETCH_OBJ);
+		if ($stmt->rowCount() == 0)
+			return -1;
+
+		$result = $stmt->fetch(PDO::FETCH_OBJ);
+		return $result->id;
 	}
 }

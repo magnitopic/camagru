@@ -36,7 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		// Save the post to the database
-		savePost($_POST['user_id'], $_POST['postMsg'], 'uploads/postImage.png');
+		$newFileName = savePost($_POST['user_id'], $_POST['postMsg']);
+		if ($newFileName['status'] === 'error') {
+			echo json_encode($newFileName);
+			exit;
+		}
+
+		// save image with post id
+		if (!rename('uploads/postImage.png', $newFileName['fileName'])) {
+			echo json_encode(['status' => 'error', 'message' => 'Failed to save post image']);
+			exit;
+		}
 
 		// Return a response
 		echo json_encode(['status' => 'success', 'message' => 'Images uploaded and processed successfully', 'postMsg' => $_POST['postMsg']]);
@@ -113,8 +123,12 @@ function generatePostImage()
 	return ['status' => 'success', 'message' => 'Image generated successfully', 'outputPath' => $outputPath];
 }
 
-function savePost($user_id, $postMsg, $outputPath)
+function savePost($user_id, $postMsg)
 {
 	$postController = new PostController();
-	return $postController->createNewPost($user_id, $postMsg, $outputPath);
+	$result = $postController->createNewPost($user_id, $postMsg);
+	if ($result === false) {
+		return ['status' => 'error', 'message' => 'Failed to save post to database'];
+	}
+	return ['status' => 'success', 'fileName' => $result];
 }

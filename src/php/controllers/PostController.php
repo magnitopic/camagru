@@ -19,9 +19,9 @@ class PostController
 		return $this->post->getPostById($postId);
 	}
 
-	public function createNewPost($userId, $imagePath, $title)
+	public function createNewPost($userId, $title)
 	{
-		return $this->post->createNewPost($userId, $imagePath, $title);
+		return $this->post->createNewPost($userId, $title);
 	}
 
 	public function getPosts()
