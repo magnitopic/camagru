@@ -28,6 +28,18 @@ const fetchPosts = async () => {
 	const response = await fetch(`/php/getPosts.php?page=${page}`);
 	const posts = await response.json();
 
+	if (page === 1 && posts.length === 0) {
+		galleryContainer.innerHTML = 
+		"<center>\
+		<h1>Gallery is empty for now :(</h1>\
+		<h3>Be the first to publish a picture!</h3>\
+		</center>";
+	}
+	if (posts.length === 0) {
+		observer.unobserve(document.querySelector("footer"));
+		return;
+	}
+
 	posts.forEach((post) => {
 		const postElement = postTemplate.cloneNode(true);
 		postElement.style.display = "block";
@@ -105,5 +117,3 @@ window.addEventListener("resize", checkPageFilled);
 // create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
 observer.observe(document.querySelector("footer"));
-// initial post fetch
-fetchPosts();
