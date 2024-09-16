@@ -8,7 +8,6 @@ let page = 1;
 let selectedPost = null;
 
 // hide postInfo
-
 postInfo.addEventListener("click", () => {
 	if (event.target === event.currentTarget) {
 		postInfo.style.display = "none";
@@ -55,6 +54,12 @@ const fetchPosts = async () => {
 };
 
 const updateLikes = (newLikes) => {
+	// update selectedPost likes
+	selectedPost.likes = newLikes.likes;
+
+	// update postInfo likes
+	postInfo.querySelector("#postInfoLikes").textContent = selectedPost.likes;
+
 	// remove all elements from galleryContainer
 	while (galleryContainer.firstChild) {
 		galleryContainer.removeChild(galleryContainer.firstChild);
@@ -62,9 +67,6 @@ const updateLikes = (newLikes) => {
 	// fetch and load posts
 	page = 1;
 	fetchPosts();
-
-	// update selectedPost likes
-	selectedPost.likes = newLikes.likes;
 };
 
 const checkPageFilled = () => {
@@ -95,9 +97,6 @@ const likePost = async () => {
 				updateLikes(data);
 			})
 			.catch((error) => console.error("Error:", error));
-
-		postInfo.querySelector("#postInfoLikes").textContent =
-			selectedPost.likes;
 	}
 };
 
