@@ -24,9 +24,9 @@ class PostController
 		return $this->post->createNewPost($userId, $title);
 	}
 
-	public function getPosts()
+	public function getPosts($limit, $offset)
 	{
-		return $this->post->getPosts();
+		return $this->post->getPosts($limit, $offset);
 	}
 
 	public function getIdLastPost()

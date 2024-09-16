@@ -9,7 +9,7 @@ main {
 	padding: 2rem;
 }
 
-.postContainer {
+#postContainer {
 	border: 2px solid var(--borders);
 	border-radius: 0.5em;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

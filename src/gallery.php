@@ -20,8 +20,8 @@ session_start();
 	<?php include 'components/header.php'; ?>
 
 	<main>
-		<div class="postContainer">
-			<img src="img/rocket.png" alt="">
+		<div id="postContainer">
+			<img src="img/rocket.png" alt="" id="postImg">
 			<div class="postIconsContainer">
 				<div id="like">
 					<i class="fa-solid fa-heart"></i>

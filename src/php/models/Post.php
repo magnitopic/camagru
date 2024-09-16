@@ -40,12 +40,13 @@ class Post
 		return false;
 	}
 
-	public function getPosts()
+	public function getPosts($limit, $offset)
 	{
-		$query = "SELECT * FROM " . $this->table;
+		$query = "SELECT * FROM " . $this->table . " LIMIT :limit OFFSET :offset";
 		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+		$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 		$stmt->execute();
-
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
