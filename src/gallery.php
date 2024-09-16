@@ -75,6 +75,7 @@ session_start();
 				</div>
 			</div>
 		</div>
+		<div id="galleryContainer"></div>
 	</main>
 
 	<?php include 'components/footer.html'; ?>

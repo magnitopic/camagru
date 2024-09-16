@@ -20,10 +20,10 @@ class LikeController
 
 		if ($like) {
 			$this->like->unlikePost($userId, $postId);
-			return false;
 		} else {
 			$this->like->likePost($userId, $postId);
-			return true;
 		}
+		$likes = $this->like->getNumberLikes($postId);
+		return json_encode($likes);
 	}
 }

@@ -12,12 +12,11 @@ class Like
 
 	public function getNumberLikes($postId)
 	{
-		$query = "SELECT COUNT(likeId) FROM " . $this->table . " WHERE postId = :post_id";
+		$query = "SELECT COUNT(likeId) AS likes FROM " . $this->table . " WHERE postId = :post_id";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
 		$stmt->execute();
-
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
+		return $stmt->fetch(PDO::FETCH_OBJ);
 	}
 
 	public function getPostLikedByUser($userId, $postId)
@@ -33,8 +32,6 @@ class Like
 
 	public function likePost($userId, $postId)
 	{
-		echo $userId;
-		echo $postId;
 		$query = "INSERT INTO " . $this->table . " (userId, postId) VALUES (:user_id, :post_id)";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);

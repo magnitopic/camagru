@@ -1,6 +1,6 @@
 const posts = document.querySelectorAll("#postContainer");
 const postInfo = document.querySelector(".postInfoContainer");
-const galleryContainer = document.querySelector("main");
+const galleryContainer = document.querySelector("#galleryContainer");
 const postTemplate = document.querySelector("#postContainer");
 const likeButton = document.querySelector("#postInfoLikes");
 
@@ -29,9 +29,6 @@ const fetchPosts = async () => {
 	const response = await fetch(`/php/getPosts.php?page=${page}`);
 	const posts = await response.json();
 
-	console.log(posts); // TODO -> remove
-	console.log(page); // TODO -> remove
-
 	posts.forEach((post) => {
 		const postElement = postTemplate.cloneNode(true);
 		postElement.style.display = "block";
@@ -57,6 +54,19 @@ const fetchPosts = async () => {
 	checkPageFilled();
 };
 
+const updateLikes = (newLikes) => {
+	// remove all elements from galleryContainer
+	while (galleryContainer.firstChild) {
+		galleryContainer.removeChild(galleryContainer.firstChild);
+	}
+	// fetch and load posts
+	page = 1;
+	fetchPosts();
+
+	// update selectedPost likes
+	selectedPost.likes = newLikes.likes;
+};
+
 const checkPageFilled = () => {
 	if (document.body.scrollHeight <= window.innerHeight) {
 		fetchPosts();
@@ -80,30 +90,21 @@ const handleIntersect = (entries, observer) => {
 const likePost = async () => {
 	if (selectedPost) {
 		fetch(`php/likePost.php?postId=${selectedPost.id}&userId=${user_id}`)
-			.then((response) => response.text())
-			.then((text) => {
-				try {
-					const data = JSON.parse(text);
-					if (data.status === "error") {
-						console.error("Error:", data.message);
-					} else {
-						console.log("Success:", data);
-					}
-				} catch (e) {
-					console.error("Error parsing JSON:", text);
-				}
+			.then((response) => response.json())
+			.then((data) => {
+				updateLikes(data);
 			})
-			.catch((error) => {
-				console.error("Fetch error:", error);
-			});
-		const likes = selectedPost.likes + 1;
+			.catch((error) => console.error("Error:", error));
 
-		postInfo.querySelector("#postInfoLikes").textContent = likes;
+		postInfo.querySelector("#postInfoLikes").textContent =
+			selectedPost.likes;
 	}
 };
 
 likeButton.addEventListener("click", likePost);
+window.addEventListener("resize", checkPageFilled);
+// create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
 observer.observe(document.querySelector("footer"));
-window.addEventListener("resize", checkPageFilled);
-document.addEventListener("DOMContentLoaded", fetchPosts);
+// initial post fetch
+fetchPosts();
