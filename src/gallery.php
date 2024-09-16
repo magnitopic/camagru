@@ -37,10 +37,13 @@ session_start();
 		<div class="postInfoContainer">
 			<div class="postInfo">
 				<div class="mainInfo">
-					<img src="img/rocket.png" alt="">
+					<img src="img/rocket.png" alt="" id="postInfoImg">
 					<div class="postLike" id="like">
 						<i class="fa-solid fa-heart"></i>
 						<span>5</span>
+					</div>
+					<div>
+						<p id="postInfoTitle">PostTitle</p>
 					</div>
 				</div>
 				<div class="commentsContainer">

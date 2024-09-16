@@ -26,7 +26,7 @@ main {
 }
 
 img {
-	width: 15em;
+	width: 20em;
 	height: auto;
 }
 
@@ -38,7 +38,7 @@ img {
 	position: absolute;
 	display: flex;
 	justify-content: space-between;
-	width: 15em;
+	width: 20em;
 	padding: 0 1em;
 	background: rgb(0, 0, 0);
 	background: linear-gradient(
