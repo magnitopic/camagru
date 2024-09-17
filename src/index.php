@@ -40,7 +40,7 @@ session_start();
 					final product
 				</p>
 			</div>
-			<img src="img/logo.png" alt="Taking pictures" />
+			<img src="img/main2.png" alt="Taking pictures" />
 		</section>
 		<section class="middle_sections">
 			<div>
@@ -51,7 +51,7 @@ session_start();
 					pictures
 				</p>
 			</div>
-			<img src="img/logo.png" alt="Taking pictures" />
+			<img src="img/main3.png" alt="Taking pictures" />
 		</section>
 		<section class="final_section">
 			<div>
