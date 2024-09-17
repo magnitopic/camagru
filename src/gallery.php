@@ -41,14 +41,17 @@ session_start();
 			<div class="postInfo">
 				<div class="mainInfo">
 					<img src="" alt="" id="postInfoImg">
-					<div class="postLike" id="likePostButton">
-						<i class="fa-solid fa-heart"></i>
-						<span id="postInfoLikes">5</span>
-					</div>
-					<div>
-						<span id="postInfoTitle">PostTitle</span>
-						<span>-</span>
-						<span id="postInfoAuthor" class="usernameSpan">PostAuthor</span>
+					<div id="postInfo">
+						<div class="postLike" id="likePostButton">
+							<i class="fa-solid fa-heart"></i>
+							<span id="postInfoLikes">5</span>
+						</div>
+						<div>
+							<span id="postInfoTitle">PostTitle</span>
+							<span>-</span>
+							<span id="postInfoAuthor" class="usernameSpan">PostAuthor</span>
+						</div>
+						<div><span id="postDate"></span></div>
 					</div>
 				</div>
 				<div class="commentsContainer">

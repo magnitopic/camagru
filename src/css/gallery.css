@@ -104,6 +104,13 @@ img {
 	border-radius: 0.5em;
 }
 
+#postInfo {
+	display: flex;
+	flex-direction: column;
+	gap: .7em;
+	margin-left: .2em;
+}
+
 .commentsContainer {
 	display: flex;
 	flex-direction: column;

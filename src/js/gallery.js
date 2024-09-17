@@ -45,6 +45,8 @@ const fetchPosts = async () => {
 	} else observer.observe(document.querySelector("footer"));
 
 	posts.forEach((post) => {
+		console.log(post);
+
 		const postElement = postTemplate.cloneNode(true);
 		postElement.style.display = "block";
 		// load post card element data
@@ -63,6 +65,16 @@ const fetchPosts = async () => {
 			postInfo.querySelector("#postInfoTitle").textContent = post.title;
 			postInfo.querySelector("#postInfoAuthor").textContent = post.author;
 			postInfo.querySelector("#postInfoLikes").textContent = post.likes;
+
+			// Format the post date
+			const postDate = new Date(post.date);
+			const formattedDate = postDate.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			});
+			postInfo.querySelector("#postDate").textContent = formattedDate;
+
 			if (post.liked) likeButton.classList.add("likedPost");
 			else likeButton.classList.remove("likedPost");
 			document.body.style.overflow = "hidden";
