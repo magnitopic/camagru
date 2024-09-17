@@ -29,6 +29,11 @@ class LikeController
 
 	public function getPostLikedByUser($postId, $userId)
 	{
-		return $this->like->getPostLikedByUser($userId, $postId);
+		$like = $this->like->getPostLikedByUser($userId, $postId);
+		if ($like) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

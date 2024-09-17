@@ -2,7 +2,7 @@ const posts = document.querySelectorAll("#postContainer");
 const postInfo = document.querySelector(".postInfoContainer");
 const galleryContainer = document.querySelector("#galleryContainer");
 const postTemplate = document.querySelector("#postContainer");
-const likeButton = document.querySelector("#postInfoLikes");
+const likeButton = document.querySelector("#likePostButton");
 
 let page = 1;
 let selectedPost = null;
@@ -12,6 +12,7 @@ postInfo.addEventListener("click", () => {
 	if (event.target === event.currentTarget) {
 		postInfo.style.display = "none";
 		selectedPost = null;
+		document.body.style.overflow = "visible";
 	}
 });
 
@@ -20,25 +21,28 @@ document.addEventListener("keydown", (event) => {
 	if (event.key === "Escape" && postInfo.style.display === "flex") {
 		postInfo.style.display = "none";
 		selectedPost = null;
+		document.body.style.overflow = "visible";
 	}
 });
 
 // fetch and load posts
 const fetchPosts = async () => {
-	const response = await fetch(`/php/getPosts.php?page=${page}`);
+	const response = await fetch(
+		`/php/getPosts.php?page=${page}&user_id=${user_id}`
+	);
 	const posts = await response.json();
 
 	if (page === 1 && posts.length === 0) {
-		galleryContainer.innerHTML = 
-		"<center>\
-		<h1>Gallery is empty for now :(</h1>\
-		<h3>Be the first to publish a picture!</h3>\
-		</center>";
+		galleryContainer.innerHTML =
+			"<center>\
+			<h1>Gallery is empty for now :(</h1>\
+			<h3>Be the first to publish a picture!</h3>\
+			</center>";
 	}
 	if (posts.length === 0) {
 		observer.unobserve(document.querySelector("footer"));
 		return;
-	}
+	} else observer.observe(document.querySelector("footer"));
 
 	posts.forEach((post) => {
 		const postElement = postTemplate.cloneNode(true);
@@ -59,13 +63,14 @@ const fetchPosts = async () => {
 			postInfo.querySelector("#postInfoTitle").textContent = post.title;
 			postInfo.querySelector("#postInfoAuthor").textContent = post.author;
 			postInfo.querySelector("#postInfoLikes").textContent = post.likes;
+			if (post.liked) likeButton.classList.add("likedPost");
+			else likeButton.classList.remove("likedPost");
+			document.body.style.overflow = "hidden";
 		});
 
 		// check post liked by user
 		if (post.liked) {
-			postElement
-				.querySelector("#postLikes")
-				.classList.toggle("likedPost");
+			postElement.querySelector("#like").classList.toggle("likedPost");
 		}
 	});
 	page++;
@@ -126,4 +131,4 @@ likeButton.addEventListener("click", likePost);
 window.addEventListener("resize", checkPageFilled);
 // create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
-observer.observe(document.querySelector("footer"));
+fetchPosts();
