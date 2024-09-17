@@ -26,4 +26,9 @@ class LikeController
 		$likes = $this->like->getNumberLikes($postId);
 		return json_encode($likes);
 	}
+
+	public function getPostLikedByUser($postId, $userId)
+	{
+		return $this->like->getPostLikedByUser($userId, $postId);
+	}
 }

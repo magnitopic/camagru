@@ -60,6 +60,13 @@ const fetchPosts = async () => {
 			postInfo.querySelector("#postInfoAuthor").textContent = post.author;
 			postInfo.querySelector("#postInfoLikes").textContent = post.likes;
 		});
+
+		// check post liked by user
+		if (post.liked) {
+			postElement
+				.querySelector("#postLikes")
+				.classList.toggle("likedPost");
+		}
 	});
 	page++;
 	checkPageFilled();
@@ -79,6 +86,9 @@ const updateLikes = (newLikes) => {
 	// fetch and load posts
 	page = 1;
 	fetchPosts();
+
+	// update like button color
+	likeButton.classList.toggle("likedPost");
 };
 
 const checkPageFilled = () => {

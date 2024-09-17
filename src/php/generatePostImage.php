@@ -92,6 +92,8 @@ function generatePostImage($postX, $postY, $size, $rotation)
 	$selectedImgPath = 'uploads/selectedImg.png';
 	$outputPath = 'uploads/postImage.png';
 
+	$rotation = $rotation * -1; // Reverse the rotation direction
+
 	// Saving original images
 	$backgroundImage = imagecreatefrompng($backgroundImagePath);
 	if (!$backgroundImage) {

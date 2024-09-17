@@ -135,3 +135,7 @@ img {
 	font-weight: 800;
 	color: var(--font);
 }
+
+.likedPost {
+	color: lightcoral;
+}

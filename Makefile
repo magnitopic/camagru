@@ -6,7 +6,7 @@
 #    By: alaparic <alaparic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/15 15:57:48 by alaparic          #+#    #+#              #
-#    Updated: 2024/09/17 07:47:41 by alaparic         ###   ########.fr        #
+#    Updated: 2024/09/17 08:15:11 by alaparic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,12 +40,14 @@ stop:
 
 clean:		stop
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) down
+			@rm -rf ./src/php/uploads/*
 			@printf "\n$(BLUE)==> $(RED)Removed Camagru 🗑️\n$(RESET)"
 
 fclean:
 			@docker rmi -f $(shell docker images -q)
 			@docker rm -f $(shell docker ps -aq)
 			@docker network rm $(shell docker network ls -q)
+			@rm -rf ./src/php/uploads/*
 			@printf "\n$(BLUE)==> $(RED)Fully cleaned Camagru 🗑️\n$(RESET)"
 
 re:			clean
