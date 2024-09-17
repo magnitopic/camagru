@@ -45,48 +45,89 @@ const fetchPosts = async () => {
 	} else observer.observe(document.querySelector("footer"));
 
 	posts.forEach((post) => {
-		console.log(post);
-
 		const postElement = postTemplate.cloneNode(true);
 		postElement.style.display = "block";
 		// load post card element data
-		postElement.querySelector("#postImg").src = "php/" + post.imagePath;
-		postElement.querySelector("#postImg").alt = post.title;
-		postElement.querySelector("#postLikes").textContent = post.likes;
-		postElement.classList.remove("postTemplate");
-		galleryContainer.appendChild(postElement);
+		loadPostInfo(postElement, post);
 
 		// load post info data
 		postElement.addEventListener("click", () => {
-			postInfo.style.display = "flex";
-			selectedPost = post;
-			postInfo.querySelector("#postInfoImg").src =
-				"php/" + post.imagePath;
-			postInfo.querySelector("#postInfoTitle").textContent = post.title;
-			postInfo.querySelector("#postInfoAuthor").textContent = post.author;
-			postInfo.querySelector("#postInfoLikes").textContent = post.likes;
-
-			// Format the post date
-			const postDate = new Date(post.date);
-			const formattedDate = postDate.toLocaleDateString("en-US", {
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-			});
-			postInfo.querySelector("#postDate").textContent = formattedDate;
-
-			if (post.liked) likeButton.classList.add("likedPost");
-			else likeButton.classList.remove("likedPost");
-			document.body.style.overflow = "hidden";
+			handlePostInfo(post);
 		});
 
 		// check post liked by user
-		if (post.liked) {
+		if (post.liked)
 			postElement.querySelector("#like").classList.toggle("likedPost");
-		}
 	});
 	page++;
 	checkPageFilled();
+};
+
+const loadPostInfo = (postElement, post) => {
+	postElement.querySelector("#postImg").src = "php/" + post.imagePath;
+	postElement.querySelector("#postImg").alt = post.title;
+	postElement.querySelector("#postLikes").textContent = post.likes;
+	postElement.classList.remove("postTemplate");
+	galleryContainer.appendChild(postElement);
+};
+
+const handlePostInfo = (post) => {
+	postInfo.style.display = "flex";
+	selectedPost = post;
+	postInfo.querySelector("#postInfoImg").src = "php/" + post.imagePath;
+	postInfo.querySelector("#postInfoTitle").textContent = post.title;
+	postInfo.querySelector("#postInfoAuthor").textContent = post.author;
+	postInfo.querySelector("#postInfoLikes").textContent = post.likes;
+
+	// Format the post date
+	const postDate = new Date(post.date);
+	const formattedDate = postDate.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
+	postInfo.querySelector("#postDate").textContent = formattedDate;
+
+	if (post.liked) likeButton.classList.add("likedPost");
+	else likeButton.classList.remove("likedPost");
+	document.body.style.overflow = "hidden";
+
+	// load post comments
+	loadComments(post);
+};
+
+const loadComments = (post) => {
+	const commentsContainer = postInfo.querySelector("#commentsContainer");
+	
+	// remove all previous comments
+	while (commentsContainer.firstChild)
+		commentsContainer.removeChild(commentsContainer.firstChild);
+	
+	if (post.comments.length === 0) {
+		const noComments = document.createElement("h3");
+		noComments.textContent = "No comments yet!";
+		noComments.style.margin = "auto";
+		noComments.style.color = "gray";
+		commentsContainer.appendChild(noComments);
+		return;
+	}
+	
+	const commentTemplate = postInfo.querySelector("#fullComment");
+	post.comments.forEach((comment) => {
+		const commentElement = commentTemplate.cloneNode(true);
+		commentElement.style.display = "block";
+
+		const authorElement = commentElement.querySelector(".commentAuthor");
+		console.log(comment);
+		
+		
+		authorElement.textContent = "alaparic";
+
+		const msgElement = commentElement.querySelector("#commentMsg");
+		msgElement.textContent = comment.message;
+
+		commentsContainer.appendChild(commentElement);
+	});
 };
 
 const updateLikes = (newLikes) => {

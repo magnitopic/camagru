@@ -38,6 +38,8 @@ main {
 	font-size: 1.8rem;
 	margin-bottom: 1rem;
 	font-weight: 400;
+	text-decoration: underline;
+	text-decoration-color: var(--secondary);
 }
 
 section p {

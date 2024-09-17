@@ -54,27 +54,13 @@ session_start();
 						<div><span id="postDate"></span></div>
 					</div>
 				</div>
-				<div class="commentsContainer">
-					<div class="fullComment">
-						<div class="commentTop">
-							<span class="usernameSpan">UserName</span>
-							<div id="like">
-								<i class="fa-solid fa-heart"></i>
-								<span>5</span>
-							</div>
-						</div>
-						<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus ullam corporis provident, nemo quidem ipsa nam commodi placeat molestiae accusantium dolore ipsam, incidunt itaque rem. Labore nulla animi aperiam delectus?</span>
+				<div id="commentsContainer">
+				</div>
+				<div id="fullComment">
+					<div class="commentTop">
+						<span class="commentAuthor usernameSpan"></span>
 					</div>
-					<div class="fullComment">
-						<div class="commentTop">
-							<span class="usernameSpan">UserName</span>
-							<div>
-								<i class="fa-solid fa-heart"></i>
-								<span>5</span>
-							</div>
-						</div>
-						<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus ullam corporis provident, nemo quidem ipsa nam commodi placeat molestiae accusantium dolore ipsam, incidunt itaque rem. Labore nulla animi aperiam delectus?</span>
-					</div>
+					<span id="commentMsg"></span>
 				</div>
 			</div>
 		</div>

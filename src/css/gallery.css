@@ -23,6 +23,7 @@ main {
 	width: fit-content;
 	transition: all 0.3s ease-in-out;
 	cursor: pointer;
+	background-color: var(--secondary);
 }
 
 .postContainer:hover {
@@ -58,6 +59,8 @@ img {
 .usernameSpan {
 	font-weight: 500;
 	text-decoration: underline;
+	font-weight: 800;
+	color: var(--font);
 }
 
 .postInfoContainer {
@@ -111,18 +114,18 @@ img {
 	margin-left: .2em;
 }
 
-.commentsContainer {
+#commentsContainer {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
 }
 
-.fullComment {
+#fullComment {
+	display: none;
 	background-color: var(--background);
 	border: 2px solid var(--borders);
 	padding: 0.5em;
 	border-radius: 0.5em;
-	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	gap: 0.4em;
@@ -136,11 +139,6 @@ img {
 .commentTop {
 	display: flex;
 	gap: 0.5em;
-}
-
-.usernameSpan {
-	font-weight: 800;
-	color: var(--font);
 }
 
 .likedPost {
