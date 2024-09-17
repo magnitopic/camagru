@@ -309,6 +309,10 @@ const savePost = async () => {
 	const formData = new FormData();
 	formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
 	formData.append("selectedImg", selImageBlob, "selectedImg.png");
+	formData.append("posx", selectedImg.position.x);
+	formData.append("posy", selectedImg.position.y);
+	formData.append("size", selectedImg.size.width);
+	formData.append("rotation", selectedImg.rotation);
 	formData.append("postMsg", postMsg);
 	formData.append("user_id", user_id); // user_id is a global variable defined in the php file head
 

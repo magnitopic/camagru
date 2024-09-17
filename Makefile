@@ -6,7 +6,7 @@
 #    By: alaparic <alaparic@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/15 15:57:48 by alaparic          #+#    #+#              #
-#    Updated: 2024/09/09 15:13:46 by alaparic         ###   ########.fr        #
+#    Updated: 2024/09/17 07:47:41 by alaparic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ $(NAME):
 			@echo "Using compose files: $(DOCKER_COMPOSE_FILE)"
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --remove-orphans
 			@printf "\n$(BLUE)==> $(CYAN)Camagru is running ✅\n$(RESET)"
-			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)https://localhost:8080\n$(RESET)"
+			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)http://localhost:8080\n$(RESET)"
 
 stop:
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) stop
@@ -52,6 +52,6 @@ re:			clean
 			@docker-compose -p $(NAME) -f $(DOCKER_COMPOSE_FILE) up -d --build --remove-orphans
 			@printf "$(BLUE)==> $(CYAN)Camagru rebuilt 🔄\n$(RESET)"
 			@printf "\n$(BLUE)==> $(CYAN)Camagru is running ✅\n$(RESET)"
-			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)https://localhost:8080\n$(RESET)"
+			@printf "$(BLUE)==> $(BLUE)Accessible on: \n\t$(YELLOW)http://localhost:8080\n$(RESET)"
 
 .PHONY:		all stop clean fclean re re-postgres re-django re-nginx

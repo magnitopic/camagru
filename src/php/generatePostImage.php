@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$rotation = $_POST['rotation'];
 
 		// Generate the post image
-		$result = generatePostImage(postx, posty, size, rotation);
+		$result = generatePostImage($postX, $postY, $size, $rotation);
 		if ($result['status'] === 'error') {
 			echo json_encode($result);
 			exit;
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		// Return a response
-		echo json_encode(['status' => 'success', 'message' => 'Images uploaded and processed successfully', 'postMsg' => $_POST['postMsg']]);
+		echo json_encode(['status' => 'success', 'message' => 'Images uploaded and processed successfully']);
 	} else {
 		echo json_encode(['status' => 'error', 'message' => 'Images or post message not uploaded']);
 	}
@@ -92,6 +92,7 @@ function generatePostImage($postX, $postY, $size, $rotation)
 	$selectedImgPath = 'uploads/selectedImg.png';
 	$outputPath = 'uploads/postImage.png';
 
+	// Saving original images
 	$backgroundImage = imagecreatefrompng($backgroundImagePath);
 	if (!$backgroundImage) {
 		return ['status' => 'error', 'message' => 'Failed to create background image from file'];
@@ -103,27 +104,59 @@ function generatePostImage($postX, $postY, $size, $rotation)
 		return ['status' => 'error', 'message' => 'Failed to create selected image from file'];
 	}
 
-	$backgroundWidth = imagesx($backgroundImage);
-	$backgroundHeight = imagesy($backgroundImage);
-
+	// Resize the selected image
 	$selectedImgWidth = imagesx($selectedImg);
 	$selectedImgHeight = imagesy($selectedImg);
+	$newWidth = $size;
+	$newHeight = $size;
 
-	$x = ($backgroundWidth - $selectedImgWidth) / 2;
-	$y = ($backgroundHeight - $selectedImgHeight) / 2;
+	// Check for valid dimensions and reasonable limits
+	$maxDimension = 100000; // Example limit, adjust as needed
+	if ($newWidth <= 0 || $newHeight <= 0 || $newWidth > $maxDimension || $newHeight > $maxDimension) {
+		imagedestroy($backgroundImage);
+		imagedestroy($selectedImg);
+		return ['status' => 'error', 'message' => 'Invalid dimensions for resized image'];
+	}
 
-	// Copy the selected image onto the background image
-	imagecopy($backgroundImage, $selectedImg, $x, $y, 0, 0, $selectedImgWidth, $selectedImgHeight);
+	$resizedImg = imagecreatetruecolor($newWidth, $newHeight);
+	if (!$resizedImg) {
+		imagedestroy($backgroundImage);
+		imagedestroy($selectedImg);
+		return ['status' => 'error', 'message' => 'Failed to create resized image'];
+	}
+
+	imagealphablending($resizedImg, false);
+	imagesavealpha($resizedImg, true);
+	imagecopyresampled($resizedImg, $selectedImg, 0, 0, 0, 0, $newWidth, $newHeight, $selectedImgWidth, $selectedImgHeight);
+
+	// Rotate the resized image
+	$rotatedImg = imagerotate($resizedImg, $rotation, imageColorAllocateAlpha($resizedImg, 0, 0, 0, 127));
+	if (!$rotatedImg) {
+		imagedestroy($backgroundImage);
+		imagedestroy($selectedImg);
+		imagedestroy($resizedImg);
+		return ['status' => 'error', 'message' => 'Failed to rotate image'];
+	}
+
+	imagealphablending($rotatedImg, false);
+	imagesavealpha($rotatedImg, true);
+
+	// Copy the rotated image onto the background image at the specified position
+	imagecopy($backgroundImage, $rotatedImg, $postX, $postY, 0, 0, imagesx($rotatedImg), imagesy($rotatedImg));
 
 	// Save the final image
 	if (!imagepng($backgroundImage, $outputPath)) {
 		imagedestroy($backgroundImage);
 		imagedestroy($selectedImg);
+		imagedestroy($resizedImg);
+		imagedestroy($rotatedImg);
 		return ['status' => 'error', 'message' => 'Failed to save final image'];
 	}
 
 	imagedestroy($backgroundImage);
 	imagedestroy($selectedImg);
+	imagedestroy($resizedImg);
+	imagedestroy($rotatedImg);
 
 	return ['status' => 'success', 'message' => 'Image generated successfully', 'outputPath' => $outputPath];
 }
