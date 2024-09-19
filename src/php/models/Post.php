@@ -63,7 +63,7 @@ class Post
 		$stmt->execute();
 
 		if ($stmt->rowCount() == 0)
-			return -1;
+			return 0;
 
 		$result = $stmt->fetch(PDO::FETCH_OBJ);
 		return $result->id;

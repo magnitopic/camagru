@@ -3,6 +3,7 @@ const postInfo = document.querySelector(".postInfoContainer");
 const galleryContainer = document.querySelector("#galleryContainer");
 const postTemplate = document.querySelector("#postContainer");
 const likeButton = document.querySelector("#likePostButton");
+const newCommentForm = postInfo.querySelector("#newCommentForm");
 
 let page = 1;
 let selectedPost = null;
@@ -53,6 +54,8 @@ const fetchPosts = async () => {
 		// load post info data
 		postElement.addEventListener("click", () => {
 			handlePostInfo(post);
+			// load post comments
+			loadComments(post.comments);
 		});
 
 		// check post liked by user
@@ -67,6 +70,8 @@ const loadPostInfo = (postElement, post) => {
 	postElement.querySelector("#postImg").src = "php/" + post.imagePath;
 	postElement.querySelector("#postImg").alt = post.title;
 	postElement.querySelector("#postLikes").textContent = post.likes;
+	postElement.querySelector("#postComments").textContent =
+		post.comments.length;
 	postElement.classList.remove("postTemplate");
 	galleryContainer.appendChild(postElement);
 };
@@ -91,19 +96,16 @@ const handlePostInfo = (post) => {
 	if (post.liked) likeButton.classList.add("likedPost");
 	else likeButton.classList.remove("likedPost");
 	document.body.style.overflow = "hidden";
-
-	// load post comments
-	loadComments(post);
 };
 
-const loadComments = (post) => {
+const loadComments = (comments) => {
 	const commentsContainer = postInfo.querySelector("#commentsContainer");
-	
+
 	// remove all previous comments
 	while (commentsContainer.firstChild)
 		commentsContainer.removeChild(commentsContainer.firstChild);
-	
-	if (post.comments.length === 0) {
+
+	if (comments.length === 0) {
 		const noComments = document.createElement("h3");
 		noComments.textContent = "No comments yet!";
 		noComments.style.margin = "auto";
@@ -111,16 +113,15 @@ const loadComments = (post) => {
 		commentsContainer.appendChild(noComments);
 		return;
 	}
-	
+
 	const commentTemplate = postInfo.querySelector("#fullComment");
-	post.comments.forEach((comment) => {
+	comments.forEach((comment) => {
 		const commentElement = commentTemplate.cloneNode(true);
 		commentElement.style.display = "block";
 
 		const authorElement = commentElement.querySelector(".commentAuthor");
 		console.log(comment);
-		
-		
+
 		authorElement.textContent = "alaparic";
 
 		const msgElement = commentElement.querySelector("#commentMsg");
@@ -147,6 +148,30 @@ const updateLikes = (newLikes) => {
 
 	// update like button color
 	likeButton.classList.toggle("likedPost");
+};
+
+const handleNewComment = (event) => {
+	event.preventDefault();
+	const comment = newCommentForm.querySelector("#newComment").value;
+	if (comment === "") return;
+
+	const data = new FormData();
+	data.append("postId", selectedPost.id);
+	data.append("userId", user_id);
+	data.append("comment", comment);
+
+	fetch("php/addComment.php", {
+		method: "POST",
+		body: data,
+	})
+		.then((response) => response.json())
+		.then((newCommentList) => {
+			console.log("New comments: ", newCommentList);
+
+			loadComments(newCommentList);
+			newCommentForm.querySelector("#newComment").value = "";
+		})
+		.catch((error) => console.error("Error:", error));
 };
 
 const checkPageFilled = () => {
@@ -184,4 +209,5 @@ likeButton.addEventListener("click", likePost);
 window.addEventListener("resize", checkPageFilled);
 // create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
+newCommentForm.addEventListener("submit", handleNewComment);
 fetchPosts();

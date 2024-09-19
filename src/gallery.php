@@ -32,7 +32,7 @@ session_start();
 				</div>
 				<div id="comment">
 					<i class="fa-solid fa-comment"></i>
-					<span></span>
+					<span id="postComments"></span>
 				</div>
 			</div>
 		</div>
@@ -54,6 +54,10 @@ session_start();
 						<div><span id="postDate"></span></div>
 					</div>
 				</div>
+				<form id="newCommentForm">
+					<input type="text" placeholder="New comment..." minlength="1" id="newComment">
+					<button id="newCommentButton"><i class="fa-solid fa-paper-plane"></i></button>
+				</form>
 				<div id="commentsContainer">
 				</div>
 				<div id="fullComment">

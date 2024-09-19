@@ -19,12 +19,12 @@ class Comment
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
-	public function newComment($userId, $postId, $content)
+	public function newComment($commenterId, $postId, $content)
 	{
-		$query = "INSERT INTO " . $this->table . " (userId, postId, message) VALUES (:userId, :postId, :content)";
+		$query = "INSERT INTO " . $this->table . " (commenterId, postId, message) VALUES (:commenterId, :postId, :content)";
 		$stmt = $this->conn->prepare($query);
 
-		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+		$stmt->bindParam(':commenterId', $commenterId, PDO::PARAM_INT);
 		$stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
 		$stmt->bindParam(':content', $content);
 

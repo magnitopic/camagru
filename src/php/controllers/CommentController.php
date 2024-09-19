@@ -30,7 +30,7 @@ class CommentController
 	public function newComment($userId, $postId, $content)
 	{
 		if ($this->comment->newComment($userId, $postId, $content)) {
-			return json_encode(['message' => 'Comment added']);
+			return json_encode($this->getCommentsPost($postId));
 		}
 
 		return json_encode(['message' => 'Error adding comment']);
