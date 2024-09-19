@@ -19,3 +19,16 @@ body {
 	background: var(--background);
 	color: var(--font);
 }
+
+.error-message {
+	display: none;
+	background-color: #bf7877;
+	color: white;
+	padding: 1rem;
+	font-weight: bold;
+	text-align: center;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+}

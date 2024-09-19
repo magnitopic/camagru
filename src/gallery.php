@@ -10,6 +10,7 @@ session_start();
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/gallery.css">
 	<script defer src="js/gallery.js"></script>
+	<script defer src="js/error.js"></script>
 	<script>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";
 	</script>

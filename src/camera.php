@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 	<title>Camagru | Camera</title>
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/camera.css">
+	<script defer src="js/error.js"></script>
 	<script src="js/camera.js" defer></script>
 	<script>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";

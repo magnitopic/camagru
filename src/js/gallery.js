@@ -31,15 +31,16 @@ const fetchPosts = async () => {
 	const response = await fetch(
 		`/php/getPosts.php?page=${page}&user_id=${user_id}`
 	);
-	const posts = await response.json();
-
-	if (page === 1 && posts.length === 0) {
-		galleryContainer.innerHTML =
-			"<center>\
-			<h1>Gallery is empty for now :(</h1>\
-			<h3>Be the first to publish a picture!</h3>\
-			</center>";
+	let posts;
+	try {
+		posts = await response.json();
+	} catch (error) {
+		showError("Failed to fetch posts");
+		showGalleryEmptyMgs();
+		return;
 	}
+
+	if (page === 1 && posts.length === 0) showGalleryEmptyMgs();
 	if (posts.length === 0) {
 		observer.unobserve(document.querySelector("footer"));
 		return;
@@ -64,6 +65,14 @@ const fetchPosts = async () => {
 	});
 	page++;
 	checkPageFilled();
+};
+
+const showGalleryEmptyMgs = () => {
+	galleryContainer.innerHTML =
+		"<center>\
+		<h1>Gallery is empty for now :(</h1>\
+		<h3>Be the first to publish a picture!</h3>\
+		</center>";
 };
 
 const loadPostInfo = (postElement, post) => {
@@ -171,7 +180,7 @@ const handleNewComment = (event) => {
 			loadComments(newCommentList);
 			newCommentForm.querySelector("#newComment").value = "";
 		})
-		.catch((error) => console.error("Error:", error));
+		.catch((error) => showError("Failed to add comment"));
 };
 
 const checkPageFilled = () => {
@@ -201,7 +210,7 @@ const likePost = async () => {
 			.then((data) => {
 				updateLikes(data);
 			})
-			.catch((error) => console.error("Error:", error));
+			.catch((error) => showError("Failed to like post"));
 	}
 };
 

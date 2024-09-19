@@ -3,6 +3,11 @@ session_start();
 ?>
 <link rel="stylesheet" href="css/_general.css" />
 <link rel="stylesheet" href="css/header.css" />
+
+<!-- Error message container -->
+<div id="error-message" class="error-message"></div>
+
+<!-- Header -->
 <header>
 	<a href="/" class="header-logo-container">
 		<img src="img/logo.png" alt="logo" />

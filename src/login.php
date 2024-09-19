@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<title>Camagru | LogIn</title>
 	<link rel="stylesheet" href="/css/_general.css" />
 	<link rel="stylesheet" href="/css/accountForms.css" />
+	<script defer src="/js/error.js"></script>
 	<link rel="shortcut icon" href="/img/logo.png" type="image/x-icon" />
 </head>
 

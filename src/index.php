@@ -11,6 +11,7 @@ session_start();
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
 	<link rel="stylesheet" href="/css/_general.css" />
 	<link rel="stylesheet" href="/css/index.css" />
+	<script defer src="/js/error.js"></script>
 </head>
 
 <body>

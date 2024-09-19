@@ -35,6 +35,7 @@ $user = $userController->getUserById($_SESSION['user_id']);
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
 	<link rel="stylesheet" href="css/_general.css" />
 	<link rel="stylesheet" href="css/settigs.css" />
+	<script defer src="js/error.js"></script>
 	<title>Camagru | Settings</title>
 </head>
 
