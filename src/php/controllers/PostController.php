@@ -38,4 +38,9 @@ class PostController
 	{
 		return $this->post->getIdLastPost();
 	}
+
+	public function deletePost($postId)
+	{
+		return $this->post->deletePost($postId);
+	}
 }

@@ -198,7 +198,7 @@ img {
 	position: absolute;
 	top: 0.5rem;
 	left: 0.5rem;
-	color: var(--error);
+	color: rgb(255, 54, 54);
 	background-color: var(--background-light);
 	padding: 0.25rem;
 	border-radius: 0.25rem;

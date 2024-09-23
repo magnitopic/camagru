@@ -319,21 +319,22 @@ window.onload = () => {
 		formData.append("postMsg", postMsg);
 		formData.append("user_id", user_id); // user_id is a global variable defined in the php file head
 
-		/* fetch("/php/generatePostImage.php", {
-        method: "POST",
-        body: formData,
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log("Success:", data);
-        })
-        .catch((error) => {
-            showError("Failed to save post");
-        }); */
+		fetch("/php/generatePostImage.php", {
+			method: "POST",
+			body: formData,
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				loadUserPosts();
+				resetPicture();
+			})
+			.catch((error) => {
+				showError("Failed to save post");
+			});
 
 		/** TODO -> Debugging method, remove when working */
 		/** ------------------------ */
-		fetch("/php/generatePostImage.php", {
+		/* fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -352,13 +353,16 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
-			});
+			}); */
 		/** ----------------------- */
 	};
 
 	const loadUserPosts = () => {
 		const oldPostContainer = document.querySelector("#oldPosts");
 		const postContainer = document.querySelector("#postContainer");
+
+		while (oldPostContainer.firstChild)
+			oldPostContainer.removeChild(oldPostContainer.firstChild);
 
 		fetch(`/php/getUserPosts.php?user_id=${user_id}&page=1`, {
 			method: "GET",
@@ -371,21 +375,9 @@ window.onload = () => {
 					const postImage = newPost.querySelector("img");
 					postImage.src = "php/" + post.imagePath;
 
-					const deleteButton = newPost.querySelector("i");
+					const deleteButton = newPost.querySelector(".deleteIcon");
 					deleteButton.addEventListener("click", () => {
-						fetch("/php/deletePost.php", {
-							method: "POST",
-							body: JSON.stringify({ post_id: post.id }),
-						})
-							.then((response) => response.json())
-							.then((data) => {
-								if (data.status === "success") {
-									postImage.remove();
-								}
-							})
-							.catch((error) => {
-								showError("Failed to delete post");
-							});
+						handleDeletePost(post, oldPostContainer, newPost);
 					});
 					oldPostContainer.appendChild(newPost);
 				});
@@ -393,6 +385,22 @@ window.onload = () => {
 			.catch((error) => {
 				showError("Failed to load posts");
 				console.log("Error:", error);
+			});
+	};
+
+	const handleDeletePost = (post, oldPostContainer, newPost) => {
+		fetch(`/php/deletePost.php?id=${post.id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				oldPostContainer.removeChild(newPost);
+			})
+			.catch((error) => {
+				showError("Failed to delete post");
 			});
 	};
 

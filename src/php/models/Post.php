@@ -82,4 +82,25 @@ class Post
 		$result = $stmt->fetch(PDO::FETCH_OBJ);
 		return $result->id;
 	}
+
+	public function deletePost($postId)
+	{
+		// Delete related likes first to avoid foreign key constraint violation
+		$queryLikes = "DELETE FROM likes WHERE postId = :postId";
+		$stmtLikes = $this->conn->prepare($queryLikes);
+		$stmtLikes->bindParam(':postId', $postId, PDO::PARAM_INT);
+		$stmtLikes->execute();
+
+		// Delete related comments first to avoid foreign key constraint violation
+		$queryComments = "DELETE FROM comment WHERE postId = :postId";
+		$stmtComments = $this->conn->prepare($queryComments);
+		$stmtComments->bindParam(':postId', $postId, PDO::PARAM_INT);
+		$stmtComments->execute();
+
+		// Now delete the post
+		$query = "DELETE FROM " . $this->table . " WHERE id = :postId";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
 }

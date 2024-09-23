@@ -19,6 +19,7 @@ if (!isset($_SESSION['user_id'])) {
 	<script>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";
 	</script>
+	<script src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 </head>
 
@@ -72,10 +73,10 @@ if (!isset($_SESSION['user_id'])) {
 		<div id="oldPostContainer">
 			<h2 class="text-font font-semibold">Your posts</h2>
 			<div id="oldPosts">
-				<div id="postContainer">
-					<i class="deleteIcon fa-solid fa-trash">Del</i>
-					<img src="php/uploads/1.png" alt="postImage" id="postImg">
-				</div>
+			</div>
+			<div id="postContainer">
+				<i class="deleteIcon fa-solid fa-trash"></i>
+				<img src="php/uploads/1.png" alt="postImage" id="postImg">
 			</div>
 		</div>
 	</main>
