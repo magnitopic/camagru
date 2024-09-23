@@ -328,7 +328,7 @@ window.onload = () => {
             console.log("Success:", data);
         })
         .catch((error) => {
-            console.error("Error:", error);
+            showError("Failed to save post");
         }); */
 
 		/** TODO -> Debugging method, remove when working */
@@ -354,6 +354,46 @@ window.onload = () => {
 				console.error("Fetch error:", error);
 			});
 		/** ----------------------- */
+	};
+
+	const loadUserPosts = () => {
+		const oldPostContainer = document.querySelector("#oldPosts");
+		const postContainer = document.querySelector("#postContainer");
+
+		fetch(`/php/getUserPosts.php?user_id=${user_id}&page=1`, {
+			method: "GET",
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				data.forEach((post) => {
+					const newPost = postContainer.cloneNode(true);
+					newPost.style.display = "flex";
+					const postImage = newPost.querySelector("img");
+					postImage.src = "php/" + post.imagePath;
+
+					const deleteButton = newPost.querySelector("i");
+					deleteButton.addEventListener("click", () => {
+						fetch("/php/deletePost.php", {
+							method: "POST",
+							body: JSON.stringify({ post_id: post.id }),
+						})
+							.then((response) => response.json())
+							.then((data) => {
+								if (data.status === "success") {
+									postImage.remove();
+								}
+							})
+							.catch((error) => {
+								showError("Failed to delete post");
+							});
+					});
+					oldPostContainer.appendChild(newPost);
+				});
+			})
+			.catch((error) => {
+				showError("Failed to load posts");
+				console.log("Error:", error);
+			});
 	};
 
 	/* Listeners and initial function */
@@ -414,4 +454,5 @@ window.onload = () => {
 	saveButton.addEventListener("click", savePost);
 
 	initialSetup();
+	loadUserPosts();
 };

@@ -1,6 +1,12 @@
 main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	max-width: 80rem;
 	margin: 2em auto;
+}
+
+#newPostContainer {
 	padding: 2rem;
 	background-color: var(--background-light);
 	border: 1px solid var(--borders);
@@ -8,6 +14,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	margin-bottom: 2em;
 }
 
 .postImages {
@@ -143,4 +150,56 @@ main {
 
 #saveButton:disabled:hover {
 	background-color: #a0aec0;
+}
+
+#oldPostContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	padding: 0.5em 1rem;
+	background-color: var(--background-light);
+	border: 1px solid var(--borders);
+	border-radius: 0.5rem;
+}
+
+#oldPosts {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	overflow: auto;
+	max-width: 100%;
+}
+
+#postContainer {
+	display: none;
+	position: relative;
+	border: 2px solid var(--borders);
+	border-radius: 0.5em;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	background-color: var(--background-light);
+	width: fit-content;
+	transition: all 0.3s ease-in-out;
+}
+
+.postContainer:hover {
+	background-color: var(--primary);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+img {
+	width: 20em;
+	height: auto;
+	border-radius: 0.5em 0.5em 0 0;
+}
+
+.deleteIcon {
+	cursor: pointer;
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	color: var(--error);
+	background-color: var(--background-light);
+	padding: 0.25rem;
+	border-radius: 0.25rem;
 }

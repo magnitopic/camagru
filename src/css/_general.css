@@ -9,6 +9,7 @@
 	--secondary: #b57410;
 	--font: #cad9e5;
 	--borders: #7a7164;
+	--error: #bf7877;
 }
 
 * {
@@ -22,7 +23,7 @@ body {
 
 .error-message {
 	display: none;
-	background-color: #bf7877;
+	background-color: var(--error);
 	color: white;
 	padding: 1rem;
 	font-weight: bold;

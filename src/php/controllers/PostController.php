@@ -29,6 +29,11 @@ class PostController
 		return $this->post->getPosts($limit, $offset);
 	}
 
+	public function getUserPosts($userId)
+	{
+		return $this->post->getUserPosts($userId);
+	}
+
 	public function getIdLastPost()
 	{
 		return $this->post->getIdLastPost();

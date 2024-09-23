@@ -47,11 +47,25 @@ class Post
 			(SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) as likes 
 			FROM " . $this->table . " p 
 			JOIN user u ON p.posterId = u.id
-			ORDER BY p.date DESC
+			ORDER BY p.id DESC
 			LIMIT :limit OFFSET :offset";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 		$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
+	public function getUserPosts($userId)
+	{
+		$query = "SELECT DISTINCT p.*, u.username as author, 
+			(SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) as likes 
+			FROM " . $this->table . " p 
+			JOIN user u ON p.posterId = u.id
+			WHERE p.posterId = :userId
+			ORDER BY p.id DESC";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
