@@ -173,14 +173,22 @@ const handleNewComment = (event) => {
 		method: "POST",
 		body: data,
 	})
-		.then((response) => response.json())
+		.then((response) => {
+			if (!response.ok) {
+				if (response.status === 401) throw new Error("Unauthorized");
+				else throw new Error("Failed to like post");
+			}
+			return response.json();
+		})
 		.then((newCommentList) => {
-			console.log("New comments: ", newCommentList);
-
 			loadComments(newCommentList);
 			newCommentForm.querySelector("#newComment").value = "";
 		})
-		.catch((error) => showError("Failed to add comment"));
+		.catch((error) => {
+			if (error.message === "Unauthorized")
+				window.location.href = "/login.php";
+			else showError(error.message);
+		});
 };
 
 const checkPageFilled = () => {
@@ -206,11 +214,22 @@ const handleIntersect = (entries, observer) => {
 const likePost = async () => {
 	if (selectedPost) {
 		fetch(`php/likePost.php?postId=${selectedPost.id}&userId=${user_id}`)
-			.then((response) => response.json())
+			.then((response) => {
+				if (!response.ok) {
+					if (response.status === 401)
+						throw new Error("Unauthorized");
+					else throw new Error("Failed to like post");
+				}
+				return response.json();
+			})
 			.then((data) => {
 				updateLikes(data);
 			})
-			.catch((error) => showError("Failed to like post"));
+			.catch((error) => {
+				if (error.message === "Unauthorized")
+					window.location.href = "/login.php";
+				else showError(error.message);
+			});
 	}
 };
 

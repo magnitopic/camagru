@@ -5,6 +5,10 @@ main {
 	padding: 2rem;
 }
 
+section {
+	gap: 1rem;
+}
+
 .title_section {
 	text-align: center;
 	margin-bottom: 2rem;
