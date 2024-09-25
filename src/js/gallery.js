@@ -183,6 +183,13 @@ const handleNewComment = (event) => {
 		.then((newCommentList) => {
 			loadComments(newCommentList);
 			newCommentForm.querySelector("#newComment").value = "";
+			// remove all elements from galleryContainer
+			while (galleryContainer.firstChild) {
+				galleryContainer.removeChild(galleryContainer.firstChild);
+			}
+			// fetch and load posts
+			page = 1;
+			fetchPosts();
 		})
 		.catch((error) => {
 			if (error.message === "Unauthorized")
