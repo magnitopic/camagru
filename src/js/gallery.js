@@ -129,9 +129,8 @@ const loadComments = (comments) => {
 		commentElement.style.display = "block";
 
 		const authorElement = commentElement.querySelector(".commentAuthor");
-		console.log(comment);
 
-		authorElement.textContent = "alaparic";
+		authorElement.textContent = comment.author;
 
 		const msgElement = commentElement.querySelector("#commentMsg");
 		msgElement.textContent = comment.message;

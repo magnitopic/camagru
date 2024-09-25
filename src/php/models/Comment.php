@@ -12,7 +12,7 @@ class Comment
 
 	public function getCommentsPost($postId)
 	{
-		$query = "SELECT * FROM " . $this->table . " WHERE postId = :post_id";
+		$query = "SELECT c.*, u.username AS author FROM " . $this->table . " c JOIN user u ON c.commenterId = u.id WHERE c.postId = :post_id";
 		$stmt = $this->conn->prepare($query);
 		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
 		$stmt->execute();

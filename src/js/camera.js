@@ -384,7 +384,6 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				showError("Failed to load posts");
-				console.log("Error:", error);
 			});
 	};
 
