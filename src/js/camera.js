@@ -56,6 +56,11 @@ window.onload = () => {
 			img.addEventListener("click", () => {
 				selectedImg.src = img;
 				img.style.background = "#b57410";
+				console.log(selectedImg.previousSelectedImage);
+				console.log(
+					selectedImg.previousSelectedImage != selectedImg.src
+				);
+
 				if (
 					selectedImg.previousSelectedImage != null &&
 					selectedImg.previousSelectedImage.src != selectedImg.src
@@ -255,12 +260,14 @@ window.onload = () => {
 			slider.style.display = "flex";
 		});
 		flashEffect();
-		editImages();
 	};
 
 	const resetPicture = () => {
-		if (selectedImg.previousSelectedImage != null)
+		if (selectedImg.previousSelectedImage != null) {
 			selectedImg.previousSelectedImage.style.background = "#1051B5";
+			console.log("HERE");
+			selectedImg.previousSelectedImage = null;
+		}
 		initialSetup(); // Reinitialize the camera when resetting the picture
 
 		video.style.display = "block";
@@ -369,6 +376,12 @@ window.onload = () => {
 		})
 			.then((response) => response.json())
 			.then((data) => {
+				if (data.length === 0) {
+					oldPostContainer.innerHTML =
+						"<p>You haven't published any posts yet</p>";
+					return;
+				}
+
 				data.forEach((post) => {
 					const newPost = postContainer.cloneNode(true);
 					newPost.style.display = "flex";
@@ -461,5 +474,6 @@ window.onload = () => {
 	saveButton.addEventListener("click", savePost);
 
 	initialSetup();
+	editImages();
 	loadUserPosts();
 };
