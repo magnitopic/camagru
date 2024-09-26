@@ -3,16 +3,10 @@ session_start();
 
 require_once 'controllers/PostController.php';
 
-// Enable error reporting
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 header('Content-Type: application/json');
 
 try {
 	$postController = new PostController();
-	// echo "PostController initialized successfully."; // Comment out or remove this line
 } catch (Exception $e) {
 	echo json_encode(['status' => 'error', 'message' => "Error initializing PostController: " . $e->getMessage()]);
 	exit;
@@ -73,102 +67,90 @@ function recvImages()
 	if (!is_dir($uploadsDir))
 		mkdir($uploadsDir, 0755, true);
 
-	// Save the images to the server
-	$backgroundImagePath = $uploadsDir . '/backgroundImage.png';
-	$selectedImgPath = $uploadsDir . '/selectedImg.png';
+	// Move the uploaded files to the uploads directory
+	$backgroundImagePath = $uploadsDir . '/' . basename($backgroundImage['name']);
+	$selectedImgPath = $uploadsDir . '/' . basename($selectedImg['name']);
 
-	if (!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath))
-		return ['status' => 'error', 'message' => 'Failed to save background image'];
+	if (
+		!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath) ||
+		!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)
+	)
+		return ['status' => 'error', 'message' => 'Failed to move uploaded files'];
 
-	if (!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath))
-		return ['status' => 'error', 'message' => 'Failed to save selected image'];
-
-	return ['status' => 'success', 'message' => 'Images uploaded successfully', 'postMsg' => $postMsg];
+	return ['status' => 'success', 'backgroundImagePath' => $backgroundImagePath, 'selectedImgPath' => $selectedImgPath];
 }
 
 function generatePostImage($postX, $postY, $size, $rotation)
 {
 	$backgroundImagePath = 'uploads/backgroundImage.png';
 	$selectedImgPath = 'uploads/selectedImg.png';
-	$outputPath = 'uploads/postImage.png';
 
-	$rotation = $rotation * -1; // Reverse the rotation direction
+	$rotation = $rotation * -1;
 
-	// Saving original images
+	// Load the background image
 	$backgroundImage = imagecreatefrompng($backgroundImagePath);
-	if (!$backgroundImage) {
-		return ['status' => 'error', 'message' => 'Failed to create background image from file'];
-	}
+	if (!$backgroundImage)
+		return ['status' => 'error', 'message' => 'Failed to load background image'];
 
+	// Load the selected image
 	$selectedImg = imagecreatefrompng($selectedImgPath);
-	if (!$selectedImg) {
-		imagedestroy($backgroundImage);
-		return ['status' => 'error', 'message' => 'Failed to create selected image from file'];
-	}
+	if (!$selectedImg)
+		return ['status' => 'error', 'message' => 'Failed to load selected image'];
+
+	// Get dimensions of the background image
+	$backgroundWidth = imagesx($backgroundImage);
+	$backgroundHeight = imagesy($backgroundImage);
+
+	// Calculate the actual pixel values based on percentages
+	$posX = ($postX / 100) * $backgroundWidth;
+	$posY = ($postY / 100) * $backgroundHeight;
+	$width = ($size / 100) * $backgroundWidth;
+	$height = ($size / 100) * $backgroundHeight;
 
 	// Resize the selected image
-	$selectedImgWidth = imagesx($selectedImg);
-	$selectedImgHeight = imagesy($selectedImg);
-	$newWidth = $size;
-	$newHeight = $size;
+	$resizedImg = imagescale($selectedImg, $width, $height);
 
-	// Check for valid dimensions and reasonable limits
-	$maxDimension = 100000; // Example limit, adjust as needed
-	if ($newWidth <= 0 || $newHeight <= 0 || $newWidth > $maxDimension || $newHeight > $maxDimension) {
-		imagedestroy($backgroundImage);
-		imagedestroy($selectedImg);
-		return ['status' => 'error', 'message' => 'Invalid dimensions for resized image'];
-	}
+	// Create a transparent background for the rotated image
+	$transparentBg = imagecreatetruecolor($width, $height);
+	imagealphablending($transparentBg, false);
+	imagesavealpha($transparentBg, true);
+	$transparentColor = imagecolorallocatealpha($transparentBg, 0, 0, 0, 127);
+	imagefill($transparentBg, 0, 0, $transparentColor);
 
-	$resizedImg = imagecreatetruecolor($newWidth, $newHeight);
-	if (!$resizedImg) {
-		imagedestroy($backgroundImage);
-		imagedestroy($selectedImg);
-		return ['status' => 'error', 'message' => 'Failed to create resized image'];
-	}
+	// Rotate the selected image with a transparent background
+	$rotatedImg = imagerotate($resizedImg, $rotation, $transparentColor);
 
-	imagealphablending($resizedImg, false);
-	imagesavealpha($resizedImg, true);
-	imagecopyresampled($resizedImg, $selectedImg, 0, 0, 0, 0, $newWidth, $newHeight, $selectedImgWidth, $selectedImgHeight);
+	// Get dimensions of the rotated image
+	$rotatedWidth = imagesx($rotatedImg);
+	$rotatedHeight = imagesy($rotatedImg);
 
-	// Rotate the resized image
-	$rotatedImg = imagerotate($resizedImg, $rotation, imageColorAllocateAlpha($resizedImg, 0, 0, 0, 127));
-	if (!$rotatedImg) {
-		imagedestroy($backgroundImage);
-		imagedestroy($selectedImg);
-		imagedestroy($resizedImg);
-		return ['status' => 'error', 'message' => 'Failed to rotate image'];
-	}
+	// Calculate the position to center the rotated image
+	$centerX = $posX - ($rotatedWidth / 2);
+	$centerY = $posY - ($rotatedHeight / 2);
 
-	imagealphablending($rotatedImg, false);
-	imagesavealpha($rotatedImg, true);
-
-	// Copy the rotated image onto the background image at the specified position
-	imagecopy($backgroundImage, $rotatedImg, $postX, $postY, 0, 0, imagesx($rotatedImg), imagesy($rotatedImg));
+	// Merge the selected image onto the background image
+	imagecopy($backgroundImage, $rotatedImg, $centerX, $centerY, 0, 0, $rotatedWidth, $rotatedHeight);
 
 	// Save the final image
-	if (!imagepng($backgroundImage, $outputPath)) {
-		imagedestroy($backgroundImage);
-		imagedestroy($selectedImg);
-		imagedestroy($resizedImg);
-		imagedestroy($rotatedImg);
-		return ['status' => 'error', 'message' => 'Failed to save final image'];
-	}
+	$outputPath = 'uploads/postImage.png';
+	if (!imagepng($backgroundImage, $outputPath))
+		return ['status' => 'error', 'message' => 'Failed to save post image'];
 
+	// Clean up
 	imagedestroy($backgroundImage);
 	imagedestroy($selectedImg);
 	imagedestroy($resizedImg);
 	imagedestroy($rotatedImg);
+	imagedestroy($transparentBg);
 
-	return ['status' => 'success', 'message' => 'Image generated successfully', 'outputPath' => $outputPath];
+	return ['status' => 'success', 'fileName' => $outputPath];
 }
 
-function savePost($user_id, $postMsg)
+function savePost($userId, $postMsg)
 {
 	$postController = new PostController();
-	$result = $postController->createNewPost($user_id, $postMsg);
-	if ($result === false) {
+	$result = $postController->createNewPost($userId, $postMsg);
+	if ($result === false)
 		return ['status' => 'error', 'message' => 'Failed to save post to database'];
-	}
 	return ['status' => 'success', 'fileName' => $result];
 }

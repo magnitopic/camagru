@@ -74,11 +74,10 @@ if (!isset($_SESSION['user_id'])) {
 		</div>
 		<div id="oldPostContainer">
 			<h2 class="text-font font-semibold">Your posts</h2>
-			<div id="oldPosts">
-			</div>
+			<div id="oldPosts"></div>
 			<div id="postContainer">
 				<i class="deleteIcon fa-solid fa-trash"></i>
-				<img src="php/uploads/1.png" alt="postImage" id="postImg">
+				<img src="" alt="postImage" id="postImg">
 			</div>
 		</div>
 	</main>
