@@ -116,7 +116,6 @@ window.onload = () => {
 		ctx.translate(posX, posY);
 		ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
 
-		// Draw the image, adjusting the position to account for the translation
 		ctx.drawImage(
 			selectedImg.src,
 			-(width / 2),
@@ -421,6 +420,7 @@ window.onload = () => {
 	};
 
 	/* Listeners and initial function */
+
 	startButton.addEventListener(
 		"click",
 		(ev) => {
@@ -456,10 +456,15 @@ window.onload = () => {
 
 	canvas.addEventListener("click", (event) => {
 		const rect = canvas.getBoundingClientRect();
-		const x = ((event.clientX - rect.left) / canvas.width) * 100;
-		const y = ((event.clientY - rect.top) / canvas.height) * 100;
-		selectedImg.position.x = x;
-		selectedImg.position.y = y;
+		const scaleX = canvas.width / rect.width;
+		const scaleY = canvas.height / rect.height;
+
+		const x = (event.clientX - rect.left) * scaleX;
+		const y = (event.clientY - rect.top) * scaleY;
+
+		selectedImg.position.x = (x / canvas.width) * 100;
+		selectedImg.position.y = (y / canvas.height) * 100;
+
 		drawEntireScene();
 	});
 
@@ -479,6 +484,27 @@ window.onload = () => {
 	});
 
 	saveButton.addEventListener("click", savePost);
+
+	// Event listener for resizing the window
+	function debounce(func, timeout = 300) {
+		let timer;
+		return (...args) => {
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				func.apply(this, args);
+			}, timeout);
+		};
+	}
+
+	const processChange = debounce(() => {
+		resetPicture();
+		imgWidth = canvasContainer.offsetWidth;
+		initialSetup();
+	});
+
+	window.addEventListener("resize", () => {
+		processChange();
+	});
 
 	initialSetup();
 	editImages();
