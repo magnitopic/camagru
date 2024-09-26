@@ -1,5 +1,5 @@
 window.onload = () => {
-	const canvas = document.querySelector("canvas");
+	const canvas = document.querySelector(".final_image_canvas");
 	const video = document.querySelector("#video");
 	const startButton = document.querySelector("#startButton");
 	const retakeButton = document.querySelector("#retakeButton");
@@ -10,10 +10,11 @@ window.onload = () => {
 	const sliderContainer = document.querySelectorAll(".sliderContainer");
 	const postMsg = document.querySelector("#postMsg");
 	const imgFileInput = document.querySelector("#imgFileInput");
+	const canvasContainer = document.querySelector(".canvasContainer");
 	const imgFile = document.querySelector("#imgFile");
 	const ctx = canvas.getContext("2d");
 
-	let imgWidth = 1000;
+	let imgWidth = canvasContainer.offsetWidth;
 	let imgHeight = 0; // Will be computed based on the aspect ratio of the video
 	let reader;
 	let postMsgValue = "";
@@ -32,7 +33,7 @@ window.onload = () => {
 	class SelectedImg {
 		constructor() {
 			this.position = { x: 0, y: 0 };
-			this.size = { width: 100, height: 100 };
+			this.size = { width: 10, height: 10 };
 			this.rotation = 1;
 			this.src = null;
 			this.previousSelectedImage = null;
@@ -56,11 +57,6 @@ window.onload = () => {
 			img.addEventListener("click", () => {
 				selectedImg.src = img;
 				img.style.background = "#b57410";
-				console.log(selectedImg.previousSelectedImage);
-				console.log(
-					selectedImg.previousSelectedImage != selectedImg.src
-				);
-
 				if (
 					selectedImg.previousSelectedImage != null &&
 					selectedImg.previousSelectedImage.src != selectedImg.src
@@ -106,32 +102,39 @@ window.onload = () => {
 		ctx.stroke();
 	};
 
-	function drawTest() {
+	function selectedImgToCanvas() {
+		const posX =
+			(selectedImg.position.x / 100) * backgroundImage.size.width;
+		const posY =
+			(selectedImg.position.y / 100) * backgroundImage.size.height;
+		const width =
+			(selectedImg.size.width / 100) * backgroundImage.size.width;
+		const height =
+			(selectedImg.size.height / 100) * backgroundImage.size.height;
+
 		ctx.save();
-		ctx.translate(selectedImg.position.x, selectedImg.position.y);
+		ctx.translate(posX, posY);
 		ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
 
 		// Draw the image, adjusting the position to account for the translation
 		ctx.drawImage(
 			selectedImg.src,
-			-(selectedImg.size.width / 2),
-			-(selectedImg.size.height / 2),
-			selectedImg.size.width,
-			selectedImg.size.height
+			-(width / 2),
+			-(height / 2),
+			width,
+			height
 		);
-
 		ctx.restore();
 	}
 
 	const drawSelectedImage = () => {
 		if (selectedImg.src === null) return;
-		if (selectedImg.src.complete) drawTest();
+		if (selectedImg.src.complete) selectedImgToCanvas();
 		else {
 			selectedImg.src.onload = () => {
-				drawTest();
+				selectedImgToCanvas();
 			};
 		}
-
 		enableSaveButton();
 	};
 
@@ -265,9 +268,10 @@ window.onload = () => {
 	const resetPicture = () => {
 		if (selectedImg.previousSelectedImage != null) {
 			selectedImg.previousSelectedImage.style.background = "#1051B5";
-			console.log("HERE");
 			selectedImg.previousSelectedImage = null;
 		}
+		postMsg.value = "";
+
 		initialSetup(); // Reinitialize the camera when resetting the picture
 
 		video.style.display = "block";
@@ -279,7 +283,7 @@ window.onload = () => {
 		imgFile.style.display = "flex";
 
 		rotationSlider.value = 1;
-		sizeSlider.value = 100;
+		sizeSlider.value = 10;
 
 		saveButton.disabled = true;
 		saveButton.style.cursor = "not-allowed";
@@ -437,8 +441,9 @@ window.onload = () => {
 	);
 
 	sizeSlider.addEventListener("input", (ev) => {
-		selectedImg.size.width = ev.target.value;
-		selectedImg.size.height = ev.target.value;
+		const sizePercentage = ev.target.value;
+		selectedImg.size.width = sizePercentage;
+		selectedImg.size.height = sizePercentage;
 		drawEntireScene();
 		ev.preventDefault();
 	});
@@ -449,10 +454,12 @@ window.onload = () => {
 		ev.preventDefault();
 	});
 
-	canvas.addEventListener("click", () => {
+	canvas.addEventListener("click", (event) => {
 		const rect = canvas.getBoundingClientRect();
-		selectedImg.position.x = event.clientX - rect.left;
-		selectedImg.position.y = event.clientY - rect.top;
+		const x = ((event.clientX - rect.left) / canvas.width) * 100;
+		const y = ((event.clientY - rect.top) / canvas.height) * 100;
+		selectedImg.position.x = x;
+		selectedImg.position.y = y;
 		drawEntireScene();
 	});
 

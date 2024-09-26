@@ -7,38 +7,58 @@ main {
 }
 
 #newPostContainer {
-	padding: 2rem;
+	padding: .5rem;
 	background-color: var(--background-light);
 	border: 1px solid var(--borders);
 	border-radius: 0.5rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	margin-bottom: 2em;
+	margin: .5em .5em 1em .5em;
+	width: 100%;
+}
+
+.canvasContainer{
+	flex: 5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	max-width: 100%;
 }
 
 .postImages {
 	display: flex;
 	gap: 1rem;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+@media (max-width: 768px) {
+	.postImages {
+		flex-direction: column;
+	}
 }
 
 .stream_player {
 	border: 1px solid #e53e3e;
 	border-radius: 0.5rem;
+	max-width: 100%;
 }
 
 .final_image_canvas {
 	border: 1px solid var(--borders);
 	border-radius: 0.5rem;
 	display: none;
+	max-width: 100%;
 }
 
 .side_panel {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
-	max-width: 20rem;
+	gap: .5rem;
 	padding: 1rem;
+	flex: 1;
 }
 
 #startButton {
@@ -98,6 +118,13 @@ main {
 	align-items: center;
 	flex-direction: column;
 	display: none;
+}
+
+.allSelectableImages{
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .defaultImgs {

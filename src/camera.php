@@ -49,18 +49,20 @@ if (!isset($_SESSION['user_id'])) {
 					</button>
 					<div class="imgContainer">
 						<p class="text-font font-semibold">Select an overlay image</p>
-						<img class="defaultImgs" src="img/rocket.png" alt="rocket" title="Rocket">
-						<img class="defaultImgs" src="img/flower.png" alt="flower" title="Flower">
-						<img class="defaultImgs" src="img/42.png" alt="42logo" title="42logo">
-						<img class="defaultImgs" src="img/c.png" alt="c" title="c">
-						<img class="defaultImgs" src="img/github.png" alt="github" title="github">
+						<div class="allSelectableImages">
+							<img class="defaultImgs" src="img/rocket.png" alt="rocket" title="Rocket">
+							<img class="defaultImgs" src="img/flower.png" alt="flower" title="Flower">
+							<img class="defaultImgs" src="img/42.png" alt="42logo" title="42logo">
+							<img class="defaultImgs" src="img/c.png" alt="c" title="c">
+							<img class="defaultImgs" src="img/github.png" alt="github" title="github">
+						</div>
 					</div>
 					<div class="sliderContainer">
 						<label for="size">Change image size </label>
-						<input type="range" min="30" max="1000" value="100" class="slider" id="size" name="rotation">
+						<input type="range" min="5" max="100" value="10" class="slider" id="size" name="size">
 					</div>
 					<div class="sliderContainer">
-						<label for="rotation">Change image rotationw</label>
+						<label for="rotation">Change image rotation</label>
 						<input type="range" min="0" max="360" value="1" class="slider" id="rotation" name="rotation">
 					</div>
 				</div>
