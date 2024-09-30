@@ -16,6 +16,7 @@ postInfo.addEventListener("click", () => {
 		postInfo.style.display = "none";
 		selectedPost = null;
 		document.body.style.overflow = "visible";
+		shareDropdown.classList.remove("show");
 	}
 });
 
@@ -25,6 +26,7 @@ document.addEventListener("keydown", (event) => {
 		postInfo.style.display = "none";
 		selectedPost = null;
 		document.body.style.overflow = "visible";
+		shareDropdown.classList.remove("show");
 	}
 });
 
@@ -106,6 +108,26 @@ const handlePostInfo = (post) => {
 	if (post.liked) likeButton.classList.add("likedPost");
 	else likeButton.classList.remove("likedPost");
 	document.body.style.overflow = "hidden";
+
+	const postUrl = window.location.href;
+	const postText = `Check out this post by ${post.author} in the Camagru project: "${post.title}"`;
+
+	// update share links
+	let shareLinks = [
+		`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+			postUrl
+		)}&text=${encodeURIComponent(postText)}`,
+		`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+			postUrl
+		)}`,
+		`https://www.linkedin.com/feed/?shareActive=true&text=${
+			encodeURIComponent(postText) + " " + encodeURIComponent(postUrl)
+		}`,
+	];
+	shareDropdown.querySelectorAll("a").forEach((link, index) => {
+		link.href = shareLinks[index];
+		link.target = "_blank";
+	});
 };
 
 const loadComments = (comments) => {
@@ -245,6 +267,9 @@ const processChange = debounce(() => {
 
 window.addEventListener("resize", () => processChange());
 likeButton.addEventListener("click", likePost);
+shareButton.addEventListener("click", () =>
+	shareDropdown.classList.toggle("show")
+);
 // create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
 newCommentForm.addEventListener("submit", handleNewComment);
