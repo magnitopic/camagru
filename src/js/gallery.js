@@ -4,8 +4,10 @@ const galleryContainer = document.querySelector("#galleryContainer");
 const postTemplate = document.querySelector("#postContainer");
 const likeButton = document.querySelector("#likePostButton");
 const newCommentForm = postInfo.querySelector("#newCommentForm");
+const shareButton = document.querySelector(".sharePost");
+const shareDropdown = document.querySelector(".shareDropdown");
 
-let page = 1;
+let page = 0;
 let selectedPost = null;
 
 // hide postInfo
@@ -28,6 +30,7 @@ document.addEventListener("keydown", (event) => {
 
 // fetch and load posts
 const fetchPosts = async () => {
+	page++;
 	const response = await fetch(
 		`/php/getPosts.php?page=${page}&user_id=${user_id}`
 	);
@@ -63,8 +66,6 @@ const fetchPosts = async () => {
 		if (post.liked)
 			postElement.querySelector("#like").classList.toggle("likedPost");
 	});
-	page++;
-	checkPageFilled();
 };
 
 const showGalleryEmptyMgs = () => {
@@ -151,7 +152,7 @@ const updateLikes = (newLikes) => {
 		galleryContainer.removeChild(galleryContainer.firstChild);
 	}
 	// fetch and load posts
-	page = 1;
+	page = 0;
 	fetchPosts();
 
 	// update like button color
@@ -187,7 +188,7 @@ const handleNewComment = (event) => {
 				galleryContainer.removeChild(galleryContainer.firstChild);
 			}
 			// fetch and load posts
-			page = 1;
+			page = 0;
 			fetchPosts();
 		})
 		.catch((error) => {
@@ -195,12 +196,6 @@ const handleNewComment = (event) => {
 				window.location.href = "/login.php";
 			else showError(error.message);
 		});
-};
-
-const checkPageFilled = () => {
-	if (document.body.scrollHeight <= window.innerHeight) {
-		fetchPosts();
-	}
 };
 
 const options = {
@@ -239,8 +234,17 @@ const likePost = async () => {
 	}
 };
 
+const processChange = debounce(() => {
+	observer.unobserve(document.querySelector("footer"));
+	while (galleryContainer.firstChild)
+		galleryContainer.removeChild(galleryContainer.firstChild);
+	page = 0;
+	fetchPosts();
+	observer.observe(document.querySelector("footer"));
+});
+
+window.addEventListener("resize", () => processChange());
 likeButton.addEventListener("click", likePost);
-window.addEventListener("resize", checkPageFilled);
 // create observer to fetch more posts when user scrolls to the bottom of the page
 const observer = new IntersectionObserver(handleIntersect, options);
 newCommentForm.addEventListener("submit", handleNewComment);

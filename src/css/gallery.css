@@ -166,9 +166,60 @@ img {
 	gap: 0.4em;
 }
 
+.postInteractions {
+	display: flex;
+	justify-content: space-between;
+}
+
 .postLike {
 	font-size: 1.5em;
 	width: fit-content;
+	border: 1px solid var(--borders);
+	background-color: var(--background);
+	border-radius: 0.25em;
+	padding: 0.2em;
+	cursor: pointer;
+}
+
+.dropdownShareContainer {
+	position: relative;
+	display: inline-block;
+}
+
+.sharePost {
+	font-size: 1.5em;
+	color: rgb(101, 101, 169);
+	border: 1px solid var(--borders);
+	background-color: var(--background);
+	border-radius: 0.25em;
+	padding: 0.2em;
+	cursor: pointer;
+}
+
+.shareDropdown {
+	display: none;
+	position: absolute;
+	background-color: var(--background);
+	border: 1px solid var(--borders);
+	border-radius: 0.25em;
+	padding: 0.3em;
+	flex-direction: column;
+	gap: 0.4em;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	right: 0;
+}
+
+.shareDropdown a {
+	color: var(--font);
+}
+
+.shareDropdown a:hover {
+	background-color: var(--background-light);
+}
+
+.sharePost:hover .shareDropdown {
+	display: flex;
 }
 
 .commentTop {

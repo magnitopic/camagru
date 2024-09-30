@@ -9,8 +9,9 @@ session_start();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="css/_general.css">
 	<link rel="stylesheet" href="css/gallery.css">
-	<script defer src="js/gallery.js"></script>
+	<script defer src="js/utils.js"></script>
 	<script defer src="js/error.js"></script>
+	<script defer src="js/gallery.js"></script>
 	<script>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";
 	</script>
@@ -43,9 +44,19 @@ session_start();
 				<div class="mainInfo">
 					<img src="" alt="" id="postInfoImg">
 					<div id="postInfo">
-						<div class="postLike" id="likePostButton">
-							<i class="fa-solid fa-heart"></i>
-							<span id="postInfoLikes">5</span>
+						<div class="postInteractions">
+							<div class="postLike" id="likePostButton">
+								<i class="fa-solid fa-heart"></i>
+								<span id="postInfoLikes">5</span>
+							</div>
+							<div class="dropdownShareContainer">
+								<i class="sharePost fa-solid fa-share"></i>
+								<div class="shareDropdown">
+									<a>Twitter</a>
+									<a>Facebook</a>
+									<a>LinkedIn</a>
+								</div>
+							</div>
 						</div>
 						<div>
 							<span id="postInfoTitle">PostTitle</span>
