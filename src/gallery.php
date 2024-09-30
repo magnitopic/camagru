@@ -53,7 +53,6 @@ session_start();
 								<i class="sharePost fa-solid fa-share"></i>
 								<div class="shareDropdown">
 									<a>Twitter</a>
-									<a>Facebook</a>
 									<a>LinkedIn</a>
 								</div>
 							</div>

@@ -117,9 +117,6 @@ const handlePostInfo = (post) => {
 		`https://twitter.com/intent/tweet?url=${encodeURIComponent(
 			postUrl
 		)}&text=${encodeURIComponent(postText)}`,
-		`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-			postUrl
-		)}`,
 		`https://www.linkedin.com/feed/?shareActive=true&text=${
 			encodeURIComponent(postText) + " " + encodeURIComponent(postUrl)
 		}`,
@@ -184,7 +181,11 @@ const updateLikes = (newLikes) => {
 const handleNewComment = (event) => {
 	event.preventDefault();
 	const comment = newCommentForm.querySelector("#newComment").value;
-	if (comment === "") return;
+	if (comment.trim().length === 0) {
+		showError("Comment cannot be empty");
+		newCommentForm.querySelector("#newComment").value = "";
+		return;
+	}
 
 	const data = new FormData();
 	data.append("postId", selectedPost.id);

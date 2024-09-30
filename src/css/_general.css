@@ -33,3 +33,11 @@ body {
 	width: 100%;
 	z-index: 1000;
 }
+
+.form-error-message {
+	color: var(--error);
+}
+
+.form-error-message p {
+	margin: 0;
+}

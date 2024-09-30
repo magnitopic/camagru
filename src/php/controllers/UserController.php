@@ -16,11 +16,25 @@ class UserController
 
 	public function register($username, $email, $password)
 	{
+		$errors = [];
+
+		// Checks before registering
+		if (empty($username) || empty($email) || empty($password)) {
+			$errors[] = "Empty fields.";
+		} else if ($this->user->getUserByUsername($username)) {
+			$errors[] = "Username already exists.";
+		} else if ($this->user->getUserByEmail($email)) {
+			$errors[] = "Email already exists.";
+		}
+
+		if (!empty($errors)) {
+			return ['success' => false, 'errors' => $errors];
+		}
+
 		if ($this->user->createUser($username, $email, $password)) {
-			header("Location: /login.php");
-			exit();
+			return ['success' => true];
 		} else {
-			echo "Error: Could not register user.";
+			return ['success' => false, 'errors' => ["Could not register user."]];
 		}
 	}
 
