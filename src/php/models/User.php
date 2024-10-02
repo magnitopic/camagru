@@ -59,22 +59,6 @@ class User
 		return false;
 	}
 
-	public function login($username, $password)
-	{
-		$query = "SELECT * FROM " . $this->table . " WHERE username = :username";
-		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':username', $username);
-		$stmt->execute();
-
-		$user = $stmt->fetch(PDO::FETCH_OBJ);
-
-		if ($user && password_verify($password, $user->password)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public function updatePassword($id, $newPass)
 	{
 		$query = "UPDATE " . $this->table . " SET password = :password WHERE id = :id";

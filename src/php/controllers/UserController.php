@@ -48,7 +48,35 @@ class UserController
 
 	public function login($username, $password)
 	{
-		return $this->user->login($username, $password);
+		$errors = [];
+
+		// Check for empty fields
+		if (empty($username) || empty($password)) {
+			$errors[] = "Username and password are required.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// Check if the user exists
+		$user = $this->user->getUserByUsername($username);
+		if (!$user) {
+			$errors[] = "This user does not exist.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// Verify the password
+		if (!password_verify($password, $user->password)) {
+			$errors[] = "Invalid username or password.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// Check if the user's email is verified (if you have email verification)
+		if (!$user->email_verified) {
+			$errors[] = "Please verify your email address before logging in.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// If everything is okay, return success
+		return ['success' => true, 'user' => $user];
 	}
 
 	public function getUserById($userId)
@@ -82,7 +110,7 @@ class UserController
 		if (!preg_match($GLOBALS['emailRegex'], $email))
 			$errors[] = "Invalid email format.";
 		if (!empty($pass) && !preg_match($GLOBALS['passRegex'], $pass))
-		$errors[] = "Invalid password.<br>Password must contain at least:<br>&emsp;&ensp;· One lowercase letter<br>&emsp;&ensp;· One uppercase letter<br>&emsp;&ensp;· One digit<br>&emsp;&ensp;· One special character<br>&emsp;&ensp;· Be at least 6 characters long";
+			$errors[] = "Invalid password.<br>Password must contain at least:<br>&emsp;&ensp;· One lowercase letter<br>&emsp;&ensp;· One uppercase letter<br>&emsp;&ensp;· One digit<br>&emsp;&ensp;· One special character<br>&emsp;&ensp;· Be at least 6 characters long";
 
 		if (!empty($errors))
 			return ['success' => false, 'errors' => $errors];

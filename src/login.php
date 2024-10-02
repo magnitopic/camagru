@@ -10,17 +10,22 @@ if (isset($_SESSION['user_id'])) {
 	die();
 }
 
+$response = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$username = parseData($_POST['username']);
 	$pass = parseData($_POST['pass']);
 
-	if ($userController->login($username, $pass)) {
-		$_SESSION['user_id'] = $userController->getUserByUsername($username)->id;
-		$_SESSION['user_name'] = $username;
-		header("Location: /camera.php");
-	} else {
-		echo "invalid UserName or Password";
+	$response = $userController->login($username, $pass);
+
+	if ($response['success']) {
+		$_SESSION['user_id'] = $response['user']->id;
+		$_SESSION['user_name'] = $response['user']->username;
 	}
+
+	header('Content-Type: application/json');
+	echo json_encode($response);
+	exit;
 }
 ?>
 
@@ -40,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 	<?php include 'components/header.php'; ?>
 	<main>
-		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+		<form id="loginForm" method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Login</h2>
 			<input
 				required
@@ -56,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				id="pass"
 				placeholder="Password" />
 			<button type="submit">Access account</button>
+			<div id="form-error-message" class="form-error-message"></div>
 			<p>Don't have an account? <a href="register.php">Register</a></p>
 		</form>
 		<div class="resetEmail">
@@ -74,6 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		</div>
 	</main>
 	<?php include 'components/footer.html'; ?>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const loginForm = document.getElementById("loginForm");
+			handleFormSubmit(loginForm, '/camera.php');
+		});
+	</script>
 </body>
 
 </html>
