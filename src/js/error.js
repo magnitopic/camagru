@@ -7,7 +7,7 @@ const showError = (message) => {
 	}, 5000); // Hide after 5 seconds
 };
 
-const showFormError = (form) => {
+const handleFormSubmit = (form, successRedirectUrl) => {
 	form.addEventListener("submit", async (event) => {
 		event.preventDefault();
 
@@ -26,7 +26,7 @@ const showFormError = (form) => {
 				.join("");
 			errorMessage.style.display = "block";
 		} else {
-			window.location.href = "/camera.php";
+			window.location.href = successRedirectUrl;
 		}
 	});
 };

@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<script>
 		document.addEventListener("DOMContentLoaded", () => {
 			const registerForm = document.getElementById("registerForm");
-			showFormError(registerForm);
+			handleFormSubmit(registerForm, '/camera.php');
 		});
 	</script>
 </body>

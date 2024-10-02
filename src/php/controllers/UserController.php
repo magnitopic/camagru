@@ -34,7 +34,7 @@ class UserController
 		if (!preg_match($GLOBALS['emailRegex'], $email))
 			$errors[] = "Invalid email.";
 		if (!preg_match($GLOBALS['passRegex'], $password))
-			$errors[] = "Invalid password.<br>Password must contain at least:<br>&emsp;&ensp;One lowercase letter<br>&emsp;&ensp;One uppercase letter<br>&emsp;&ensp;One digit<br>&emsp;&ensp;One special character<br>&emsp;&ensp;Be at least 6 characters long";
+			$errors[] = "Invalid password.<br>Password must contain at least:<br>&emsp;&ensp;· One lowercase letter<br>&emsp;&ensp;· One uppercase letter<br>&emsp;&ensp;· One digit<br>&emsp;&ensp;· One special character<br>&emsp;&ensp;· Be at least 6 characters long";
 
 		if (!empty($errors))
 			return ['success' => false, 'errors' => $errors];
@@ -65,26 +65,37 @@ class UserController
 	{
 		$errors = [];
 
+		if (empty($username) || empty($email))
+			$errors[] = "Username and email cannot be empty.";
+		else {
+			$existingUser = $this->user->getUserByUsername($username);
+			if ($existingUser && $existingUser->id != $id)
+				$errors[] = "Username already exists.";
+
+			$existingEmail = $this->user->getUserByEmail($email);
+			if ($existingEmail && $existingEmail->id != $id)
+				$errors[] = "Email already exists.";
+		}
+
 		if (!preg_match($GLOBALS['usernameRegex'], $username))
 			$errors[] = "Invalid username format.";
 		if (!preg_match($GLOBALS['emailRegex'], $email))
 			$errors[] = "Invalid email format.";
 		if (!empty($pass) && !preg_match($GLOBALS['passRegex'], $pass))
-			$errors[] = "Password must be at least 6 characters long, contain at least one lowercase letter, one uppercase letter, one digit, and one special character.";
+		$errors[] = "Invalid password.<br>Password must contain at least:<br>&emsp;&ensp;· One lowercase letter<br>&emsp;&ensp;· One uppercase letter<br>&emsp;&ensp;· One digit<br>&emsp;&ensp;· One special character<br>&emsp;&ensp;· Be at least 6 characters long";
 
 		if (!empty($errors))
 			return ['success' => false, 'errors' => $errors];
 
 		$status = true;
 
-		// unless the password is set, we don't want to update it
+		// Update password only if it's not empty
 		if (!empty($pass))
 			$status = $status && $this->user->updatePassword($id, $pass);
 
 		$emailPreference = $emailPreference === 'on' ? 1 : 0;
 
-		if ($status && isset($username) && isset($email) && isset($emailPreference))
-			$status = $status && $this->user->updateUserData($id, $username, $email, $emailPreference);
+		$status = $status && $this->user->updateUserData($id, $username, $email, $emailPreference);
 
 		if ($status)
 			return ['success' => true];

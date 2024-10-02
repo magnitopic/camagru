@@ -10,18 +10,24 @@ if (!isset($_SESSION['user_id'])) {
 	exit();
 }
 
+$response = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$username = parseData($_POST['username']);
 	$email = parseData($_POST['email']);
 	$pass = parseData($_POST['pass']);
-	$emailPreference = $_POST['emailPreference'];
+	$emailPreference = isset($_POST['emailPreference']) ? $_POST['emailPreference'] : 'off';
 	$id = $_SESSION['user_id'];
 
-	if (!$userController->updateUserData($id, $username, $email, $pass, $emailPreference)) {
-		echo 'Error: Could not update user data.';
-		exit();
+	$response = $userController->updateUserData($id, $username, $email, $pass, $emailPreference);
+
+	if ($response['success']) {
+		$_SESSION['user_name'] = $username;
 	}
-	$_SESSION['user_name'] = $username;
+
+	header('Content-Type: application/json');
+	echo json_encode($response);
+	exit;
 }
 
 $user = $userController->getUserById($_SESSION['user_id']);
@@ -42,7 +48,7 @@ $user = $userController->getUserById($_SESSION['user_id']);
 <body>
 	<?php include 'components/header.php'; ?>
 	<main>
-		<form method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+		<form id="settingsForm" method="post" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
 			<h2>Change your settings</h2>
 			<div class="inputContainer">
 				<input
@@ -86,10 +92,17 @@ $user = $userController->getUserById($_SESSION['user_id']);
 					Email notifications on new comments
 				</label>
 			</div>
-			<button>Save settings</button>
+			<button type="submit">Save settings</button>
+			<div id="form-error-message" class="form-error-message"></div>
 		</form>
 	</main>
 	<?php include 'components/footer.html'; ?>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const settingsForm = document.getElementById("settingsForm");
+			handleFormSubmit(settingsForm, '/settings.php');
+		});
+	</script>
 </body>
 
 </html>
