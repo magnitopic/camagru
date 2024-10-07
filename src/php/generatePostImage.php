@@ -5,6 +5,11 @@ require_once 'controllers/PostController.php';
 
 header('Content-Type: application/json');
 
+if (!isset($_SESSION['user_id'])) {
+	echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+	exit;
+}
+
 try {
 	$postController = new PostController();
 } catch (Exception $e) {
@@ -13,6 +18,12 @@ try {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// Verify that the logged-in user matches the user_id in the request
+	if ($_SESSION['user_id'] != $_POST['user_id']) {
+		echo json_encode(['status' => 'error', 'message' => 'Unauthorized action']);
+		exit;
+	}
+
 	if (isset($_FILES['backgroundImage']) && isset($_FILES['selectedImg']) && isset($_POST['postMsg'])) {
 
 		// Receive the images
