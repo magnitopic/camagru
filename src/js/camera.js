@@ -21,6 +21,9 @@ window.onload = () => {
 	let postMsgValue = "";
 	let streaming = false;
 	let videoStream = null;
+	let currentSelectedImg = 0;
+	let previousSelectedImage = null;
+	let isWebcamImg = null;
 
 	class BackgroundImage {
 		constructor(width, height) {
@@ -37,14 +40,22 @@ window.onload = () => {
 			this.size = { width: 10, height: 10 };
 			this.rotation = 1;
 			this.src = null;
-			this.previousSelectedImage = null;
 		}
 	}
-	let selectedImg;
+	let selectedImgs;
 
 	/* Editing images logic */
+	const checkIfPlacedSticker = () => {
+		// if the image was uploaded, it's always true
+		if (!isWebcamImg) return true;
+		for (let i = 0; i < selectedImgs.length; i++) {
+			if (selectedImgs[i].src != null) return true;
+		}
+		return false;
+	};
+
 	const enableSaveButton = () => {
-		if (postMsgValue.trim().length > 0 && selectedImg.src != null) {
+		if (postMsgValue.trim().length > 0 && checkIfPlacedSticker()) {
 			saveButton.disabled = false;
 			saveButton.style.cursor = "pointer";
 		} else {
@@ -54,17 +65,17 @@ window.onload = () => {
 	};
 
 	const editImages = () => {
-		defaultImages.forEach((img) => {
+		defaultImages.forEach((img, index) => {
 			img.addEventListener("click", () => {
-				selectedImg.src = img;
+				selectedImgs[index].src = img;
 				img.style.background = "#b57410";
+				currentSelectedImg = index;
 				if (
-					selectedImg.previousSelectedImage != null &&
-					selectedImg.previousSelectedImage.src != selectedImg.src
+					previousSelectedImage != null &&
+					previousSelectedImage.src != selectedImgs[index].src.src
 				)
-					selectedImg.previousSelectedImage.style.background =
-						"#1051B5";
-				selectedImg.previousSelectedImage = img;
+					previousSelectedImage.style.background = "#1051B5";
+				previousSelectedImage = img;
 			});
 		});
 	};
@@ -103,38 +114,30 @@ window.onload = () => {
 		ctx.stroke();
 	};
 
-	function selectedImgToCanvas() {
-		const posX =
-			(selectedImg.position.x / 100) * backgroundImage.size.width;
-		const posY =
-			(selectedImg.position.y / 100) * backgroundImage.size.height;
-		const width =
-			(selectedImg.size.width / 100) * backgroundImage.size.width;
-		const height =
-			(selectedImg.size.height / 100) * backgroundImage.size.height;
+	function selectedImgToCanvas(img) {
+		const posX = (img.position.x / 100) * backgroundImage.size.width;
+		const posY = (img.position.y / 100) * backgroundImage.size.height;
+		const width = (img.size.width / 100) * backgroundImage.size.width;
+		const height = (img.size.height / 100) * backgroundImage.size.height;
 
 		ctx.save();
 		ctx.translate(posX, posY);
-		ctx.rotate((selectedImg.rotation * Math.PI) / 180); // Rotate the image
+		ctx.rotate((img.rotation * Math.PI) / 180); // Rotate the image
 
-		ctx.drawImage(
-			selectedImg.src,
-			-(width / 2),
-			-(height / 2),
-			width,
-			height
-		);
+		ctx.drawImage(img.src, -(width / 2), -(height / 2), width, height);
 		ctx.restore();
 	}
 
 	const drawSelectedImage = () => {
-		if (selectedImg.src === null) return;
-		if (selectedImg.src.complete) selectedImgToCanvas();
-		else {
-			selectedImg.src.onload = () => {
-				selectedImgToCanvas();
-			};
-		}
+		selectedImgs.forEach((img) => {
+			if (img.src === null) return;
+			if (img.src.complete) selectedImgToCanvas(img);
+			else {
+				img.src.onload = () => {
+					selectedImgToCanvas(img);
+				};
+			}
+		});
 		enableSaveButton();
 	};
 
@@ -207,7 +210,13 @@ window.onload = () => {
 			false
 		);
 
-		selectedImg = new SelectedImg();
+		selectedImgs = [
+			new SelectedImg(),
+			new SelectedImg(),
+			new SelectedImg(),
+			new SelectedImg(),
+			new SelectedImg(),
+		];
 		reader = new FileReader();
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -263,6 +272,7 @@ window.onload = () => {
 		const validImageTypes = ["image/png", "image/jpeg", "image/jpg"];
 
 		if (file != false) {
+			isWebcamImg = false;
 			if (!validImageTypes.includes(file.type)) {
 				showError("Invalid image type");
 				return;
@@ -277,6 +287,7 @@ window.onload = () => {
 				};
 			};
 		} else {
+			isWebcamImg = true;
 			backgroundImage.src = getFrame(video);
 			drawBackground();
 		}
@@ -300,11 +311,12 @@ window.onload = () => {
 	};
 
 	const resetPicture = () => {
-		if (selectedImg.previousSelectedImage != null) {
-			selectedImg.previousSelectedImage.style.background = "#1051B5";
-			selectedImg.previousSelectedImage = null;
+		if (previousSelectedImage != null) {
+			previousSelectedImage.style.background = "#1051B5";
+			previousSelectedImage = null;
 		}
 		postMsg.value = "";
+		isWebcamImg = null;
 
 		initialSetup(); // Reinitialize the camera when resetting the picture
 
@@ -324,14 +336,21 @@ window.onload = () => {
 		sliderContainer.forEach((slider) => {
 			slider.style.display = "none";
 		});
-		backgroundImage = new BackgroundImage(imgWidth, imgHeight);
+		/* backgroundImage = new BackgroundImage(imgWidth, imgHeight); */ // TODO -> remove this?
 		streaming = false;
 	};
 
 	const savePost = async () => {
-		const bgImage = backgroundImage.src.src;
-		const selImageUrl = selectedImg.src.src; // URL to the selected image
-		const postMsg = postMsgValue;
+		let bgImage;
+		let postMsg;
+		try {
+			bgImage = backgroundImage.src.src;
+			postMsg = postMsgValue;
+		} catch (e) {
+			showError("Missing images");
+			resetPicture();
+			return;
+		}
 
 		// Convert base64 to Blob
 		const base64ToBlob = (base64, mime) => {
@@ -344,27 +363,26 @@ window.onload = () => {
 			return new Blob([ab], { type: mime });
 		};
 
-		// Fetch the selected image data from the URL and convert it to a blob
-		const fetchImageBlob = async (url) => {
-			const response = await fetch(url);
-			const blob = await response.blob();
-			return blob;
-		};
-
 		const bgImageBlob = base64ToBlob(bgImage, "image/png");
-		const selImageBlob = await fetchImageBlob(selImageUrl);
 
 		const formData = new FormData();
-		formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
-		formData.append("selectedImg", selImageBlob, "selectedImg.png");
-		formData.append("posx", selectedImg.position.x);
-		formData.append("posy", selectedImg.position.y);
-		formData.append("size", selectedImg.size.width);
-		formData.append("rotation", selectedImg.rotation);
+		formData.append("user_id", user_id); // user_id is a global variable defined in the head of the `camera.php` file
 		formData.append("postMsg", postMsg);
-		formData.append("user_id", user_id); // user_id is a global variable defined in the php file head
+		formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
+		for (let index = 0; index < selectedImgs.length; index++) {
+			if (selectedImgs[index] === null) return;
+			formData.append(
+				`selectedImg${index}`,
+				await fetchImageBlob(selectedImgs[index].src.src),
+				`selectedImg${index}.png`
+			);
+			formData.append(`posx${index}`, selectedImgs[index].position.x);
+			formData.append(`posy${index}`, selectedImgs[index].position.y);
+			formData.append(`size${index}`, selectedImgs[index].size.width);
+			formData.append(`rotation${index}`, selectedImgs[index].rotation);
+		}
 
-		fetch("/php/generatePostImage.php", {
+		/* fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -375,11 +393,11 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				showError("Failed to save post");
-			});
+			}); */
 
 		/** TODO -> Debugging method, remove when working */
 		/** ------------------------ */
-		/* fetch("/php/generatePostImage.php", {
+		fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -398,8 +416,27 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
-			}); */
+			});
 		/** ----------------------- */
+	};
+
+	const fetchImageBlob = async (url) => {
+		const response = await fetch(url);
+		const blob = await response.blob();
+		return blob;
+	};
+
+	const base64ToBlob = (base64, mime) => {
+		if (!base64.includes(",")) {
+			throw new Error("Invalid base64 string");
+		}
+		const byteString = atob(base64.split(",")[1]);
+		const ab = new ArrayBuffer(byteString.length);
+		const ia = new Uint8Array(ab);
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		return new Blob([ab], { type: mime });
 	};
 
 	const loadUserPosts = () => {
@@ -477,14 +514,14 @@ window.onload = () => {
 
 	sizeSlider.addEventListener("input", (ev) => {
 		const sizePercentage = ev.target.value;
-		selectedImg.size.width = sizePercentage;
-		selectedImg.size.height = sizePercentage;
+		selectedImgs[currentSelectedImg].size.width = sizePercentage;
+		selectedImgs[currentSelectedImg].size.height = sizePercentage;
 		drawEntireScene();
 		ev.preventDefault();
 	});
 
 	rotationSlider.addEventListener("input", (ev) => {
-		selectedImg.rotation = ev.target.value;
+		selectedImgs[currentSelectedImg].rotation = ev.target.value;
 		drawEntireScene();
 		ev.preventDefault();
 	});
@@ -497,8 +534,8 @@ window.onload = () => {
 		const x = (event.clientX - rect.left) * scaleX;
 		const y = (event.clientY - rect.top) * scaleY;
 
-		selectedImg.position.x = (x / canvas.width) * 100;
-		selectedImg.position.y = (y / canvas.height) * 100;
+		selectedImgs[currentSelectedImg].position.x = (x / canvas.width) * 100;
+		selectedImgs[currentSelectedImg].position.y = (y / canvas.height) * 100;
 
 		drawEntireScene();
 	});

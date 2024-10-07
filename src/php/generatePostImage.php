@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		exit;
 	}
 
-	if (isset($_FILES['backgroundImage']) && isset($_FILES['selectedImg']) && isset($_POST['postMsg'])) {
+	if (isset($_FILES['backgroundImage']) && isset($_POST['postMsg'])) {
 
 		// Receive the images
 		$result = recvImages();
@@ -33,13 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			exit;
 		}
 
-		$postX = $_POST['posx'];
-		$postY = $_POST['posy'];
-		$size = $_POST['size'];
-		$rotation = $_POST['rotation'];
-
 		// Generate the post image
-		$result = generatePostImage($postX, $postY, $size, $rotation);
+		$result = generatePostImage();
 		if ($result['status'] === 'error') {
 			echo json_encode($result);
 			exit;
@@ -70,8 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function recvImages()
 {
 	$backgroundImage = $_FILES['backgroundImage'];
-	$selectedImg = $_FILES['selectedImg'];
-	$postMsg = $_POST['postMsg'];
 
 	// Ensure the uploads directory exists
 	$uploadsDir = 'uploads';
@@ -80,37 +73,68 @@ function recvImages()
 
 	// Move the uploaded files to the uploads directory
 	$backgroundImagePath = $uploadsDir . '/' . basename($backgroundImage['name']);
-	$selectedImgPath = $uploadsDir . '/' . basename($selectedImg['name']);
 
-	if (
-		!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath) ||
-		!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)
-	)
-		return ['status' => 'error', 'message' => 'Failed to move uploaded files'];
+	$selectedImgPaths = [];
 
-	return ['status' => 'success', 'backgroundImagePath' => $backgroundImagePath, 'selectedImgPath' => $selectedImgPath];
+	for ($i = 0; $i <= 5; $i++) {
+		if (isset($_FILES['selectedImg' . $i]) && $_FILES['selectedImg' . $i]['error'] == UPLOAD_ERR_OK) {
+			$selectedImg = $_FILES['selectedImg' . $i];
+			$selectedImgPath = $uploadsDir . '/' . basename($selectedImg['name']);
+
+			if (!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)) {
+				return ['status' => 'error', 'message' => 'Failed to move uploaded file: selectedImg' . $i];
+			}
+			$selectedImgPaths[] = $selectedImgPath;
+		}
+	}
+
+	if (!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath))
+		return ['status' => 'error', 'message' => 'Failed to move background image'];
+
+	return ['status' => 'success', 'backgroundImagePath' => $backgroundImagePath, 'selectedImgPaths' => $selectedImgPaths];
 }
 
-function generatePostImage($postX, $postY, $size, $rotation)
+function generatePostImage()
 {
 	$backgroundImagePath = 'uploads/backgroundImage.png';
-	$selectedImgPath = 'uploads/selectedImg.png';
-
-	$rotation = $rotation * -1;
 
 	// Load the background image
 	$backgroundImage = imagecreatefrompng($backgroundImagePath);
 	if (!$backgroundImage)
 		return ['status' => 'error', 'message' => 'Failed to load background image'];
 
+	// Get dimensions of the background image
+	$backgroundWidth = imagesx($backgroundImage);
+	$backgroundHeight = imagesy($backgroundImage);
+
+	for ($i = 0; $i < 5; $i++) {
+		placeSelectedImage($i, $backgroundImage, $backgroundWidth, $backgroundHeight);
+	}
+
+	// Save the final image
+	$outputPath = 'uploads/postImage.png';
+	if (!imagepng($backgroundImage, $outputPath))
+		return ['status' => 'error', 'message' => 'Failed to save post image'];
+
+	// Clean up
+	imagedestroy($backgroundImage);
+
+	return ['status' => 'success', 'fileName' => $outputPath];
+}
+
+function placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgroundHeight)
+{
+	$selectedImgPath = 'uploads/selectedImg' . $index . '.png';
+	$postX = $_POST['posx' . $index];
+	$postY = $_POST['posy' . $index];
+	$size = $_POST['size' . $index];
+	$rotation = $_POST['rotation' . $index];
+	$rotation = $rotation * -1;
+
 	// Load the selected image
 	$selectedImg = imagecreatefrompng($selectedImgPath);
 	if (!$selectedImg)
 		return ['status' => 'error', 'message' => 'Failed to load selected image'];
-
-	// Get dimensions of the background image
-	$backgroundWidth = imagesx($backgroundImage);
-	$backgroundHeight = imagesy($backgroundImage);
 
 	// Calculate the actual pixel values based on percentages
 	$posX = ($postX / 100) * $backgroundWidth;
@@ -139,22 +163,13 @@ function generatePostImage($postX, $postY, $size, $rotation)
 	$centerX = $posX - ($rotatedWidth / 2);
 	$centerY = $posY - ($rotatedHeight / 2);
 
-	// Merge the selected image onto the background image
 	imagecopy($backgroundImage, $rotatedImg, $centerX, $centerY, 0, 0, $rotatedWidth, $rotatedHeight);
 
-	// Save the final image
-	$outputPath = 'uploads/postImage.png';
-	if (!imagepng($backgroundImage, $outputPath))
-		return ['status' => 'error', 'message' => 'Failed to save post image'];
-
 	// Clean up
-	imagedestroy($backgroundImage);
 	imagedestroy($selectedImg);
 	imagedestroy($resizedImg);
 	imagedestroy($rotatedImg);
 	imagedestroy($transparentBg);
-
-	return ['status' => 'success', 'fileName' => $outputPath];
 }
 
 function savePost($userId, $postMsg)
