@@ -70,10 +70,11 @@ class UserController
 		}
 
 		// Check if the user's email is verified (if you have email verification)
-		if (!$user->email_verified) {
+		/* if (!$user->email_verified) {
 			$errors[] = "Please verify your email address before logging in.";
 			return ['success' => false, 'errors' => $errors];
-		}
+		} */
+		// TODO: Uncomment the above code when email verification is implemented
 
 		// If everything is okay, return success
 		return ['success' => true, 'user' => $user];

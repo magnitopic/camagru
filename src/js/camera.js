@@ -17,6 +17,7 @@ window.onload = () => {
 	let imgWidth = canvasContainer.offsetWidth;
 	let imgHeight = 0; // Will be computed based on the aspect ratio of the video
 	let reader;
+	let retryTimeout;
 	let postMsgValue = "";
 	let streaming = false;
 	let videoStream = null;
@@ -142,19 +143,47 @@ window.onload = () => {
 		drawSelectedImage();
 	};
 
-	/* Camera and taking picture logic */
-	const initialSetup = () => {
-		// Get the camera stream
+	const setupCamera = (retryCount = 0) => {
 		navigator.mediaDevices
 			.getUserMedia({ video: true, audio: false })
 			.then((stream) => {
-				videoStream = stream; // Store the stream in a variable
+				videoStream = stream;
 				video.srcObject = stream;
 				video.play();
+				video.style.display = "block";
 			})
 			.catch((err) => {
-				console.error(`An error occurred: ${err}`);
+				console.warn(
+					`Camera setup attempt ${retryCount + 1} failed: ${err}`
+				);
+				if (retryCount < 3) {
+					// Retry up to 3 times
+					retryTimeout = setTimeout(
+						() => setupCamera(retryCount + 1),
+						1000
+					);
+				} else {
+					console.log(
+						`Failed to setup camera after ${
+							retryCount + 1
+						} attempts:`,
+						err
+					);
+					showError("No camera detected");
+				}
 			});
+	};
+
+	/* Camera and taking picture logic */
+	const initialSetup = () => {
+		if (retryTimeout) {
+			clearTimeout(retryTimeout);
+		}
+
+		// Setup the camera
+		try {
+			setupCamera();
+		} catch (error) {}
 
 		// Set the video dimensions
 		video.addEventListener(
@@ -208,14 +237,14 @@ window.onload = () => {
 		animateFlash();
 	};
 
-	const getFrame = () => {
+	const getFrame = (src) => {
 		const offscreenCanvas = document.createElement("canvas");
 		const offscreenCtx = offscreenCanvas.getContext("2d");
-		offscreenCanvas.width = video.videoWidth;
-		offscreenCanvas.height = video.videoHeight;
+		offscreenCanvas.width = 640;
+		offscreenCanvas.height = 480;
 
 		offscreenCtx.drawImage(
-			video,
+			src,
 			0,
 			0,
 			offscreenCanvas.width,
@@ -235,16 +264,22 @@ window.onload = () => {
 
 		if (file != false) {
 			if (!validImageTypes.includes(file.type)) {
+				showError("Invalid image type");
 				return;
 			}
 			reader.readAsDataURL(file);
-			reader.onload = function (e) {
-				backgroundImage.src = new Image();
-				backgroundImage.src.src = e.target.result;
+			reader.onload = (e) => {
+				let fileImageTmp = new Image();
+				fileImageTmp.src = e.target.result;
+				fileImageTmp.onload = () => {
+					backgroundImage.src = getFrame(fileImageTmp);
+					drawBackground();
+				};
 			};
-		} else backgroundImage.src = getFrame();
-
-		drawBackground();
+		} else {
+			backgroundImage.src = getFrame(video);
+			drawBackground();
+		}
 
 		// Stop the camera stream
 		if (videoStream) {
