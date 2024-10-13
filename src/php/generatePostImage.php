@@ -115,25 +115,9 @@ function generatePostImage($selectedImgPaths)
 	$backgroundWidth = imagesx($backgroundImage);
 	$backgroundHeight = imagesy($backgroundImage);
 
-	// Sort selected images by their position
-	$sortedImages = [];
-	for ($i = 0; $i < 5; $i++) {
-		if (isset($_POST["posx$i"]) && isset($_POST["posy$i"])) {
-			$sortedImages[] = [
-				'index' => $i,
-				'x' => $_POST["posx$i"],
-				'y' => $_POST["posy$i"]
-			];
-		}
-	}
-	usort($sortedImages, function ($a, $b) {
-		return $a['y'] == $b['y'] ? $a['x'] - $b['x'] : $a['y'] - $b['y'];
-	});
-
 	// Place each selected image
-	foreach ($sortedImages as $image) {
-		$index = $image['index'];
-		placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgroundHeight);
+	for ($i = 0; isset($_POST["posx$i"]); $i++) {
+		placeSelectedImage($i, $backgroundImage, $backgroundWidth, $backgroundHeight);
 	}
 
 	// Save the final image
@@ -146,6 +130,7 @@ function generatePostImage($selectedImgPaths)
 
 	return ['status' => 'success', 'fileName' => $outputPath];
 }
+
 
 function placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgroundHeight)
 {

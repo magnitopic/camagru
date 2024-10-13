@@ -22,6 +22,7 @@ window.onload = () => {
 	let streaming = false;
 	let videoStream = null;
 	let currentSelectedImg = 0;
+	let currentSelectedImgIndex = null;
 	let previousSelectedImage = null;
 	let isWebcamImg = null;
 
@@ -55,7 +56,10 @@ window.onload = () => {
 	};
 
 	const enableSaveButton = () => {
-		if (postMsgValue.trim().length > 0 && checkIfPlacedSticker()) {
+		if (
+			postMsgValue.trim().length > 0 &&
+			(isWebcamImg ? selectedImgs.length === 1 : true)
+		) {
 			saveButton.disabled = false;
 			saveButton.style.cursor = "pointer";
 		} else {
@@ -67,20 +71,51 @@ window.onload = () => {
 	const editImages = () => {
 		defaultImages.forEach((img, index) => {
 			img.addEventListener("click", () => {
-				selectedImgs[index].src = img;
-				img.style.background = "#b57410";
-				currentSelectedImg = index;
-				sizeSlider.value = selectedImgs[index].size.width;
-				rotationSlider.value = currentSelectedImg.rotation;
-				if (
-					previousSelectedImage != null &&
-					previousSelectedImage.src != selectedImgs[index].src.src
-				)
-					previousSelectedImage.style.background = "#1051B5";
+				if (isWebcamImg) {
+					// For webcam images, replace the existing sticker
+					selectedImgs = [new SelectedImg()];
+					selectedImgs[0].src = img;
+					currentSelectedImg = 0;
+					currentSelectedImgIndex = index;
+				} else {
+					// For uploaded images, allow multiple stickers
+					let existingIndex = selectedImgs.findIndex(
+						(si) => si.src === img
+					);
+					if (existingIndex !== -1) {
+						currentSelectedImg = existingIndex;
+					} else {
+						let newSticker = new SelectedImg();
+						newSticker.src = img;
+						selectedImgs.push(newSticker);
+						currentSelectedImg = selectedImgs.length - 1;
+					}
+					currentSelectedImgIndex = index;
+				}
 
-				previousSelectedImage = img;
+				updateStickerDisplay();
+				drawEntireScene();
 			});
 		});
+	};
+
+	const updateStickerDisplay = () => {
+		defaultImages.forEach((img, index) => {
+			if (selectedImgs.some((si) => si.src === img)) {
+				if (index === currentSelectedImgIndex) {
+					img.style.background = "var(--tertiary)";
+				} else {
+					img.style.background = "var(--secondary)";
+				}
+			} else {
+				img.style.background = "var(--primary)";
+			}
+		});
+
+		if (currentSelectedImg !== null && selectedImgs[currentSelectedImg]) {
+			sizeSlider.value = selectedImgs[currentSelectedImg].size.width;
+			rotationSlider.value = selectedImgs[currentSelectedImg].rotation;
+		}
 	};
 
 	/* Drawing on the canvas */
@@ -283,10 +318,10 @@ window.onload = () => {
 					drawBackground();
 				};
 			};
+			selectedImgs = [];
 		} else {
 			isWebcamImg = true;
-			backgroundImage.src = getFrame(video);
-			drawBackground();
+			selectedImgs = [new SelectedImg()];
 		}
 
 		// Stop the camera stream
@@ -314,6 +349,9 @@ window.onload = () => {
 		}
 		postMsg.value = "";
 		isWebcamImg = null;
+		selectedImgs = [];
+		currentSelectedImg = null;
+		currentSelectedImgIndex = null;
 
 		initialSetup(); // Reinitialize the camera when resetting the picture
 
@@ -366,7 +404,6 @@ window.onload = () => {
 		formData.append("postMsg", postMsg);
 		formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
 		for (let index = 0; index < selectedImgs.length; index++) {
-			if (selectedImgs[index].src === null) continue;
 			formData.append(
 				`selectedImg${index}`,
 				await fetchImageBlob(selectedImgs[index].src.src),
