@@ -328,6 +328,8 @@ window.onload = () => {
 		} else {
 			isWebcamImg = true;
 			selectedImgs = [new SelectedImg()];
+			backgroundImage.src = getFrame(video);
+			drawBackground();
 		}
 
 		// Stop the camera stream
@@ -355,6 +357,7 @@ window.onload = () => {
 		selectedImgs = [];
 		currentSelectedImg = null;
 		currentSelectedImgIndex = null;
+		imgFileInput.value = "";
 
 		initialSetup(); // Reinitialize the camera when resetting the picture
 
@@ -422,7 +425,7 @@ window.onload = () => {
 			formData.append(`rotation${index}`, selectedImgs[index].rotation);
 		}
 
-		/* fetch("/php/generatePostImage.php", {
+		fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -434,10 +437,9 @@ window.onload = () => {
 			.catch((error) => {
 				showError("Failed to save post");
 			});
- */
 		/** TODO -> Debugging method, remove when working */
 		/** ------------------------ */
-		fetch("/php/generatePostImage.php", {
+		/* fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -456,7 +458,7 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
-			});
+			}); */
 		/** ----------------------- */
 	};
 
