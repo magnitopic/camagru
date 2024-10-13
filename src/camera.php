@@ -55,7 +55,7 @@ if (!isset($_SESSION['user_id'])) {
 							<img class="defaultImgs" src="img/flower.png" alt="flower" title="Flower">
 							<img class="defaultImgs" src="img/42.png" alt="42logo" title="42logo">
 							<img class="defaultImgs" src="img/c.png" alt="c" title="c">
-							<img class="defaultImgs" src="img/github.png" alt="github" title="github">
+							<img class="defaultImgs" src="img/marvin.png" alt="marvin" title="marvin">
 						</div>
 					</div>
 					<div class="sliderContainer">

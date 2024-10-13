@@ -527,6 +527,9 @@ window.onload = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				oldPostContainer.removeChild(newPost);
+				if (oldPostContainer.childElementCount === 0)
+					oldPostContainer.innerHTML =
+						"<p>You haven't published any posts yet</p>";
 			})
 			.catch((error) => {
 				showError("Failed to delete post");
