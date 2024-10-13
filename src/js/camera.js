@@ -56,10 +56,7 @@ window.onload = () => {
 	};
 
 	const enableSaveButton = () => {
-		if (
-			postMsgValue.trim().length > 0 &&
-			(isWebcamImg ? selectedImgs.length === 1 : true)
-		) {
+		if (postMsgValue.trim().length > 0 && checkIfPlacedSticker()) {
 			saveButton.disabled = false;
 			saveButton.style.cursor = "pointer";
 		} else {
@@ -352,10 +349,7 @@ window.onload = () => {
 	};
 
 	const resetPicture = () => {
-		if (previousSelectedImage != null) {
-			previousSelectedImage.style.background = "#1051B5";
-			previousSelectedImage = null;
-		}
+		previousSelectedImage = null;
 		postMsg.value = "";
 		isWebcamImg = null;
 		selectedImgs = [];
@@ -377,6 +371,10 @@ window.onload = () => {
 
 		saveButton.disabled = true;
 		saveButton.style.cursor = "not-allowed";
+		defaultImages.forEach((img) => {
+			img.style.background = "var(--primary)";
+		});
+
 		sliderContainer.forEach((slider) => {
 			slider.style.display = "none";
 		});
@@ -424,7 +422,7 @@ window.onload = () => {
 			formData.append(`rotation${index}`, selectedImgs[index].rotation);
 		}
 
-		fetch("/php/generatePostImage.php", {
+		/* fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -436,10 +434,10 @@ window.onload = () => {
 			.catch((error) => {
 				showError("Failed to save post");
 			});
-
+ */
 		/** TODO -> Debugging method, remove when working */
 		/** ------------------------ */
-		/* fetch("/php/generatePostImage.php", {
+		fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -458,7 +456,7 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
-			}); */
+			});
 		/** ----------------------- */
 	};
 
