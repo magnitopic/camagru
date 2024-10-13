@@ -190,8 +190,17 @@ window.onload = () => {
 			.then((stream) => {
 				videoStream = stream;
 				video.srcObject = stream;
-				video.play();
-				video.style.display = "block";
+				var playPromise = video.play();
+
+				if (playPromise !== undefined) {
+					playPromise
+						.then((_) => {
+							video.style.display = "block";
+						})
+						.catch((error) => {
+							console.log("Resizing video...");
+						});
+				}
 			})
 			.catch((err) => {
 				console.warn(
