@@ -109,6 +109,8 @@ img {
 	display: flex;
 	border-radius: 0.5em;
 	max-width: 100%;
+	width: 50em;
+	height: auto;
 }
 
 #postInfo {

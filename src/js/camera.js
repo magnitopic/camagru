@@ -70,11 +70,14 @@ window.onload = () => {
 				selectedImgs[index].src = img;
 				img.style.background = "#b57410";
 				currentSelectedImg = index;
+				sizeSlider.value = selectedImgs[index].size.width;
+				rotationSlider.value = currentSelectedImg.rotation;
 				if (
 					previousSelectedImage != null &&
 					previousSelectedImage.src != selectedImgs[index].src.src
 				)
 					previousSelectedImage.style.background = "#1051B5";
+
 				previousSelectedImage = img;
 			});
 		});
@@ -166,12 +169,6 @@ window.onload = () => {
 						1000
 					);
 				} else {
-					console.log(
-						`Failed to setup camera after ${
-							retryCount + 1
-						} attempts:`,
-						err
-					);
 					showError("No camera detected");
 				}
 			});
@@ -336,7 +333,6 @@ window.onload = () => {
 		sliderContainer.forEach((slider) => {
 			slider.style.display = "none";
 		});
-		/* backgroundImage = new BackgroundImage(imgWidth, imgHeight); */ // TODO -> remove this?
 		streaming = false;
 	};
 
@@ -370,7 +366,7 @@ window.onload = () => {
 		formData.append("postMsg", postMsg);
 		formData.append("backgroundImage", bgImageBlob, "backgroundImage.png");
 		for (let index = 0; index < selectedImgs.length; index++) {
-			if (selectedImgs[index] === null) return;
+			if (selectedImgs[index].src === null) continue;
 			formData.append(
 				`selectedImg${index}`,
 				await fetchImageBlob(selectedImgs[index].src.src),
@@ -382,7 +378,7 @@ window.onload = () => {
 			formData.append(`rotation${index}`, selectedImgs[index].rotation);
 		}
 
-		/* fetch("/php/generatePostImage.php", {
+		fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -393,11 +389,11 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				showError("Failed to save post");
-			}); */
+			});
 
 		/** TODO -> Debugging method, remove when working */
 		/** ------------------------ */
-		fetch("/php/generatePostImage.php", {
+		/* fetch("/php/generatePostImage.php", {
 			method: "POST",
 			body: formData,
 		})
@@ -416,7 +412,7 @@ window.onload = () => {
 			})
 			.catch((error) => {
 				console.error("Fetch error:", error);
-			});
+			}); */
 		/** ----------------------- */
 	};
 
@@ -527,6 +523,8 @@ window.onload = () => {
 	});
 
 	canvas.addEventListener("click", (event) => {
+		if (currentSelectedImg === null) return;
+
 		const rect = canvas.getBoundingClientRect();
 		const scaleX = canvas.width / rect.width;
 		const scaleY = canvas.height / rect.height;

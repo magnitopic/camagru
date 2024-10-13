@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 
 	if (isset($_FILES['backgroundImage']) && isset($_POST['postMsg'])) {
-
 		// Receive the images
 		$result = recvImages();
 		if ($result['status'] === 'error') {
@@ -34,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		// Generate the post image
-		$result = generatePostImage();
-		if ($result['status'] === 'error') {
-			echo json_encode($result);
+		$postImageResult = generatePostImage($result['selectedImgPaths']);
+		if ($postImageResult['status'] === 'error') {
+			echo json_encode($postImageResult);
 			exit;
 		}
 
@@ -48,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		// save image with post id
-		if (!rename('uploads/postImage.png', $newFileName['fileName'])) {
+		if (!rename($postImageResult['fileName'], $newFileName['fileName'])) {
 			echo json_encode(['status' => 'error', 'message' => 'Failed to save post image']);
 			exit;
 		}
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		// Return a response
 		echo json_encode(['status' => 'success', 'message' => 'Images uploaded and processed successfully']);
 	} else {
-		echo json_encode(['status' => 'error', 'message' => 'Images or post message not uploaded']);
+		echo json_encode(['status' => 'error', 'message' => 'Background image or post message not uploaded']);
 	}
 } else {
 	echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
@@ -76,25 +75,34 @@ function recvImages()
 
 	$selectedImgPaths = [];
 
-	for ($i = 0; $i <= 5; $i++) {
-		if (isset($_FILES['selectedImg' . $i]) && $_FILES['selectedImg' . $i]['error'] == UPLOAD_ERR_OK) {
-			$selectedImg = $_FILES['selectedImg' . $i];
-			$selectedImgPath = $uploadsDir . '/' . basename($selectedImg['name']);
-
-			if (!move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)) {
-				return ['status' => 'error', 'message' => 'Failed to move uploaded file: selectedImg' . $i];
-			}
-			$selectedImgPaths[] = $selectedImgPath;
-		}
-	}
-
+	// Handle background image
 	if (!move_uploaded_file($backgroundImage['tmp_name'], $backgroundImagePath))
 		return ['status' => 'error', 'message' => 'Failed to move background image'];
 
-	return ['status' => 'success', 'backgroundImagePath' => $backgroundImagePath, 'selectedImgPaths' => $selectedImgPaths];
+	// Handle sticker images
+	for ($i = 0; $i < 5; $i++) {
+		$key = 'selectedImg' . $i;
+		if (isset($_FILES[$key]) && $_FILES[$key]['error'] == UPLOAD_ERR_OK) {
+			$selectedImg = $_FILES[$key];
+			$selectedImgPath = $uploadsDir . '/' . basename($selectedImg['name']);
+
+			if (move_uploaded_file($selectedImg['tmp_name'], $selectedImgPath)) {
+				$selectedImgPaths[] = $selectedImgPath;
+			} else {
+				// If a file fails to move, log it but continue processing
+				error_log("Failed to move uploaded file: $key");
+			}
+		}
+	}
+
+	return [
+		'status' => 'success',
+		'backgroundImagePath' => $backgroundImagePath,
+		'selectedImgPaths' => $selectedImgPaths
+	];
 }
 
-function generatePostImage()
+function generatePostImage($selectedImgPaths)
 {
 	$backgroundImagePath = 'uploads/backgroundImage.png';
 
@@ -107,8 +115,25 @@ function generatePostImage()
 	$backgroundWidth = imagesx($backgroundImage);
 	$backgroundHeight = imagesy($backgroundImage);
 
+	// Sort selected images by their position
+	$sortedImages = [];
 	for ($i = 0; $i < 5; $i++) {
-		placeSelectedImage($i, $backgroundImage, $backgroundWidth, $backgroundHeight);
+		if (isset($_POST["posx$i"]) && isset($_POST["posy$i"])) {
+			$sortedImages[] = [
+				'index' => $i,
+				'x' => $_POST["posx$i"],
+				'y' => $_POST["posy$i"]
+			];
+		}
+	}
+	usort($sortedImages, function ($a, $b) {
+		return $a['y'] == $b['y'] ? $a['x'] - $b['x'] : $a['y'] - $b['y'];
+	});
+
+	// Place each selected image
+	foreach ($sortedImages as $image) {
+		$index = $image['index'];
+		placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgroundHeight);
 	}
 
 	// Save the final image
@@ -124,17 +149,19 @@ function generatePostImage()
 
 function placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgroundHeight)
 {
-	$selectedImgPath = 'uploads/selectedImg' . $index . '.png';
-	$postX = $_POST['posx' . $index];
-	$postY = $_POST['posy' . $index];
-	$size = $_POST['size' . $index];
-	$rotation = $_POST['rotation' . $index];
-	$rotation = $rotation * -1;
+	$selectedImgPath = "uploads/selectedImg$index.png";
+	if (!file_exists($selectedImgPath))
+		return; // Skip if the image doesn't exist
+
+	$postX = $_POST['posx' . $index] ?? 0;
+	$postY = $_POST['posy' . $index] ?? 0;
+	$size = $_POST['size' . $index] ?? 10;
+	$rotation = ($_POST['rotation' . $index] ?? 0) * -1;
 
 	// Load the selected image
 	$selectedImg = imagecreatefrompng($selectedImgPath);
 	if (!$selectedImg)
-		return ['status' => 'error', 'message' => 'Failed to load selected image'];
+		return; // Skip this image if it can't be loaded
 
 	// Calculate the actual pixel values based on percentages
 	$posX = ($postX / 100) * $backgroundWidth;
