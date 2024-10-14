@@ -66,6 +66,7 @@ session_start();
 					</div>
 				</div>
 				<form id="newCommentForm">
+					<div id="form-error-message" class="form-error-message"></div>
 					<input type="text" placeholder="New comment..." minlength="1" id="newComment">
 					<button id="newCommentButton"><i class="fa-solid fa-paper-plane"></i></button>
 				</form>

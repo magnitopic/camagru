@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'controllers/PostController.php';
+require_once 'parseData.php';
 
 header('Content-Type: application/json');
 
@@ -24,13 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		exit;
 	}
 
-	if (isset($_FILES['backgroundImage']) && isset($_POST['postMsg'])) {
+	// Check if the required fields are set
+	$postMsg = parseData($_POST['postMsg']);
+
+	if (!empty($_FILES['backgroundImage']['name']) && !empty($postMsg)) {
 		// Receive the images
 		$result = recvImages();
 		if ($result['status'] === 'error') {
 			echo json_encode($result);
 			exit;
 		}
+
 
 		// Generate the post image
 		$postImageResult = generatePostImage($result['selectedImgPaths']);
@@ -40,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		// Save the post to the database
-		$newFileName = savePost($_POST['user_id'], $_POST['postMsg']);
+		$newFileName = savePost($_POST['user_id'], $postMsg);
 		if ($newFileName['status'] === 'error') {
 			echo json_encode($newFileName);
 			exit;

@@ -29,10 +29,13 @@ class CommentController
 
 	public function newComment($userId, $postId, $content)
 	{
-		if ($this->comment->newComment($userId, $postId, $content)) {
-			return json_encode($this->getCommentsPost($postId));
-		}
+		// if comment is to long return error
+		if (strlen($content) > 200)
+			return json_encode(['status' => 'error', 'message' => 'Comment is too long (maximum 200 characters)']);
 
-		return json_encode(['message' => 'Error adding comment']);
+		if ($this->comment->newComment($userId, $postId, $content))
+			return json_encode(['status' => 'success', 'message' => 'Comment added successfully', 'comments' => $this->getCommentsPost($postId)]);
+
+		return json_encode(['status' => 'error', 'message' => 'Failed to add comment']);
 	}
 }

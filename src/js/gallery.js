@@ -196,15 +196,13 @@ const handleNewComment = (event) => {
 		method: "POST",
 		body: data,
 	})
-		.then((response) => {
-			if (!response.ok) {
-				if (response.status === 401) throw new Error("Unauthorized");
-				else throw new Error("Failed to like post");
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.status === "error") {
+				showError(data.message);
+				return;
 			}
-			return response.json();
-		})
-		.then((newCommentList) => {
-			loadComments(newCommentList);
+			loadComments(data.comments);
 			newCommentForm.querySelector("#newComment").value = "";
 			// remove all elements from galleryContainer
 			while (galleryContainer.firstChild) {
@@ -217,7 +215,7 @@ const handleNewComment = (event) => {
 		.catch((error) => {
 			if (error.message === "Unauthorized")
 				window.location.href = "/login.php";
-			else showError(error.message);
+			else showError("An error occurred while adding the comment");
 		});
 };
 

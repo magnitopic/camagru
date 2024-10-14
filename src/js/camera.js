@@ -443,6 +443,11 @@ window.onload = () => {
 		})
 			.then((response) => response.json())
 			.then((data) => {
+				if (data.status === "error") {
+					showError(data.message);
+					resetPicture();
+					return;
+				}
 				loadUserPosts();
 				resetPicture();
 			})
