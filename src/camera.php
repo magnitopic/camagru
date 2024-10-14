@@ -17,10 +17,10 @@ if (!isset($_SESSION['user_id'])) {
 	<script defer src="js/error.js"></script>
 	<script deffer src="js/camera.js"></script>
 	<script defer src="js/utils.js"></script>
-	<script>
+	<script defer>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";
 	</script>
-	<script src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
+	<script defer src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
 </head>
 

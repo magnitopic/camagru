@@ -12,11 +12,11 @@ session_start();
 	<script defer src="js/utils.js"></script>
 	<script defer src="js/error.js"></script>
 	<script defer src="js/gallery.js"></script>
-	<script>
+	<script defer>
 		const user_id = "<?php echo $_SESSION['user_id']; ?>";
 	</script>
 	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
-	<script src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
+	<script defer src="https://kit.fontawesome.com/eca98d4b47.js" crossorigin="anonymous"></script>
 	<title>Camagru | Gallery</title>
 </head>
 
