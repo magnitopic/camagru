@@ -39,6 +39,7 @@ window.onload = () => {
 		constructor() {
 			this.position = { x: 0, y: 0 };
 			this.size = { width: 10, height: 10 };
+			this.aspectRatio = 1;
 			this.rotation = 1;
 			this.src = null;
 		}
@@ -153,11 +154,11 @@ window.onload = () => {
 		const posX = (img.position.x / 100) * backgroundImage.size.width;
 		const posY = (img.position.y / 100) * backgroundImage.size.height;
 		const width = (img.size.width / 100) * backgroundImage.size.width;
-		const height = (img.size.height / 100) * backgroundImage.size.height;
+		const height = width / img.aspectRatio; // Use aspect ratio to calculate height
 
 		ctx.save();
 		ctx.translate(posX, posY);
-		ctx.rotate((img.rotation * Math.PI) / 180); // Rotate the image
+		ctx.rotate((img.rotation * Math.PI) / 180);
 
 		ctx.drawImage(img.src, -(width / 2), -(height / 2), width, height);
 		ctx.restore();
@@ -166,9 +167,20 @@ window.onload = () => {
 	const drawSelectedImage = () => {
 		selectedImgs.forEach((img) => {
 			if (img.src === null) return;
-			if (img.src.complete) selectedImgToCanvas(img);
-			else {
+			if (img.src.complete) {
+				// Update aspect ratio when the image is loaded
+				if (img.aspectRatio === 1) {
+					img.aspectRatio =
+						img.src.naturalWidth / img.src.naturalHeight;
+					img.size.height = img.size.width / img.aspectRatio;
+				}
+				selectedImgToCanvas(img);
+			} else {
 				img.src.onload = () => {
+					// Set aspect ratio when the image is loaded
+					img.aspectRatio =
+						img.src.naturalWidth / img.src.naturalHeight;
+					img.size.height = img.size.width / img.aspectRatio;
 					selectedImgToCanvas(img);
 				};
 			}
@@ -527,9 +539,6 @@ window.onload = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				oldPostContainer.removeChild(newPost);
-				if (oldPostContainer.childElementCount === 0)
-					oldPostContainer.innerHTML =
-						"<p>You haven't published any posts yet</p>";
 			})
 			.catch((error) => {
 				showError("Failed to delete post");

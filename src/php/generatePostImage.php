@@ -152,10 +152,18 @@ function placeSelectedImage($index, $backgroundImage, $backgroundWidth, $backgro
 	$posX = ($postX / 100) * $backgroundWidth;
 	$posY = ($postY / 100) * $backgroundHeight;
 	$width = ($size / 100) * $backgroundWidth;
-	$height = ($size / 100) * $backgroundHeight;
+
+	// Calculate height based on the original aspect ratio
+	$originalWidth = imagesx($selectedImg);
+	$originalHeight = imagesy($selectedImg);
+	$aspectRatio = $originalWidth / $originalHeight;
+	$height = $width / $aspectRatio;
 
 	// Resize the selected image
-	$resizedImg = imagescale($selectedImg, $width, $height);
+	$resizedImg = imagecreatetruecolor($width, $height);
+	imagealphablending($resizedImg, false);
+	imagesavealpha($resizedImg, true);
+	imagecopyresampled($resizedImg, $selectedImg, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
 
 	// Create a transparent background for the rotated image
 	$transparentBg = imagecreatetruecolor($width, $height);
