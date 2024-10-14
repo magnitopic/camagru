@@ -13,7 +13,7 @@ $likeController = new LikeController();
 $commentController = new CommentController();
 $posts = $postController->getPosts($postsPerPage, $offset);
 
-foreach ($posts as $post){
+foreach ($posts as $post) {
 	$post->liked = $likeController->getPostLikedByUser($post->id, $userId);
 	$post->comments = $commentController->getCommentsPost($post->id);
 }

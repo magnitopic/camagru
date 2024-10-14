@@ -7,4 +7,4 @@ $postController = new PostController();
 
 $posts = $postController->getUserPosts($userId);
 
-echo json_encode($posts);	
+echo json_encode($posts);
