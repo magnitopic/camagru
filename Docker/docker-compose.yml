@@ -16,6 +16,9 @@ services:
     php:
         build:
             context: ./php
+            args:
+                SSMTP_EMAIL: ${SSMTP_EMAIL}
+                SSMTP_AUTH_PASS: ${SSMTP_AUTH_PASS}
         container_name: php
         env_file:
             - ../.env

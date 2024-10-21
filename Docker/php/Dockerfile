@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y \
 	ssmtp\
 	npm
 
+ARG SSMTP_EMAIL
+ARG SSMTP_AUTH_PASS
+
+ENV SSMTP_EMAIL=$SSMTP_EMAIL
+ENV SSMTP_AUTH_PASS=$SSMTP_AUTH_PASS
+
 COPY ssmtp_config.sh /usr/local/bin/ssmtp_config.sh
 RUN chmod +x /usr/local/bin/ssmtp_config.sh
 RUN /usr/local/bin/ssmtp_config.sh
