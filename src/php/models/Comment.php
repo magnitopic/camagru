@@ -35,6 +35,16 @@ class Comment
 		return false;
 	}
 
+	public function getPostAuthorEmail($postId)
+	{
+		$query = "SELECT u.email FROM post p JOIN user u ON p.posterId = u.id WHERE p.id = :post_id";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+		$stmt->execute();
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $row['email'];
+	}
+
 	public function deleteComment($commentId)
 	{
 		$query = "DELETE FROM " . $this->table . " WHERE id = :comment_id";

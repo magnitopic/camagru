@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'controllers/CommentController.php';
+require_once 'controllers/EmailController.php';
 require_once 'parseData.php';
 
 header('Content-Type: application/json');
@@ -23,6 +24,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != $userId) {
 }
 
 $commentController = new CommentController();
-$response = $commentController->newComment($userId, $postId, $comment);
+$emailController = new EmailController('noreply@yourwebsite.com', 'Your Website Name');
 
-echo $response;
+$response = $commentController->newComment($userId, $postId, $comment);
+/* if ($response['status'] === 'error') {
+	echo $response;
+	exit();
+} */
+
+$authorEmail = $commentController->getPostAuthorEmail($postId);
+$yes = $emailController->sendCommentNotification($authorEmail, $comment);
+return $yes;
+/* echo $response; */

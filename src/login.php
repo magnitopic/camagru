@@ -3,6 +3,7 @@ session_start();
 
 require_once 'php/parseData.php';
 require_once 'php/controllers/UserController.php';
+require_once 'php/controllers/EmailController.php';
 $userController = new UserController();
 
 if (isset($_SESSION['user_id'])) {
@@ -22,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$_SESSION['user_id'] = $response['user']->id;
 		$_SESSION['user_name'] = $response['user']->username;
 	}
+
+	$emailController = new EmailController();
+	$emailController->sendCommentNotification($response['user']->email, 'You have logged in to Camagru');
 
 	header('Content-Type: application/json');
 	echo json_encode($response);

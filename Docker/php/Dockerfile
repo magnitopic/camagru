@@ -7,8 +7,17 @@ RUN apt-get update && apt-get install -y \
 	libpng-dev \
 	zlib1g-dev \
 	libzip-dev \
+	ssmtp\
 	npm
 
+COPY ssmtp_config.sh /usr/local/bin/ssmtp_config.sh
+RUN chmod +x /usr/local/bin/ssmtp_config.sh
+RUN /usr/local/bin/ssmtp_config.sh
+
+RUN chown root:mail /etc/ssmtp/ssmtp.conf
+RUN chmod 640 /etc/ssmtp/ssmtp.conf
+
+RUN echo "sendmail_path = /usr/sbin/ssmtp -t" > /usr/local/etc/php/conf.d/mail.ini
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install -j$(nproc) gd \

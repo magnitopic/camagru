@@ -27,6 +27,12 @@ class CommentController
 		return ['comments' => $comments, 'commentsCount' => $commentsCount]; // Return the array directly
 	}
 
+	public function getPostAuthorEmail($postId)
+	{
+		$authorEmail = $this->comment->getPostAuthorEmail($postId);
+		return $authorEmail;
+	}
+
 	public function newComment($userId, $postId, $content)
 	{
 		// if comment is to long return error

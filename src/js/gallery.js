@@ -196,7 +196,7 @@ const handleNewComment = (event) => {
 		method: "POST",
 		body: data,
 	})
-		.then((response) => response.json())
+		/* .then((response) => response.json())
 		.then((data) => {
 			if (data.status === "error") {
 				showError(data.message);
@@ -216,6 +216,22 @@ const handleNewComment = (event) => {
 			if (error.message === "Unauthorized")
 				window.location.href = "/login.php";
 			else showError("An error occurred while adding the comment");
+		}); */
+		.then((response) => response.text())
+		.then((text) => {
+			try {
+				const data = JSON.parse(text);
+				if (data.status === "error") {
+					console.error("Error:", data.message);
+				} else {
+					console.log("Success:", data);
+				}
+			} catch (e) {
+				console.error("Error parsing JSON:", text);
+			}
+		})
+		.catch((error) => {
+			console.error("Fetch error:", error);
 		});
 };
 

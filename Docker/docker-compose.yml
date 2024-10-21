@@ -19,6 +19,8 @@ services:
         container_name: php
         env_file:
             - ../.env
+        environment:
+            MARIADB_HOST: mariadb
         volumes:
             - ../src:/var/www/html
         depends_on:
