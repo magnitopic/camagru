@@ -31,8 +31,8 @@ class EmailController
 
 	public function sendCommentNotification($to, $commentContent)
 	{
-		$subject = "New Comment Notification";
-		$body = "A new comment has been posted: <br><br>" . htmlspecialchars($commentContent);
+		$subject = "camagru-alaparic: You have a new comment";
+		$body = "You have a new comment in you post: <br><br><b>" . htmlspecialchars($commentContent) . "</b><br><br>Go check it out!";
 		return $this->sendEmail($to, $subject, $body);
 	}
 

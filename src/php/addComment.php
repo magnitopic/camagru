@@ -5,6 +5,8 @@ require_once 'controllers/CommentController.php';
 require_once 'controllers/EmailController.php';
 require_once 'parseData.php';
 
+$emailController = new EmailController();
+
 header('Content-Type: application/json');
 
 $userId = $_POST['userId'];
@@ -24,15 +26,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != $userId) {
 }
 
 $commentController = new CommentController();
-$emailController = new EmailController('noreply@yourwebsite.com', 'Your Website Name');
-
 $response = $commentController->newComment($userId, $postId, $comment);
-/* if ($response['status'] === 'error') {
-	echo $response;
-	exit();
-} */
+
+error_log("Comment response: " . json_encode($response));
+
+if ($response . ["status"] === 'error')
+	return $response;
+
 
 $authorEmail = $commentController->getPostAuthorEmail($postId);
-$yes = $emailController->sendCommentNotification($authorEmail, $comment);
-return $yes;
-/* echo $response; */
+$emailRes = $emailController->sendCommentNotification($authorEmail, $comment);
+
+echo $response;

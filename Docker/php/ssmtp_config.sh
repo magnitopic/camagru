@@ -1,10 +1,5 @@
 #!/bin/sh
 
-echo $PATH > /test.txt
-echo $SSMTP_EMAIL >> /test.txt
-echo $SSMTP_AUTH_PASS >> /test.txt
-echo "Hello there" >> /test.txt
-
 # Generate ssmtp.conf file
 cat << EOF > /etc/ssmtp/ssmtp.conf
 root=$SSMTP_EMAIL
