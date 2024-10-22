@@ -40,6 +40,17 @@ class User
 		return $stmt->fetch(PDO::FETCH_OBJ);
 	}
 
+	public function getUserEmailCommentPreference($id)
+	{
+		$query = "SELECT emailCommentPreference FROM " . $this->table . " WHERE id = :id";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->execute();
+
+		$result = $stmt->fetch(PDO::FETCH_OBJ);
+		return $result ? (bool) $result->emailCommentPreference : null;
+	}
+
 	public function createUser($username, $email, $password)
 	{
 		$query = "INSERT INTO " . $this->table . " (username, email, password) VALUES (:username, :email, :password)";

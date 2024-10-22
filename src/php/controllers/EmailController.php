@@ -1,5 +1,7 @@
 <?php
 
+require_once 'controllers/UserController.php';
+
 class EmailController
 {
 	private $fromEmail;
@@ -39,8 +41,9 @@ class EmailController
 	public function sendPasswordReset($to)
 	{
 		$newPassword = $this->generateRandomPassword();
-		$subject = "Password Reset";
-		$body = "Your new password is: " . $newPassword . "<br><br>Please login and change your password.";
+		$subject = "camagru-alaparic: Password Reset";
+		$body = "We have received a password reset request.<br>Your new password is: " . $newPassword .
+			"<br><br>Please take the following steps to change your password:<br><br>1. Log in to your account<br>2. Go to your account settings<br>3. Enter a new secure password<br>4. Save your changes";
 		if ($this->sendEmail($to, $subject, $body)) {
 			$this->updateUserPassword($to, $newPassword);
 			return true;
@@ -51,8 +54,8 @@ class EmailController
 	public function sendAccountConfirmation($to)
 	{
 		$token = $this->generateConfirmationToken();
-		$subject = "Account Confirmation";
-		$confirmationLink = "https://yourwebsite.com/confirm-account.php?token=" . urlencode($token);
+		$subject = "camagru-alaparic: Account Confirmation";
+		$confirmationLink = "http://localhost:8080/confirm-account.php?token=" . urlencode($token);
 		$body = "Please click the following link to confirm your account: <br><br><a href='" . $confirmationLink . "'>Confirm Account</a>";
 		if ($this->sendEmail($to, $subject, $body)) {
 			$this->storeConfirmationToken($to, $token);
@@ -78,8 +81,8 @@ class EmailController
 
 	private function updateUserPassword($email, $newPassword)
 	{
-		// Implement the logic to update the user's password in your database
-		// This is just a placeholder function
+		$userController = new UserController();
+		$userController->updatePassword($email, $newPassword);
 	}
 
 	private function storeConfirmationToken($email, $token)
@@ -88,9 +91,3 @@ class EmailController
 		// This is just a placeholder function
 	}
 }
-
-// Usage example
-// $emailController = new EmailController('noreply@yourwebsite.com', 'Your Website Name');
-// $emailController->sendCommentNotification('user@example.com', 'Great post!');
-// $emailController->sendPasswordReset('user@example.com');
-// $emailController->sendAccountConfirmation('newuser@example.com');

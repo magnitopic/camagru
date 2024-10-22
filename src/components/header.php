@@ -20,7 +20,7 @@ session_start();
 			<?php if (isset($_SESSION["user_id"])) : ?>
 				<script defer src="js/header.js"></script>
 				<div class="userDropdown">
-					<details>
+					<details class="loginDetails">
 						<summary class="userName"><?php echo $_SESSION["user_name"] ?></summary>
 					</details>
 					<div class="dropdownContent" id="dropdownContent">

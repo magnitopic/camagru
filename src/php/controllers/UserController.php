@@ -1,8 +1,9 @@
 <?php
 
-require_once 'php/database.php';
-require_once 'php/models/User.php';
-require_once 'php/regexValidations.php';
+require_once __DIR__ . '/../config.php';
+require_once BASE_PATH . 'database.php';
+require_once BASE_PATH . 'models/User.php';
+require_once BASE_PATH . 'regexValidations.php';
 
 class UserController
 {
@@ -90,6 +91,11 @@ class UserController
 		return $this->user->getUserByUsername($username);
 	}
 
+	public function getUserEmailCommentPreference($userId)
+	{
+		return $this->user->getUserEmailCommentPreference($userId);
+	}
+
 	public function updateUserData($id, $username, $email, $pass, $emailPreference)
 	{
 		$errors = [];
@@ -130,5 +136,11 @@ class UserController
 			return ['success' => true];
 		else
 			return ['success' => false, 'errors' => ["Could not update user data."]];
+	}
+
+	public function updatePassword($email, $newPassword)
+	{
+		$id = $this->user->getUserByEmail($email)->id;
+		return $this->user->updatePassword($id, $newPassword);
 	}
 }

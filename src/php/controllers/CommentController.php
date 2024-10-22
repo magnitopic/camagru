@@ -37,11 +37,11 @@ class CommentController
 	{
 		// if comment is to long return error
 		if (strlen($content) > 200)
-			return json_encode(['status' => 'error', 'message' => 'Comment is too long (maximum 200 characters)']);
+			return ['status' => 'error', 'message' => 'Comment is too long (maximum 200 characters)'];
 
 		if ($this->comment->newComment($userId, $postId, $content))
-			return json_encode(['status' => 'success', 'message' => 'Comment added successfully', 'comments' => $this->getCommentsPost($postId)]);
+			return ['status' => 'success', 'message' => 'Comment added successfully', 'comments' => $this->getCommentsPost($postId)];
 
-		return json_encode(['status' => 'error', 'message' => 'Failed to add comment']);
+		return ['status' => 'error', 'message' => 'Failed to add comment'];
 	}
 }
