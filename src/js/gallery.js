@@ -9,6 +9,7 @@ const shareDropdown = document.querySelector(".shareDropdown");
 
 let page = 0;
 let selectedPost = null;
+let isSubmitting = false;
 
 // hide postInfo
 postInfo.addEventListener("click", () => {
@@ -178,45 +179,66 @@ const updateLikes = (newLikes) => {
 	likeButton.classList.toggle("likedPost");
 };
 
-const handleNewComment = (event) => {
+const handleNewComment = async (event) => {
 	event.preventDefault();
-	const comment = newCommentForm.querySelector("#newComment").value;
+
+	if (isSubmitting) return;
+
+	const commentInput = newCommentForm.querySelector("#newComment");
+	const submitButton = newCommentForm.querySelector("#newCommentButton");
+	const comment = commentInput.value;
 	if (comment.trim().length === 0) {
 		showError("Comment cannot be empty");
 		newCommentForm.querySelector("#newComment").value = "";
 		return;
 	}
+	try {
+		isSubmitting = true;
+		submitButton.disabled = true;
+		commentInput.disabled = true;
+		submitButton.textContent = "Posting...";
 
-	const data = new FormData();
-	data.append("postId", selectedPost.id);
-	data.append("userId", user_id);
-	data.append("comment", comment);
+		const data = new FormData();
+		data.append("postId", selectedPost.id);
+		data.append("userId", user_id);
+		data.append("comment", comment);
 
-	fetch("php/addComment.php", {
-		method: "POST",
-		body: data,
-	})
-		.then((response) => response.json())
-		.then((data) => {
-			if (data.status === "error") {
-				showError(data.message);
-				return;
-			}
-			loadComments(data.comments);
-			newCommentForm.querySelector("#newComment").value = "";
-			// remove all elements from galleryContainer
-			while (galleryContainer.firstChild) {
-				galleryContainer.removeChild(galleryContainer.firstChild);
-			}
-			// fetch and load posts
-			page = 0;
-			fetchPosts();
-		})
-		.catch((error) => {
-			if (error.message === "Unauthorized")
-				window.location.href = "/login.php";
-			else showError("An error occurred while adding the comment");
+		const response = await fetch("php/addComment.php", {
+			method: "POST",
+			body: data,
 		});
+
+		const responseData = await response.json();
+
+		if (responseData.status === "error") {
+			showError(responseData.message);
+			return;
+		}
+
+		loadComments(responseData.comments);
+		commentInput.value = "";
+
+		// Clear gallery and reload posts
+		while (galleryContainer.firstChild) {
+			galleryContainer.removeChild(galleryContainer.firstChild);
+		}
+		page = 0;
+		fetchPosts();
+	} catch (error) {
+		if (error.message === "Unauthorized")
+			window.location.href = "/login.php";
+		else showError("An error occurred while adding the comment");
+	} finally {
+		// Re-enable form submission
+		isSubmitting = false;
+		submitButton.disabled = false;
+		commentInput.disabled = false;
+
+		// Reset button text if we changed it
+		if (submitButton.textContent === "Posting...") {
+			submitButton.innerHTML = "<i class=\"fa-solid fa-paper-plane\"></i>";
+		}
+	}
 };
 
 const options = {
