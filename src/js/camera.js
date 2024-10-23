@@ -522,6 +522,7 @@ window.onload = () => {
 					const postImage = newPost.querySelector("img");
 					postImage.src = "php/" + post.imagePath;
 
+					// add delete button listener
 					const deleteButton = newPost.querySelector(".deleteIcon");
 					deleteButton.addEventListener("click", () => {
 						handleDeletePost(post, oldPostContainer, newPost);

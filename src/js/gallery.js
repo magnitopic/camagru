@@ -210,6 +210,8 @@ const handleNewComment = async (event) => {
 		const responseData = await response.json();
 
 		if (responseData.status === "error") {
+			if (responseData.message === "Unauthorized")
+				throw new Error("Unauthorized");
 			showError(responseData.message);
 			return;
 		}

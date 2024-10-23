@@ -13,11 +13,23 @@ $userController = new UserController();
 
 header('Content-Type: application/json');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+	http_response_code(405);
+	echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+	exit();
+}
+
 $userId = $_POST['userId'];
 $postId = $_POST['postId'];
 $comment = parseData($_POST['comment']);
 
-if (empty($userId) || empty($postId) || empty($comment)) {
+
+if (empty($userId)) {
+	echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+	exit;
+}
+
+if (empty($postId) || empty($comment)) {
 	http_response_code(400);
 	echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
 	exit();

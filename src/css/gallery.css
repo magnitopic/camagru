@@ -23,7 +23,6 @@ main {
 	width: fit-content;
 	transition: all 0.3s ease-in-out;
 	cursor: pointer;
-	background-color: var(--secondary);
 }
 
 .postContainer:hover {
