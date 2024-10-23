@@ -1,6 +1,7 @@
 <?php
 
-require_once 'controllers/UserController.php';
+require_once __DIR__ . '/../config.php';
+require_once BASE_PATH . 'controllers/UserController.php';
 
 class EmailController
 {
@@ -9,8 +10,8 @@ class EmailController
 
 	public function __construct()
 	{
-		$this->fromEmail = "magnitopic@gmail.com";
-		$this->fromName = "magnitopic";
+		$this->fromEmail = "alaparic@student.42madrid.com";
+		$this->fromName = "alaparic";
 	}
 
 	private function sendEmail($to, $subject, $body, $isHtml = true)
@@ -42,8 +43,8 @@ class EmailController
 	{
 		$newPassword = $this->generateRandomPassword();
 		$subject = "camagru-alaparic: Password Reset";
-		$body = "We have received a password reset request.<br>Your new password is: " . $newPassword .
-			"<br><br>Please take the following steps to change your password:<br><br>1. Log in to your account<br>2. Go to your account settings<br>3. Enter a new secure password<br>4. Save your changes";
+		$body = "We have received a password reset request.<br>Your new password is:<br><b>" . $newPassword .
+			"</b><br><br>Please take the following steps to access your account:<br>1. Log in to your account with your new password<br>2. Go to your account settings<br>3. Enter a new secure password<br>4. Save your changes";
 		if ($this->sendEmail($to, $subject, $body)) {
 			$this->updateUserPassword($to, $newPassword);
 			return true;
@@ -64,8 +65,9 @@ class EmailController
 		return false;
 	}
 
-	private function generateRandomPassword($length = 26)
+	private function generateRandomPassword()
 	{
+		$length = 26;
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@#$&?!';
 		$password = '';
 		for ($i = 0; $i < $length; $i++) {

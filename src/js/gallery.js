@@ -181,7 +181,6 @@ const updateLikes = (newLikes) => {
 
 const handleNewComment = async (event) => {
 	event.preventDefault();
-
 	if (isSubmitting) return;
 
 	const commentInput = newCommentForm.querySelector("#newComment");
@@ -236,7 +235,7 @@ const handleNewComment = async (event) => {
 
 		// Reset button text if we changed it
 		if (submitButton.textContent === "Posting...") {
-			submitButton.innerHTML = "<i class=\"fa-solid fa-paper-plane\"></i>";
+			submitButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
 		}
 	}
 };

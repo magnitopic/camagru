@@ -3,7 +3,6 @@ session_start();
 
 require_once 'php/parseData.php';
 require_once 'php/controllers/UserController.php';
-require_once 'php/controllers/EmailController.php';
 $userController = new UserController();
 
 if (isset($_SESSION['user_id'])) {
@@ -24,9 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$_SESSION['user_name'] = $response['user']->username;
 	}
 
-	$emailController = new EmailController();
-	$emailController->sendCommentNotification($response['user']->email, 'You have logged in to Camagru');
-
 	header('Content-Type: application/json');
 	echo json_encode($response);
 	exit;
@@ -43,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<link rel="stylesheet" href="/css/_general.css" />
 	<link rel="stylesheet" href="/css/accountForms.css" />
 	<script defer src="/js/error.js"></script>
+	<script defer src="/js/resetPass.js"></script>
 	<link rel="shortcut icon" href="/img/logo.png" type="image/x-icon" />
 </head>
 
@@ -70,15 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		</form>
 		<div class="resetEmail">
 			<details>
-				<summary>¿Forgot your password?</summary>
-				<form action="" method="post">
+				<summary>Forgot your password?</summary>
+				<form id="resetPasswordForm" action="php/resetPass.php" method="post">
 					<input
 						required
 						type="email"
 						name="email"
 						id="email"
 						placeholder="Email address" />
-					<button type="submit">Reset password</button>
+					<button type="submit" id="reset-form-submit">Reset password</button>
+					<div id="reset-form-message" class="form-message"></div>
 				</form>
 			</details>
 		</div>

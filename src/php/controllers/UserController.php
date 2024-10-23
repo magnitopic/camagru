@@ -91,6 +91,11 @@ class UserController
 		return $this->user->getUserByUsername($username);
 	}
 
+	public function getUserByEmail($email)
+	{
+		return $this->user->getUserByEmail($email);
+	}
+
 	public function getUserEmailCommentPreference($userId)
 	{
 		return $this->user->getUserEmailCommentPreference($userId);
