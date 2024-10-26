@@ -51,9 +51,10 @@ class User
 		return $result ? (bool) $result->emailCommentPreference : null;
 	}
 
-	public function createUser($username, $email, $password)
+	public function createUser($username, $email, $password, $token)
 	{
-		$query = "INSERT INTO " . $this->table . " (username, email, password) VALUES (:username, :email, :password)";
+		$query = "INSERT INTO " . $this->table . " (username, email, password, confirmationToken, emailConfirmed) 
+				  VALUES (:username, :email, :password, :token, 0)";
 		$stmt = $this->conn->prepare($query);
 
 		// Hash the password before storing it
@@ -62,11 +63,33 @@ class User
 		$stmt->bindParam(':username', $username);
 		$stmt->bindParam(':email', $email);
 		$stmt->bindParam(':password', $hashed_password);
+		$stmt->bindParam(':token', $token);
 
 		if ($stmt->execute()) {
 			return true;
 		}
+		return false;
+	}
 
+	public function getUserByToken($token)
+	{
+		$query = "SELECT * FROM " . $this->table . " WHERE confirmationToken = :token";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':token', $token);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_OBJ);
+	}
+
+	public function confirmEmail($id)
+	{
+		$query = "UPDATE " . $this->table . " SET emailConfirmed = 1, confirmationToken = NULL WHERE id = :id";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+		if ($stmt->execute()) {
+			return true;
+		}
 		return false;
 	}
 

@@ -34,7 +34,6 @@ services:
 
     mariadb:
         container_name: mariadb
-        image: alaparic-mariadb
         build:
             context: ./mariadb
         env_file:

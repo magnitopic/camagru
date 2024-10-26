@@ -28,7 +28,6 @@ class UserController
 		else if ($this->user->getUserByEmail($email))
 			$errors[] = "Email already exists.";
 
-
 		// regex validations
 		if (!preg_match($GLOBALS['usernameRegex'], $username))
 			$errors[] = "Invalid username.";
@@ -40,11 +39,69 @@ class UserController
 		if (!empty($errors))
 			return ['success' => false, 'errors' => $errors];
 
+		// Generate confirmation token
+		$token = $this->generateConfirmationToken($email);
 
-		if ($this->user->createUser($username, $email, $password))
+		// Create user in database
+		if ($this->user->createUser($username, $email, $password, $token)) {
+			// Send confirmation email
+			require_once BASE_PATH . 'controllers/EmailController.php';
+			$emailController = new EmailController();
+
+			if (!$emailController->sendAccountConfirmation($email, $token)) {
+				return ['success' => false, 'errors' => ["Registered successfully but failed to send confirmation email."]];
+			}
+
 			return ['success' => true];
-		else
-			return ['success' => false, 'errors' => ["Could not register user."]];
+		}
+
+		return ['success' => false, 'errors' => ["Could not register user."]];
+	}
+
+	private function generateConfirmationToken($email)
+	{
+		$timestamp = time();
+		$randomBytes = random_bytes(16);
+		$data = $email . $timestamp . $randomBytes;
+
+		// Create token with email, timestamp and random bytes
+		return hash('sha256', $data);
+	}
+
+	public function confirmAccount($token)
+	{
+		$errors = [];
+
+		if (empty($token)) {
+			$errors[] = "Invalid confirmation link.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// Get user by token
+		$user = $this->user->getUserByToken($token);
+
+		if (!$user) {
+			$errors[] = "Invalid confirmation token.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		if ($user->emailConfirmed) {
+			$errors[] = "Email already confirmed.";
+			return ['success' => false, 'errors' => $errors];
+		}
+
+		// Confirm email
+		if ($this->user->confirmEmail($user->id)) {
+			return ['success' => true];
+		}
+
+		return ['success' => false, 'errors' => ["Could not confirm email."]];
+	}
+
+	public function getUserConfirmationToken($email)
+	{
+		$user = $this->user->getUserByEmail($email);
+		return $user ? $user->confirmationToken : null;
 	}
 
 	public function login($username, $password)
@@ -71,11 +128,10 @@ class UserController
 		}
 
 		// Check if the user's email is verified (if you have email verification)
-		/* if (!$user->email_verified) {
+		if (!$user->emailConfirmed) {
 			$errors[] = "Please verify your email address before logging in.";
 			return ['success' => false, 'errors' => $errors];
-		} */
-		// TODO: Uncomment the above code when email verification is implemented
+		}
 
 		// If everything is okay, return success
 		return ['success' => true, 'user' => $user];
