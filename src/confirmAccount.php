@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'php/controllers/UserController.php';
-require_once "php/parseData.php";
+require_once "php/utils/parseData.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 	header("Location: /login.php");
@@ -13,15 +13,10 @@ if (!isset($_GET['token']) || empty($_GET['token'])) {
 	exit();
 }
 
-error_log("Working on token: " . $_GET['token']);
-
 $token = parseData($_GET['token']);
 $userController = new UserController();
 $userData = $userController->getUserByUsername("alaparic");
-error_log("User token in db: " . json_encode($userData));
 $result = $userController->confirmAccount($token);
-
-error_log("Result: " . json_encode($result));
 ?>
 
 <!DOCTYPE html>

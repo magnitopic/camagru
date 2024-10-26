@@ -1,5 +1,6 @@
 <?php
 /* user regex */
+
 // username
 $usernameRegex = "/^[a-zA-Z0-9]{3,20}$/";
 

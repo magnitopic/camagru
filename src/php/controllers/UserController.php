@@ -1,9 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../config.php';
-require_once BASE_PATH . 'database.php';
+require_once BASE_PATH . 'utils/database.php';
 require_once BASE_PATH . 'models/User.php';
-require_once BASE_PATH . 'regexValidations.php';
+require_once BASE_PATH . 'utils/regexValidations.php';
 
 class UserController
 {

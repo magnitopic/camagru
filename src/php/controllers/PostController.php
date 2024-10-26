@@ -1,6 +1,6 @@
 <?php
 
-require_once 'database.php';
+require_once 'utils/database.php';
 require_once 'models/Post.php';
 
 class PostController

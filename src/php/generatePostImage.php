@@ -2,7 +2,7 @@
 session_start();
 
 require_once 'controllers/PostController.php';
-require_once 'parseData.php';
+require_once 'utils/parseData.php';
 
 header('Content-Type: application/json');
 

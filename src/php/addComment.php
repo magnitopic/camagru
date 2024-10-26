@@ -4,7 +4,7 @@ session_start();
 require_once 'controllers/EmailController.php';
 require_once 'controllers/CommentController.php';
 require_once 'controllers/UserController.php';
-require_once 'parseData.php';
+require_once 'utils/parseData.php';
 
 $emailController = new EmailController();
 $commentController = new CommentController();

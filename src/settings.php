@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once 'php/parseData.php';
+require_once 'php/utils/parseData.php';
 require_once 'php/controllers/UserController.php';
 $userController = new UserController();
 

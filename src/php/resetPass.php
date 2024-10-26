@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once 'parseData.php';
+require_once 'utils/parseData.php';
 require_once 'controllers/EmailController.php';
 require_once 'controllers/UserController.php';
 

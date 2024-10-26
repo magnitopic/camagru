@@ -454,29 +454,6 @@ window.onload = () => {
 			.catch((error) => {
 				showError("Failed to save post");
 			});
-		/** TODO -> Debugging method, remove when working */
-		/** ------------------------ */
-		/* fetch("/php/generatePostImage.php", {
-			method: "POST",
-			body: formData,
-		})
-			.then((response) => response.text())
-			.then((text) => {
-				try {
-					const data = JSON.parse(text);
-					if (data.status === "error") {
-						console.error("Error:", data.message);
-					} else {
-						console.log("Success:", data);
-					}
-				} catch (e) {
-					console.error("Error parsing JSON:", text);
-				}
-			})
-			.catch((error) => {
-				console.error("Fetch error:", error);
-			}); */
-		/** ----------------------- */
 	};
 
 	const fetchImageBlob = async (url) => {

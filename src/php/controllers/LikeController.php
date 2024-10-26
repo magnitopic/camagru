@@ -1,5 +1,5 @@
 <?php
-require_once 'database.php';
+require_once 'utils/database.php';
 require_once 'models/Like.php';
 
 class LikeController

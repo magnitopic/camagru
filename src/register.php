@@ -2,7 +2,7 @@
 session_start();
 
 require_once 'php/controllers/UserController.php';
-require_once "php/parseData.php";
+require_once "php/utils/parseData.php";
 
 if (isset($_SESSION['user_id'])) {
 	header("Location: /camera.php");
