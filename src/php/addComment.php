@@ -44,7 +44,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != $userId) {
 # save new comment
 $response = $commentController->newComment($userId, $postId, $comment);
 
-error_log("Response: " . $response["status"]);
 
 
 # send email notification if the user has the preference enabled and there where no errors saving the comment

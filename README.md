@@ -1,7 +1,8 @@
 # Camagru
 
-This web project is challenging you to create a small web application allowing you to
-make basic photo and video editing using your webcam and some predefined images
+This project challenges you to make a webpage from which to upload, edit and share pictures with other users. You can choose to take a picture with your webcam or upload an image directly from your computer. You can also add stickers, change their size, rotation and position, and save the final image. The project is written in PHP, HTML, CSS and JS.
+
+There is a public gallery where the images published by all users are displayed. You can like and comment on the images, and the author of the image will receive an email notification, if he wants.
 
 <div align="center">
 <img alt="Camagru project view" src="https://github.com/user-attachments/assets/2fd0293f-78d5-403a-8352-3716624982d1">
