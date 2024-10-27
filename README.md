@@ -3,6 +3,10 @@
 This web project is challenging you to create a small web application allowing you to
 make basic photo and video editing using your webcam and some predefined images
 
+<div align="center">
+<img alt="Camagru project view" src="https://github.com/user-attachments/assets/2fd0293f-78d5-403a-8352-3716624982d1">
+</div>
+
 ## How to run
 
 ```bash
@@ -31,5 +35,5 @@ This projects uses three docker containers with the following services:
 ## Database structure
 
 <div align="center">
-<img src="https://github.com/user-attachments/assets/acb18354-2784-45e8-9429-d6d8df24fac3">
+<img alt="database structure" src="https://github.com/user-attachments/assets/acb18354-2784-45e8-9429-d6d8df24fac3">
 </div>
